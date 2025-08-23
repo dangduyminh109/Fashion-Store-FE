@@ -1,22 +1,21 @@
 import { Outlet } from "react-router-dom";
-import Header from "~/components/Header";
-import NavBar from "~/components/NavBar";
-import { Box, Grid } from "@mui/material";
+import Box from "@mui/material/Box";
 
-function MainLayout() {
+import Header from "~/components/Header";
+import Sidebar from "~/components/Sidebar";
+
+const MainLayout = () => {
   return (
-    <Box sx={{ height: " 100vh", display: "flex", flexDirection: "column" }}>
-      <Header />
-      <Grid container sx={{ flex: "1" }}>
-        <Grid size={3}>
-          <NavBar />
-        </Grid>
-        <Grid size={9}>
+    <Box sx={{ height: " 100vh", display: "flex" }}>
+      <Sidebar />
+      <Box sx={{ flex: 1 }}>
+        <Header />
+        <Box component={"main"} sx={{ p: "10px" }}>
           <Outlet />
-        </Grid>
-      </Grid>
+        </Box>
+      </Box>
     </Box>
   );
-}
+};
 
 export default MainLayout;
