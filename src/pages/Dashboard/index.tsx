@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import Breadcrumb from "~/components/Breadcrumb";
 
 const listBreadcrumb = [
@@ -8,14 +7,13 @@ const listBreadcrumb = [
   },
 ];
 
-function Home() {
+function Dashboard() {
   return (
     <>
       <Breadcrumb listBreadcrumb={listBreadcrumb} title="Tổng Quan" />
-      <h1>home page</h1>
-      <Link to="/detail"> go detail page</Link>
+      <h1>Dashboard page</h1>
     </>
   );
 }
 
-export default Home;
+export default Dashboard;

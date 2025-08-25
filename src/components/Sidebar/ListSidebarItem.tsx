@@ -22,6 +22,21 @@ interface listItem {
   id: string;
 }
 const listMenuItem: listItem[] = [...menuItem];
+const Line = () => {
+  return (
+    <Box
+      sx={{
+        width: "4px",
+        height: "100%",
+        bgcolor: "text.secondary",
+        position: "absolute",
+        left: 0,
+        top: 0,
+      }}
+    ></Box>
+  );
+};
+
 const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
   const [activeId, setActiveId] = useState(
     JSON.parse(localStorage.getItem("SidebarActiveItem") || '"tong-quan"')
@@ -54,16 +69,25 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
           <Link to={item.to || "/"} onClick={() => handleActive(item)}>
             <ListItemButton
               sx={{
-                bgcolor: isActive ? "primary.light" : "primary.main",
-                color: isActive ? "secondary.light" : "text.main",
-                padding: "10px 16px",
+                bgcolor: isActive ? "secondary.dark" : "secondary.main",
+                color: isActive ? "text.secondary" : "text.primary",
+                padding: "8px 16px",
+                margin: "3px 8px 0",
+                borderRadius: "8px",
+                overflow: "hidden",
+                justifyContent: "center",
+                ":hover": {
+                  opacity: 1,
+                  bgcolor: isActive ? "secondary.dark" : "secondary.main",
+                },
               }}
               onClick={(e) => handleOpenId(e, item.id)}
             >
+              {isActive && isShow && <Line />}
               <ListItemIcon sx={{ minWidth: "20px" }}>
                 {item.icon &&
                   React.cloneElement(item.icon, {
-                    sx: { color: isActive ? "secondary.light" : "text.primary" },
+                    sx: { color: isActive ? "text.secondary" : "text.primary" },
                   })}
               </ListItemIcon>
               {isShow && (
@@ -75,19 +99,25 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
           <React.Fragment>
             <ListItemButton
               sx={{
-                bgcolor: isActive ? "primary.light" : "primary.main",
-                color: isActive ? "secondary.light" : "text.main",
-                padding: "10px 16px",
+                bgcolor: isActive && !isOpen ? "secondary.dark" : "secondary.main",
+                color: isActive && !isOpen ? "text.secondary" : "text.primary",
+                padding: "8px 16px",
+                margin: "3px 8px 0",
+                borderRadius: "8px",
+                overflow: "hidden",
+                justifyContent: "center",
+                ":hover": {
+                  opacity: 1,
+                },
               }}
               onClick={(e) => handleOpenId(e, item.id)}
               aria-describedby={`Popper-${item.id}`}
             >
-              <ListItemIcon
-                sx={{ minWidth: "20px", color: isActive ? "secondary.light" : "text.main" }}
-              >
+              {isActive && !isOpen && isShow && <Line />}
+              <ListItemIcon sx={{ minWidth: "20px" }}>
                 {item.icon &&
                   React.cloneElement(item.icon, {
-                    sx: { color: isActive ? "secondary.light" : "text.primary" },
+                    sx: { color: isActive && !isOpen ? "text.secondary" : "text.primary" },
                   })}
               </ListItemIcon>
               {isShow && (
@@ -96,7 +126,6 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                     primary={item.title}
                     sx={{
                       m: "0 0 0 10px",
-                      color: isActive ? "secondary.light" : "text.main",
                       whiteSpace: "nowrap",
                     }}
                   />
@@ -104,14 +133,14 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                     sx={{
                       transform: `${isOpen ? "rotate(0)" : "rotate(90deg)"}`,
                       transition: ".3s",
-                      color: isActive ? "secondary.light" : "text.primary",
+                      color: isActive && !isOpen ? "text.secondary" : "text.primary",
                     }}
                   />
                 </>
               )}
             </ListItemButton>
             {isShow ? (
-              <Collapse in={isOpen} timeout={"auto"}>
+              <Collapse in={isOpen} timeout={"auto"} sx={{ bgcolor: "secondary.main" }}>
                 {item.children.map((childItem) => {
                   isActive = childItem.id === activeId;
                   return (
@@ -123,15 +152,25 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                       <ListItemButton
                         sx={{
                           pl: `${(index + 1) * 16}px`,
-                          bgcolor: "primary.light",
-                          padding: "10px 16px",
+                          bgcolor: isActive ? "secondary.dark" : "secondary.main",
+                          color: isActive ? "text.secondary" : "text.primary",
+                          padding: "8px 16px",
+                          margin: "3px 8px 0",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          justifyContent: "center",
+                          ":hover": {
+                            opacity: 1,
+                            bgcolor: "secondary.light",
+                          },
                         }}
                       >
+                        {isActive && <Line />}
                         {childItem.icon && (
                           <ListItemIcon sx={{ minWidth: "20px" }}>
                             {item.icon &&
                               React.cloneElement(childItem.icon, {
-                                sx: { color: isActive ? "secondary.light" : "text.primary" },
+                                sx: { color: isActive ? "text.secondary" : "text.primary" },
                               })}
                           </ListItemIcon>
                         )}
@@ -140,7 +179,6 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                             primary={childItem.title}
                             sx={{
                               m: "0 0 0 10px",
-                              color: isActive ? "secondary.light" : "text.main",
                               whiteSpace: "nowrap",
                             }}
                           />
@@ -162,22 +200,38 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                 >
                   {({ TransitionProps }) => (
                     <Fade {...TransitionProps} timeout={350}>
-                      <Box>
+                      <Box
+                        sx={{
+                          bgcolor: "secondary.main",
+                          p: "3px",
+                          borderRadius: "10px",
+                          boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                        }}
+                      >
                         <ListItemButton
                           sx={{
-                            bgcolor: "primary.light",
-                            color: "secondary.light",
-                            padding: "10px 16px",
+                            bgcolor: !openCollapse ? "secondary.dark" : "secondary.main",
+                            color: !openCollapse ? "text.secondary" : "text.primary",
+                            padding: "8px 16px",
                             minWidth: "200px",
+                            margin: "0 2px",
+                            borderRadius: "8px",
+                            overflow: "hidden",
+                            justifyContent: "center",
+                            ":hover": {
+                              opacity: 1,
+                              bgcolor: "secondary.light",
+                            },
                           }}
                           onClick={() => setOpenCollapse(!openCollapse)}
                           aria-describedby={`Popper-Collapse-${item.id}`}
                         >
+                          {!openCollapse && <Line />}
                           <ListItemText
                             primary={item.title}
                             sx={{
                               m: "0 0 0 10px",
-                              color: "secondary.light",
+                              color: !openCollapse ? "text.secondary" : "text.primary",
                               whiteSpace: "nowrap",
                             }}
                           />
@@ -185,7 +239,7 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                             sx={{
                               transform: `${openCollapse ? "rotate(0)" : "rotate(90deg)"}`,
                               transition: ".3s",
-                              color: "secondary.light",
+                              color: !openCollapse ? "text.secondary" : "text.primary",
                             }}
                           />
                         </ListItemButton>
@@ -200,14 +254,26 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                                   onClick={() => handleActive(childItem)}
                                 >
                                   <ListItemButton
-                                    sx={{ bgcolor: "primary.light", padding: "10px 16px" }}
+                                    sx={{
+                                      bgcolor: isActive ? "secondary.dark" : "secondary.main",
+                                      padding: "8px 16px",
+                                      margin: "3px 2px 0",
+                                      borderRadius: "8px",
+                                      overflow: "hidden",
+                                      justifyContent: "center",
+                                      ":hover": {
+                                        opacity: 1,
+                                        bgcolor: "secondary.light",
+                                      },
+                                    }}
                                   >
+                                    {isActive && <Line />}
                                     {childItem.icon && (
                                       <ListItemIcon sx={{ minWidth: "20px" }}>
                                         {item.icon &&
                                           React.cloneElement(childItem.icon, {
                                             sx: {
-                                              color: isActive ? "secondary.light" : "text.primary",
+                                              color: isActive ? "text.secondary" : "text.primary",
                                             },
                                           })}
                                       </ListItemIcon>
@@ -216,7 +282,7 @@ const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
                                       primary={childItem.title}
                                       sx={{
                                         m: "0 0 0 10px",
-                                        color: isActive ? "secondary.light" : "text.main",
+                                        color: isActive ? "text.secondary" : "text.primary",
                                         whiteSpace: "nowrap",
                                       }}
                                     />

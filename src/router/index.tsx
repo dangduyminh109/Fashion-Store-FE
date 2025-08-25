@@ -1,7 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "~/Layout/MainLayout";
-import Home from "~/pages/Home";
-import Detail from "~/pages/Detail";
+import Dashboard from "~/pages/Dashboard";
+import Product from "~/pages/Product";
 
 export default createBrowserRouter([
   {
@@ -9,11 +9,11 @@ export default createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        element: <Dashboard />,
       },
       {
-        path: "/detail",
-        element: <Detail />,
+        path: "/products",
+        element: <Product />,
       },
     ],
   },

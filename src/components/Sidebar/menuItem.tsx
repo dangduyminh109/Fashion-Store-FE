@@ -15,12 +15,12 @@ const menuItem = [
     children: [
       {
         title: "Danh sách sản phẩm",
-        to: "/detail",
+        to: "/products",
         id: "products",
       },
       {
         title: "Danh mục",
-        to: "/",
+        to: "/category",
         id: "category",
       },
     ],
@@ -32,17 +32,17 @@ const menuItem = [
     children: [
       {
         title: "Danh Sách User",
-        to: "/detail",
+        to: "/users",
         id: "users",
       },
       {
         title: "Vai Trò",
-        to: "/",
+        to: "/role",
         id: "role",
       },
       {
         title: "Phân Quền",
-        to: "/",
+        to: "/permission",
         id: "permission",
       },
     ],

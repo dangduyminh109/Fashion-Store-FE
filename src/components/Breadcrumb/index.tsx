@@ -15,20 +15,32 @@ const Breadcrumb = ({
   listBreadcrumb: listBreadcrumb[];
 }) => {
   return (
-    <Box>
-      <Typography variant="h2" sx={{ color: "text.primary", fontWeight: 500 }}>
+    <Box sx={{ mb: "10px" }}>
+      <Typography
+        variant="h2"
+        sx={{ color: "text.primary", fontWeight: 500, textTransform: "capitalize" }}
+      >
         {title}
       </Typography>
-      <Breadcrumbs aria-label="breadcrumb">
+      <Breadcrumbs
+        aria-label="breadcrumb"
+        sx={{
+          "li:last-child p": {
+            color: "text.secondary",
+          },
+        }}
+      >
         {listBreadcrumb.map((route) => {
           return (
             <Link to={route.url} key={route.url}>
               <Box
                 component={"p"}
                 sx={{
+                  color: "text.primary",
                   ":hover": {
-                    color: "secondary.light",
+                    color: "text.secondary",
                   },
+                  textTransform: "capitalize",
                 }}
               >
                 {route.title}

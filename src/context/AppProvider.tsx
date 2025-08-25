@@ -1,14 +1,13 @@
-import type { ReactNode } from "react";
-import { ThemeProvider } from "@mui/material/styles";
+import { type ReactNode } from "react";
 
 import { SidebarProvider } from "./SidebarContext";
-import theme from "~/theme";
+import ThemeModeProvider from "./ThemeContext";
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeModeProvider>
       <SidebarProvider>{children}</SidebarProvider>
-    </ThemeProvider>
+    </ThemeModeProvider>
   );
 };
 

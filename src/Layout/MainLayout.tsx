@@ -8,9 +8,17 @@ const MainLayout = () => {
   return (
     <Box sx={{ height: " 100vh", display: "flex" }}>
       <Sidebar />
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
         <Header />
-        <Box component={"main"} sx={{ p: "10px" }}>
+        <Box
+          component={"main"}
+          sx={{
+            p: "20px",
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Outlet />
         </Box>
       </Box>
