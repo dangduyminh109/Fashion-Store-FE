@@ -13,9 +13,9 @@ const getTheme = (mode: boolean) => {
     },
     palette: {
       secondary: {
-        main: mode ? "#2A3650" : "#ECFBFF",
-        dark: mode ? "#3B4165" : "#E6F5FA",
-        light: mode ? "#333E5A" : "#f3fcffff",
+        main: mode ? "#2A3650" : "#E6F5FA",
+        dark: mode ? "#3B4165" : "#fff",
+        light: mode ? "#333E5A" : "#fff",
       },
       primary: {
         light: mode ? "#40495bff" : "#e8ad91ff",
@@ -24,11 +24,11 @@ const getTheme = (mode: boolean) => {
       },
       background: {
         default: mode ? "#364363" : "#fff",
-        paper: mode ? "#1E293B" : "#fff",
+        paper: mode ? "#1E293B" : "#FFF2EC",
       },
       text: {
         primary: mode ? "#fff" : "#1F2937",
-        secondary: mode ? "#ea6734ff" : "#ea6734ff",
+        secondary: mode ? "#BB86FC" : "#ea6734ff",
       },
       success: {
         main: "#10B981",
@@ -54,12 +54,13 @@ const getTheme = (mode: boolean) => {
       MuiButton: {
         styleOverrides: {
           root: {
-            color: "#fff",
+            color: mode ? "#1F2937" : "#fff",
+            backgroundColor: mode ? "#BB86FC" : "#ea6734ff",
             "& .MuiButton-startIcon, & .MuiButton-endIcon": {
-              color: "#fff",
+              color: mode ? "#1F2937" : "#fff",
             },
             "& .MuiSvgIcon-root": {
-              color: "#fff",
+              color: mode ? "#1F2937" : "#fff",
             },
           },
         },

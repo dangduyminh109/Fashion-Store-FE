@@ -1,7 +1,8 @@
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link } from "react-router-dom";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
 interface listBreadcrumb {
   title: string;
   url: string;
@@ -15,13 +16,14 @@ const Breadcrumb = ({
   listBreadcrumb: listBreadcrumb[];
 }) => {
   return (
-    <Box sx={{ mb: "10px" }}>
+    <Box sx={{ mb: "20px" }}>
       <Typography
         variant="h2"
         sx={{ color: "text.primary", fontWeight: 500, textTransform: "capitalize" }}
       >
         {title}
       </Typography>
+      <Divider sx={{ m: "2px 0" }} />
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{
