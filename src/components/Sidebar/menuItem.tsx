@@ -20,7 +20,7 @@ const menuItem = [
       },
       {
         title: "Danh mục",
-        to: "/category",
+        to: "/product/categories",
         id: "category",
       },
     ],

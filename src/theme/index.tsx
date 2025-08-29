@@ -18,7 +18,7 @@ const getTheme = (mode: boolean) => {
         light: mode ? "#333E5A" : "#fff",
       },
       primary: {
-        light: mode ? "#40495bff" : "#e8ad91ff",
+        light: mode ? "#40495bff" : "#e8c2b0ff",
         main: mode ? "#2A3650" : "#f17544ff",
         dark: mode ? "#3B4165" : "#ea6734ff",
       },
@@ -62,6 +62,13 @@ const getTheme = (mode: boolean) => {
             "& .MuiSvgIcon-root": {
               color: mode ? "#1F2937" : "#fff",
             },
+          },
+        },
+      },
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            fontSize: 14,
           },
         },
       },

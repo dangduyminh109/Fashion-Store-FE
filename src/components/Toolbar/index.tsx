@@ -12,11 +12,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TuneIcon from "@mui/icons-material/Tune";
-import type { ReactNode } from "react";
+import AddIcon from "@mui/icons-material/Add";
 
-const Toolbar = ({ children }: { children: ReactNode }) => {
+const Toolbar = ({ addNewLabel, hasTrash }: { addNewLabel?: string; hasTrash: boolean }) => {
   return (
-    <Stack direction={"row"} spacing={5} flexWrap={"wrap"} justifyContent={"space-between"}>
+    <Stack direction={"row"} gap={"10px"} flexWrap={"wrap"} justifyContent={"space-between"}>
       <Box sx={{ width: "100%", maxWidth: "350px" }}>
         <FormControl sx={{ mb: 1, width: "100%" }} variant="outlined" size="small">
           <InputLabel
@@ -67,12 +67,20 @@ const Toolbar = ({ children }: { children: ReactNode }) => {
           <Button variant="contained" startIcon={<TuneIcon />}>
             Nâng Cao
           </Button>
-          <Button variant="contained" startIcon={<DeleteIcon />}>
-            Thùng Rác
-          </Button>
+          {hasTrash && (
+            <Button variant="contained" startIcon={<DeleteIcon />}>
+              Thùng Rác
+            </Button>
+          )}
         </Stack>
       </Box>
-      {children}
+      {addNewLabel && (
+        <Box>
+          <Button variant="contained" startIcon={<AddIcon />}>
+            {`thêm mới ${addNewLabel}`}
+          </Button>
+        </Box>
+      )}
     </Stack>
   );
 };

@@ -8,7 +8,7 @@ const MainLayout = () => {
   return (
     <Box sx={{ height: " 100vh", display: "flex" }}>
       <Sidebar />
-      <Box sx={{ flex: 1, display: "flex", flexDirection: "column" }}>
+      <Box sx={{ flex: 1, display: "flex", flexDirection: "column", overflowX: "hidden" }}>
         <Header />
         <Box
           component={"main"}
