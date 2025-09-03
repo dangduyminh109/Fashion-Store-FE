@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios, { type AxiosRequestConfig } from "axios";
+import axios from "axios";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:8081/fashion-store/api/admin",
@@ -47,13 +47,15 @@ axiosClient.interceptors.response.use(
   }
 );
 
+export default axiosClient;
+
 interface FetchState<T> {
   data: T | null;
   loading: boolean;
   error: any;
 }
 
-export default function useFetch<T>({
+export function useFetch<T>({
   endpoint,
   method,
   options = {},
@@ -61,12 +63,14 @@ export default function useFetch<T>({
   endpoint: string;
   method: "get" | "post" | "put" | "patch" | "delete";
   options?: import("axios").AxiosRequestConfig;
+  enabled?: boolean;
 }): FetchState<T> {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
+    if (!endpoint) return;
     let mounted = true;
     const controller = new AbortController();
 

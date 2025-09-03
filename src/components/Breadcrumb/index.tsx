@@ -3,6 +3,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
+import { memo } from "react";
 interface listBreadcrumb {
   title: string;
   url: string;
@@ -55,4 +56,4 @@ const Breadcrumb = ({
   );
 };
 
-export default Breadcrumb;
+export default memo(Breadcrumb);

@@ -5,21 +5,24 @@ import Checkbox from "@mui/material/Checkbox";
 import Switch from "@mui/material/Switch";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Typography from "@mui/material/Typography";
+import { toast } from "react-toastify";
 
 import ActionGroup from "./ActionGroup";
 import type { HeadCell, RowData } from "./interface";
+import { useDispatch } from "react-redux";
+import { type AppDispatch } from "~/store";
+import { updateStatus } from "~/features/product/productApi";
 
 interface EnhancedTableRowProps<Data extends RowData> {
   isItemSelected: boolean;
   headCells: HeadCell<Data>[];
   rowData: Data;
-  editAction: boolean;
-  deleteAction: boolean;
-  restoreAction: boolean;
   labelId: string;
   rowOpen: number;
   index: number;
   isParentRow: boolean;
+  path: string;
+  childPath: string;
   handleClick: (id: number) => void;
   setRowOpen: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -29,16 +32,30 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
     isItemSelected,
     headCells,
     rowData,
-    editAction,
-    deleteAction,
-    restoreAction,
     rowOpen,
     labelId,
     index,
     isParentRow,
     handleClick,
     setRowOpen,
+    path,
+    childPath,
   } = props;
+  const row = rowData;
+  const dispatch = useDispatch<AppDispatch>();
+  
+  async function handleSwitch({ path, field, id }: { path: string; field: string; id: string }) {
+    let fieldRequest = field;
+    if (fieldRequest === "isFeatured") fieldRequest = "featured";
+    let url = `${path}/${String(id)}/${fieldRequest}`;
+    if (!isParentRow && childPath) url = `${path}/${childPath}/${String(id)}/${fieldRequest}`;
+    try {
+      const result = await dispatch(updateStatus({ url, method: "patch" })).unwrap();
+      toast.success(result.message);
+    } catch (err: any) {
+      toast.error(err.message ?? "Có lỗi xảy ra!");
+    }
+  }
 
   return (
     <TableRow
@@ -52,7 +69,7 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
       <TableCell padding="checkbox">
         {isParentRow && (
           <Checkbox
-            onClick={() => handleClick(rowData.id)}
+            onClick={() => handleClick(row.id)}
             checked={isItemSelected}
             aria-label={labelId}
             size="large"
@@ -78,13 +95,14 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
             whiteSpace: "nowrap",
           }}
         >
-          {typeof rowData[head.id] === "boolean" ? (
+          {typeof row[head.id] === "boolean" ? (
             <Switch
-              checked={rowData[head.id]}
+              checked={row[head.id]}
               slotProps={{ input: { "aria-label": "controlled" } }}
               color="success"
+              onClick={() => handleSwitch({ path, field: String(head.id), id: row.id })}
             />
-          ) : idx === 0 && rowData.children != null ? (
+          ) : idx === 0 && row.children != null ? (
             <>
               <Box
                 sx={{
@@ -111,7 +129,7 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                   }}
                   variant="body1"
                 >
-                  {rowData[head.id] || "-"}
+                  {row[head.id] || "-"}
                 </Typography>
               </Box>
             </>
@@ -125,16 +143,12 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
               }}
               variant="body1"
             >
-              {rowData[head.id] || "-"}
+              {row[head.id] || "-"}
             </Typography>
           )}
         </TableCell>
       ))}
-      <ActionGroup
-        editAction={editAction}
-        restoreAction={restoreAction}
-        deleteAction={deleteAction}
-      />
+      {isParentRow ? <ActionGroup path={path} id={row.id} /> : <TableCell></TableCell>}
     </TableRow>
   );
 }

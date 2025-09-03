@@ -13,8 +13,17 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TuneIcon from "@mui/icons-material/Tune";
 import AddIcon from "@mui/icons-material/Add";
-
-const Toolbar = ({ addNewLabel, hasTrash }: { addNewLabel?: string; hasTrash: boolean }) => {
+import { memo, useContext } from "react";
+import { ProductContext } from "~/pages/Product";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+interface ToolbarProps {
+  addNewLabel?: string;
+  hasTrash: boolean;
+  handleTrash: () => any;
+}
+const Toolbar = (Props: ToolbarProps) => {
+  const { addNewLabel, hasTrash, handleTrash } = Props;
+  const { trash } = useContext(ProductContext);
   return (
     <Stack direction={"row"} gap={"10px"} flexWrap={"wrap"} justifyContent={"space-between"}>
       <Box sx={{ width: "100%", maxWidth: "350px" }}>
@@ -68,8 +77,12 @@ const Toolbar = ({ addNewLabel, hasTrash }: { addNewLabel?: string; hasTrash: bo
             Nâng Cao
           </Button>
           {hasTrash && (
-            <Button variant="contained" startIcon={<DeleteIcon />}>
-              Thùng Rác
+            <Button
+              variant="contained"
+              startIcon={trash ? <KeyboardBackspaceIcon /> : <DeleteIcon />}
+              onClick={handleTrash}
+            >
+              {trash ? "Quay lại" : "Thùng Rác"}
             </Button>
           )}
         </Stack>
@@ -85,4 +98,4 @@ const Toolbar = ({ addNewLabel, hasTrash }: { addNewLabel?: string; hasTrash: bo
   );
 };
 
-export default Toolbar;
+export default memo(Toolbar);

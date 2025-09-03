@@ -1,12 +1,16 @@
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState, createContext } from "react";
 
 import type { HeadCell } from "~/components/Table/interface";
-import useFetch from "~/hooks/useFetch";
 import EnhancedTable from "~/components/Table";
 import Breadcrumb from "~/components/Breadcrumb";
 import Toolbar from "~/components/Toolbar";
+import { type AppDispatch, type RootState } from "~/store";
+import type ProductResponse from "~/types/product";
+import { fetchProduct } from "~/features/product/productApi";
 
 const listBreadcrumb = [
   {
@@ -25,12 +29,12 @@ interface Product {
   categoryName: string;
   brandName: string;
   status: boolean;
-  isFeatured: boolean;
+  isFeatured: boolean | null;
   sku?: string;
   inventory?: number;
-  salePrice?: number;
-  originalPrice?: number;
-  promotionalPrice?: number;
+  salePrice?: number | string;
+  originalPrice?: number | string;
+  promotionalPrice?: number | string;
   description?: string;
   children?: Product[];
 }
@@ -92,14 +96,8 @@ const headCells: HeadCell<Product>[] = [
   },
 ];
 
-interface Data {
-  code: number;
-  message?: string;
-  result?: any;
-}
-
-function Mapper(data: any) {
-  return data?.result.flatMap((p: any) => {
+function Mapper(data: ProductResponse[]) {
+  return data.flatMap((p: ProductResponse) => {
     if (p.variants.length > 1) {
       return createData({
         id: p.id,
@@ -133,7 +131,7 @@ function Mapper(data: any) {
             categoryName: p.categoryName,
             brandName: p.brandName,
             status: v.status,
-            isFeatured: p.isFeatured,
+            isFeatured: null,
             sku: v.sku,
             inventory: v.inventory,
             salePrice: v.salePrice,
@@ -163,17 +161,39 @@ function Mapper(data: any) {
   });
 }
 
-const Product = () => {
-  const { data, loading, error } = useFetch<Data>({ endpoint: "/product", method: "get" });
-  let rowData = [];
-  rowData = Mapper(data);
-  return (
-    <>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Danh sách sản phẩm" />
-      <Toolbar addNewLabel="sản phẩm" hasTrash={true} />
-      <Divider sx={{ m: "20px 0", bgcolor: "text.primary" }} />
+export const ProductContext = createContext({
+  trash: false,
+  editAction: true,
+  restoreAction: true,
+  deleteAction: true,
+  entity: "sản phẩm",
+});
 
-      {loading && (
+const Product = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const [trash, setTrash] = useState(false);
+  const { status, data, message, code } = useSelector((state: RootState) => state.product);
+  let tableData: Product[] = [];
+  if (data) {
+    tableData = Mapper(data);
+  }
+
+  useEffect(() => {
+    dispatch(fetchProduct());
+  }, []);
+
+  function handleTrash() {
+    dispatch(fetchProduct({ deleted: !trash }));
+    setTrash(!trash);
+  }
+  return (
+    <ProductContext.Provider
+      value={{ trash, editAction: true, restoreAction: true, deleteAction: true, entity:"sản phẩm" }}
+    >
+      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Danh sách sản phẩm" />
+      <Toolbar addNewLabel="sản phẩm" hasTrash={true} handleTrash={handleTrash} />
+      <Divider sx={{ m: "20px 0", bgcolor: "text.primary" }} />
+      {status === "loading" && (
         <Box
           sx={{
             with: "100%",
@@ -186,17 +206,16 @@ const Product = () => {
           <CircularProgress sx={{ color: "text.secondary" }} />
         </Box>
       )}
-      {!loading && error && <Box>Lỗi: {error.message}</Box>}
-      {!loading && !error && data?.result && (
+      {status != "loading" && code != 1000 && <Box>{message}</Box>}
+      {status != "loading" && code == 1000 && tableData && (
         <EnhancedTable<Product>
           headCells={headCells}
-          rowData={rowData || []}
-          editAction={true}
-          restoreAction={false}
-          deleteAction={true}
+          tableData={tableData || []}
+          path="/product"
+          childPath="variant"
         />
       )}
-    </>
+    </ProductContext.Provider>
   );
 };
 

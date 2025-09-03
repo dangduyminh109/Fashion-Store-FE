@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 import type { HeadCell, RowData, Order } from "./interface";
 import EnhancedTableRow from "./EnhancedTableRow";
 import EnhancedTableHead from "./EnhancedTableHead";
+import { ProductContext } from "~/pages/Product";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -35,21 +36,20 @@ function getComparator<Key extends keyof any>(
 
 interface EnhancedTableProps<Data extends RowData> {
   headCells: HeadCell<Data>[];
-  rowData: Data[];
-  editAction: boolean;
-  deleteAction: boolean;
-  restoreAction: boolean;
+  tableData: Data[];
+  path: string;
+  childPath: string;
 }
 
 function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
-  const { headCells, rowData, editAction, deleteAction, restoreAction } = props;
+  const { entity } = useContext(ProductContext);
+  const { headCells, tableData, path, childPath } = props;
   const [order, setOrder] = useState<Order>("default");
   const [orderBy, setOrderBy] = useState<keyof Data | null>(null);
   const [selected, setSelected] = useState<readonly number[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [rowOpen, setRowOpen] = useState(-1);
-
   const handleRequestSort = (property: keyof Data | null) => {
     setOrderBy(property);
     order === "default"
@@ -61,7 +61,7 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = rowData.map((n) => n.id);
+      const newSelected = tableData.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -92,17 +92,14 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
   };
 
   // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rowData.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - tableData.length) : 0;
 
   const visibleRows = React.useMemo(() => {
-    if (orderBy != null) {
-      return [...rowData]
-        .sort(getComparator(order, orderBy))
-        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-    } else {
-      return [...rowData].slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-    }
-  }, [order, orderBy, page, rowsPerPage]);
+    const sorted =
+      orderBy != null ? [...tableData].sort(getComparator(order, orderBy)) : [...tableData];
+
+    return sorted.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }, [tableData, order, orderBy, page, rowsPerPage]);
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -116,8 +113,8 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rowData.length}
-              rowData={rowData}
+              rowCount={tableData.length}
+              rowData={tableData}
             />
             <TableBody>
               {visibleRows.map((row, index) => {
@@ -131,13 +128,12 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                       rowData={row}
                       handleClick={handleClick}
                       setRowOpen={setRowOpen}
-                      editAction={editAction}
-                      deleteAction={deleteAction}
-                      restoreAction={restoreAction}
                       rowOpen={rowOpen}
                       index={index}
                       headCells={headCells}
                       isParentRow={true}
+                      path={path}
+                      childPath={childPath}
                     />
                     {row.children != null &&
                       row.children.map((childRow: Data) => {
@@ -148,14 +144,13 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                             rowData={childRow}
                             handleClick={handleClick}
                             setRowOpen={setRowOpen}
-                            editAction={editAction}
-                            deleteAction={deleteAction}
-                            restoreAction={restoreAction}
                             rowOpen={rowOpen}
                             index={index}
                             headCells={headCells}
+                            path={path}
                             isParentRow={false}
                             key={childRow.id}
+                            childPath={childPath}
                           />
                         );
                       })}
@@ -168,7 +163,23 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={6} />
+                  <TableCell colSpan={headCells.length} />
+                </TableRow>
+              )}
+
+              {visibleRows.length <= 0 && (
+                <TableRow
+                  style={{
+                    height: 53 * emptyRows,
+                    textAlign: "center",
+                  }}
+                >
+                  <TableCell
+                    sx={{ textAlign: "center", color: "text.secondary" }}
+                    colSpan={headCells.length + 2}
+                  >
+                    Không có {entity} nào
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -177,7 +188,7 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rowData.length}
+          count={tableData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(event, newPage) => setPage(newPage)}
