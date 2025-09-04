@@ -16,6 +16,9 @@ import Switch from "@mui/material/Switch";
 import { styled } from "@mui/material/styles";
 
 import { ThemeContext } from "~/context/ThemeContext";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "~/context/AuthContext";
+import Typography from "@mui/material/Typography";
 
 const MaterialUISwitch = styled(Switch)(({ theme }) => ({
   width: 62,
@@ -75,6 +78,8 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 const HeaderLeft = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -82,7 +87,12 @@ const HeaderLeft = () => {
     setAnchorEl(null);
   };
 
+  function handleLogout() {
+    localStorage.removeItem("token");
+    return navigate("/login", { replace: true });
+  }
   const { mode, changeMode } = useContext(ThemeContext);
+  const { user } = useContext(AuthContext);
   return (
     <Box
       sx={{
@@ -101,18 +111,22 @@ const HeaderLeft = () => {
         <NotificationsNoneIcon fontSize="large" />
       </IconButton>
 
-      <Tooltip title="Tài khoản">
-        <IconButton
-          onClick={handleClick}
-          size="small"
-          sx={{ ml: 2 }}
-          aria-controls={open ? "account-menu" : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? "true" : undefined}
-        >
-          <Avatar sx={{ width: 32, height: 32 }}></Avatar>
-        </IconButton>
-      </Tooltip>
+      <Box
+        sx={{ ml: 2, display: "flex", alignItems: "center", gap: 1, cursor: "pointer" }}
+        onClick={handleClick}
+      >
+        <Typography variant="h5">{user?.firstName || user?.username}</Typography>
+        <Tooltip title="Tài khoản">
+          <IconButton
+            size="small"
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar sx={{ width: 32, height: 32 }} src={user?.avatar || ""}></Avatar>
+          </IconButton>
+        </Tooltip>
+      </Box>
 
       <Menu
         anchorEl={anchorEl}
@@ -152,7 +166,7 @@ const HeaderLeft = () => {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={handleClose}>
-          <Avatar /> Hồ Sơ
+          <Avatar src={user?.avatar || ""} /> Hồ Sơ
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
@@ -161,7 +175,7 @@ const HeaderLeft = () => {
           Cài Đặt
         </MenuItem>
         <Divider sx={{ bgcolor: "text.primary" }} />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleLogout}>
           <ListItemIcon>
             <Logout fontSize="medium" />
           </ListItemIcon>

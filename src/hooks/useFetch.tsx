@@ -18,7 +18,11 @@ axiosClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     // kiểm tra đã thử refresh trước đó chưa
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      localStorage.getItem("token")
+    ) {
       originalRequest._retry = true;
       try {
         const res = await axios.post(
@@ -36,11 +40,16 @@ axiosClient.interceptors.response.use(
           localStorage.setItem("token", newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           axiosClient(originalRequest);
+        } else {
+          // return res;
+          console.log(res);
         }
       } catch (error) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        window.location.href = "/";
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
       }
     }
     return Promise.reject(error);

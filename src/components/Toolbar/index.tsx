@@ -32,9 +32,9 @@ const Toolbar = (Props: ToolbarProps) => {
             htmlFor="outlined-adornment-search"
             sx={{
               color: "text.primary",
+              bgcolor: "background.default",
               "&.Mui-focused": {
                 color: "text.secondary",
-                bgcolor: "secondary.light",
               },
               p: "0 5px",
             }}
