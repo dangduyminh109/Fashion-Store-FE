@@ -1,23 +1,34 @@
+import { useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import type { AsyncThunk } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
+
 import TableCell from "@mui/material/TableCell";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditSquareIcon from "@mui/icons-material/EditSquare";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 import SettingsBackupRestoreIcon from "@mui/icons-material/SettingsBackupRestore";
 import { toast } from "react-toastify";
+
 import ConfirmModel from "../ConfirmModel";
-import { useContext, useState, type ReactNode } from "react";
-import { Box, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { ProductContext } from "~/pages/Product";
-import { useDispatch } from "react-redux";
-import { deleteOrRestore } from "~/features/product/productApi";
 import type { AppDispatch } from "~/store";
+import type { Params } from "~/utils/createApiThunk";
+import type Response from "~/types/response";
+
 type Props = {
   path: string;
+  trash: boolean;
+  editAction: boolean;
+  restoreAction: boolean;
+  deleteAction: boolean;
+  entity: string;
   id?: string;
+  deleteOrRestore: AsyncThunk<Response, Params, { rejectValue: Response }>;
 };
 export default function ActionGroup(props: Props) {
-  const { trash, editAction, deleteAction, restoreAction, entity } = useContext(ProductContext);
+  const { trash, editAction, deleteAction, restoreAction, entity, deleteOrRestore } = props;
   const [content, setContent] = useState<ReactNode>();
   const [title, setTitle] = useState<string>("");
   const [action, setAction] = useState<string>("");

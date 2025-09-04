@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, Fragment } from "react";
 
 import type { HeadCell } from "~/components/Table/interface";
 import EnhancedTable from "~/components/Table";
@@ -10,7 +10,7 @@ import Breadcrumb from "~/components/Breadcrumb";
 import Toolbar from "~/components/Toolbar";
 import { type AppDispatch, type RootState } from "~/store";
 import type ProductResponse from "~/types/product";
-import { fetchProduct } from "~/features/product/productApi";
+import { fetchProduct, deleteOrRestore, updateStatus } from "~/features/product/productApi";
 
 const listBreadcrumb = [
   {
@@ -161,14 +161,6 @@ function Mapper(data: ProductResponse[]) {
   });
 }
 
-export const ProductContext = createContext({
-  trash: false,
-  editAction: true,
-  restoreAction: true,
-  deleteAction: true,
-  entity: "sản phẩm",
-});
-
 const Product = () => {
   const dispatch = useDispatch<AppDispatch>();
   const [trash, setTrash] = useState(false);
@@ -179,19 +171,17 @@ const Product = () => {
   }
 
   useEffect(() => {
-    dispatch(fetchProduct());
+    dispatch(fetchProduct({ url: "/product", method: "get" }));
   }, []);
 
   function handleTrash() {
-    dispatch(fetchProduct({ deleted: !trash }));
+    dispatch(fetchProduct({ url: "/product", method: "get", deleted: !trash }));
     setTrash(!trash);
   }
   return (
-    <ProductContext.Provider
-      value={{ trash, editAction: true, restoreAction: true, deleteAction: true, entity:"sản phẩm" }}
-    >
+    <Fragment>
       <Breadcrumb listBreadcrumb={listBreadcrumb} title="Danh sách sản phẩm" />
-      <Toolbar addNewLabel="sản phẩm" hasTrash={true} handleTrash={handleTrash} />
+      <Toolbar addNewLabel="sản phẩm" hasTrash={true} handleTrash={handleTrash} trash={trash} />
       <Divider sx={{ m: "20px 0", bgcolor: "text.primary" }} />
       {status === "loading" && (
         <Box
@@ -213,9 +203,16 @@ const Product = () => {
           tableData={tableData || []}
           path="/product"
           childPath="variant"
+          trash={trash}
+          editAction={true}
+          restoreAction={true}
+          deleteAction={true}
+          entity="sản phẩm"
+          deleteOrRestore={deleteOrRestore}
+          updateStatus={updateStatus}
         />
       )}
-    </ProductContext.Provider>
+    </Fragment>
   );
 };
 

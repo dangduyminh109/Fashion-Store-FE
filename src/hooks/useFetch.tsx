@@ -40,9 +40,6 @@ axiosClient.interceptors.response.use(
           localStorage.setItem("token", newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
           axiosClient(originalRequest);
-        } else {
-          // return res;
-          console.log(res);
         }
       } catch (error) {
         localStorage.removeItem("token");

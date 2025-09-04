@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,10 +9,12 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
+import type { AsyncThunk } from "@reduxjs/toolkit";
 import type { HeadCell, RowData, Order } from "./interface";
 import EnhancedTableRow from "./EnhancedTableRow";
 import EnhancedTableHead from "./EnhancedTableHead";
-import { ProductContext } from "~/pages/Product";
+import type { Params } from "~/utils/createApiThunk";
+import type Response from "~/types/response";
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -39,11 +41,29 @@ interface EnhancedTableProps<Data extends RowData> {
   tableData: Data[];
   path: string;
   childPath: string;
+  restoreAction: boolean;
+  deleteAction: boolean;
+  editAction: boolean;
+  trash: boolean;
+  entity: string;
+  deleteOrRestore: AsyncThunk<Response, Params, { rejectValue: Response }>;
+  updateStatus: AsyncThunk<Response, Params, { rejectValue: Response }>;
 }
 
 function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
-  const { entity } = useContext(ProductContext);
-  const { headCells, tableData, path, childPath } = props;
+  const {
+    headCells,
+    tableData,
+    path,
+    childPath,
+    trash,
+    editAction,
+    deleteAction,
+    restoreAction,
+    entity,
+    deleteOrRestore,
+    updateStatus,
+  } = props;
   const [order, setOrder] = useState<Order>("default");
   const [orderBy, setOrderBy] = useState<keyof Data | null>(null);
   const [selected, setSelected] = useState<readonly number[]>([]);
@@ -134,6 +154,13 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                       isParentRow={true}
                       path={path}
                       childPath={childPath}
+                      entity={entity}
+                      editAction={editAction}
+                      restoreAction={restoreAction}
+                      deleteAction={deleteAction}
+                      trash={trash}
+                      deleteOrRestore={deleteOrRestore}
+                      updateStatus={updateStatus}
                     />
                     {row.children != null &&
                       row.children.map((childRow: Data) => {
@@ -151,6 +178,13 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                             isParentRow={false}
                             key={childRow.id}
                             childPath={childPath}
+                            entity={entity}
+                            editAction={editAction}
+                            restoreAction={restoreAction}
+                            deleteAction={deleteAction}
+                            trash={trash}
+                            deleteOrRestore={deleteOrRestore}
+                            updateStatus={updateStatus}
                           />
                         );
                       })}
@@ -163,7 +197,7 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
                     height: 53 * emptyRows,
                   }}
                 >
-                  <TableCell colSpan={headCells.length} />
+                  <TableCell colSpan={headCells.length + 2} />
                 </TableRow>
               )}
 

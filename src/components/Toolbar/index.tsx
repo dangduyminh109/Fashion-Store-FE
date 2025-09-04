@@ -1,29 +1,26 @@
-import {
-  Box,
-  Stack,
-  InputLabel,
-  FormControl,
-  OutlinedInput,
-  InputAdornment,
-  Button,
-  IconButton,
-} from "@mui/material";
+import { memo } from "react";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TuneIcon from "@mui/icons-material/Tune";
 import AddIcon from "@mui/icons-material/Add";
-import { memo, useContext } from "react";
-import { ProductContext } from "~/pages/Product";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 interface ToolbarProps {
   addNewLabel?: string;
   hasTrash: boolean;
+  trash: boolean;
   handleTrash: () => any;
 }
 const Toolbar = (Props: ToolbarProps) => {
-  const { addNewLabel, hasTrash, handleTrash } = Props;
-  const { trash } = useContext(ProductContext);
+  const { addNewLabel, hasTrash, handleTrash, trash } = Props;
   return (
     <Stack direction={"row"} gap={"10px"} flexWrap={"wrap"} justifyContent={"space-between"}>
       <Box sx={{ width: "100%", maxWidth: "350px" }}>

@@ -1,3 +1,4 @@
+import { useDispatch } from "react-redux";
 import Box from "@mui/material/Box";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
@@ -6,12 +7,13 @@ import Switch from "@mui/material/Switch";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Typography from "@mui/material/Typography";
 import { toast } from "react-toastify";
+import type { AsyncThunk } from "@reduxjs/toolkit";
 
 import ActionGroup from "./ActionGroup";
 import type { HeadCell, RowData } from "./interface";
-import { useDispatch } from "react-redux";
-import { type AppDispatch } from "~/store";
-import { updateStatus } from "~/features/product/productApi";
+import type { AppDispatch } from "~/store";
+import type { Params } from "~/utils/createApiThunk";
+import type Response from "~/types/response";
 
 interface EnhancedTableRowProps<Data extends RowData> {
   isItemSelected: boolean;
@@ -23,8 +25,15 @@ interface EnhancedTableRowProps<Data extends RowData> {
   isParentRow: boolean;
   path: string;
   childPath: string;
+  trash: boolean;
+  editAction: boolean;
+  restoreAction: boolean;
+  deleteAction: boolean;
+  entity: string;
   handleClick: (id: number) => void;
   setRowOpen: React.Dispatch<React.SetStateAction<number>>;
+  deleteOrRestore: AsyncThunk<Response, Params, { rejectValue: Response }>;
+  updateStatus: AsyncThunk<Response, Params, { rejectValue: Response }>;
 }
 
 export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTableRowProps<Data>) {
@@ -40,10 +49,17 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
     setRowOpen,
     path,
     childPath,
+    restoreAction,
+    deleteAction,
+    editAction,
+    trash,
+    entity,
+    deleteOrRestore,
+    updateStatus,
   } = props;
   const row = rowData;
   const dispatch = useDispatch<AppDispatch>();
-  
+
   async function handleSwitch({ path, field, id }: { path: string; field: string; id: string }) {
     let fieldRequest = field;
     if (fieldRequest === "isFeatured") fieldRequest = "featured";
@@ -148,7 +164,20 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
           )}
         </TableCell>
       ))}
-      {isParentRow ? <ActionGroup path={path} id={row.id} /> : <TableCell></TableCell>}
+      {isParentRow ? (
+        <ActionGroup
+          path={path}
+          id={row.id}
+          restoreAction={restoreAction}
+          deleteAction={deleteAction}
+          editAction={editAction}
+          trash={trash}
+          entity={entity}
+          deleteOrRestore={deleteOrRestore}
+        />
+      ) : (
+        <TableCell></TableCell>
+      )}
     </TableRow>
   );
 }
