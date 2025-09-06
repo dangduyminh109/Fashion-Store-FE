@@ -40,7 +40,7 @@ interface EnhancedTableProps<Data extends RowData> {
   headCells: HeadCell<Data>[];
   tableData: Data[];
   path: string;
-  childPath: string;
+  childPath?: string;
   restoreAction: boolean;
   deleteAction: boolean;
   editAction: boolean;

@@ -12,6 +12,10 @@ const Category = lazy(() => import("~/pages/Category"));
 const CreateCategory = lazy(() => import("~/pages/Category/create"));
 const EditCategory = lazy(() => import("~/pages/Category/edit"));
 
+const Brand = lazy(() => import("~/pages/Brand"));
+const CreateBrand = lazy(() => import("~/pages/Brand/create"));
+const EditBrand = lazy(() => import("~/pages/Brand/edit"));
+
 export default createBrowserRouter([
   {
     element: (
@@ -39,6 +43,19 @@ export default createBrowserRouter([
       {
         path: "/category/edit/:id",
         element: <EditCategory />,
+      },
+
+      {
+        path: "/brands",
+        element: <Brand />,
+      },
+      {
+        path: "/brand/create",
+        element: <CreateBrand />,
+      },
+      {
+        path: "/brand/edit/:id",
+        element: <EditBrand />,
       },
     ],
   },

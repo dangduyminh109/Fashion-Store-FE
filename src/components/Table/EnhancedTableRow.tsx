@@ -24,7 +24,7 @@ interface EnhancedTableRowProps<Data extends RowData> {
   index: number;
   isParentRow: boolean;
   path: string;
-  childPath: string;
+  childPath?: string;
   trash: boolean;
   editAction: boolean;
   restoreAction: boolean;

@@ -24,7 +24,7 @@ const Breadcrumb = ({
       >
         {title}
       </Typography>
-      <Divider sx={{ m: "2px 0", bgcolor: "text.primary" }} />
+      <Divider sx={{ m: "5px 0", bgcolor: "text.primary" }} />
       <Breadcrumbs
         aria-label="breadcrumb"
         sx={{

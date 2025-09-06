@@ -1,10 +1,8 @@
-export default interface Category {
+export default interface Brand {
   id: number;
   name: string;
   slug: string;
   status: boolean;
   image: string;
-  parentId: number;
-  parentName: string;
   isDeleted: boolean;
 }

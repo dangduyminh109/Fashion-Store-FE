@@ -12,10 +12,7 @@ import axiosClient from "~/hooks/useFetch";
 import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
@@ -24,47 +21,16 @@ import { BackDropContext } from "~/context/BackDrop";
 
 const listBreadcrumb = [
   {
-    title: "Sản Phẩm",
-    url: "/products",
+    title: "Thương Hiệu",
+    url: "/brands",
   },
   {
-    title: "Danh Mục",
-    url: "/product/categories",
-  },
-  {
-    title: "Chỉnh sửa Danh Mục",
-    url: "/category/edit/:id",
+    title: "Chỉnh sửa Thương Hiệu",
+    url: "/brand/edit/:id",
   },
 ];
 
-interface CategoryTree {
-  id: number;
-  name: string;
-  slug: string;
-  children?: CategoryTree[];
-}
-
-function flattenCategory(tree: CategoryTree[], level = 0): CategoryTree[] {
-  const list: CategoryTree[] = [];
-  for (const item of tree) {
-    const cloned: CategoryTree = {
-      id: item.id,
-      slug: item.slug,
-      name: `${"-- ".repeat(level)}${item.name}`,
-    };
-
-    list.push(cloned);
-
-    if (item.children && item.children.length > 0) {
-      list.push(...flattenCategory(item.children, level + 1));
-    }
-  }
-  return list;
-}
-
 function Edit() {
-  const [categoryTree, setCategoryTree] = useState<CategoryTree[]>([]);
-  const [parentId, setParentId] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [status, setStatus] = useState<boolean>(true);
@@ -81,23 +47,16 @@ function Edit() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [category, tree] = await Promise.all([
-          axiosClient.get("http://localhost:8081/fashion-store/api/admin/category/" + id),
-          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree"),
-        ]);
-        if (category.data.code == 1000) {
-          setName(category.data.result.name);
-          setParentId(String(category.data.result.parentId || ""));
-          setStatus(category.data.result.status);
-          setPreviewImg(category.data.result.image);
-        } else if (category.data.code != 9401 || category.data.code != 9400) {
-          toast(category.data.result.message);
-        }
-        if (tree.data.code == 1000) {
-          const value = flattenCategory(tree.data.result, 0);
-          setCategoryTree(value);
-        } else if (tree.data.code != 9401 || tree.data.code != 9400) {
-          toast(tree.data.result.message);
+        const brand = await axiosClient.get(
+          "http://localhost:8081/fashion-store/api/admin/brand/" + id
+        );
+
+        if (brand.data.code == 1000) {
+          setName(brand.data.result.name);
+          setStatus(brand.data.result.status);
+          setPreviewImg(brand.data.result.image);
+        } else if (brand.data.code != 9401 || brand.data.code != 9400) {
+          toast(brand.data.result.message);
         }
       } catch (error: any) {
         if (error.response?.data?.code == 9401 || error.response?.data?.code == 9400) {
@@ -125,7 +84,7 @@ function Edit() {
 
   async function handleSubmit() {
     if (name == "") {
-      toast.error("Tên danh mục không được để trống!");
+      toast.error("Tên thương hiệu không được để trống!");
       return;
     }
     setBackDrop(true);
@@ -134,7 +93,6 @@ function Edit() {
       formData.append("status", String(status));
       formData.append("name", name);
       formData.append("imageDelete", String(imageDelete));
-      formData.append("parentId", parentId);
 
       if (image) {
         formData.append("image", image);
@@ -142,14 +100,14 @@ function Edit() {
         const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
         formData.append("image", emptyFile);
       }
-      const res = await axiosClient.put("/category/" + id, formData, {
+      const res = await axiosClient.put("/brand/" + id, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       if (res.data.code == 1000) {
-        navigate("/product/categories", { state: { message: res.data.message } });
+        navigate("/brands", { state: { message: res.data.message } });
         return;
       }
       toast.error(res.data.message);
@@ -166,7 +124,7 @@ function Edit() {
 
   return (
     <Fragment>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Chỉnh Sửa Danh Mục" />
+      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Chỉnh Sửa Thương Hiệu" />
 
       {loading && (
         <Box
@@ -199,7 +157,7 @@ function Edit() {
               <TextField
                 required
                 id="outlined-required"
-                label="Tên danh mục"
+                label="Tên thương hiệu"
                 value={name}
                 fullWidth
                 slotProps={{
@@ -209,28 +167,6 @@ function Edit() {
                 }}
                 onChange={(e) => setName(e.target.value)}
               />
-            </Grid>
-            <Grid size={12}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="demo-simple-select-label">
-                  Danh mục cha
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  value={parentId}
-                  onChange={(e) => setParentId(e.target.value)}
-                  displayEmpty
-                  label={"Danh mục cha"}
-                  inputProps={{ "aria-label": "Without label" }}
-                >
-                  <MenuItem value="">Không chọn</MenuItem>
-                  {categoryTree.map((item) => (
-                    <MenuItem value={item.id} key={item.id}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
             </Grid>
             <Grid size={12}>
               <FormControl component="fieldset" variant="standard">
@@ -287,7 +223,7 @@ function Edit() {
               }}
             >
               {previewImg ? (
-                <img src={previewImg} alt="Ảnh danh mục" />
+                <img src={previewImg} alt="Ảnh thương hiệu" />
               ) : (
                 <FileUploadIcon fontSize="large" sx={{ fontSize: "54px" }} />
               )}
@@ -317,11 +253,11 @@ function Edit() {
           <Box
             sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 3 }}
           >
-            <Button variant="outlined" size="large" onClick={() => navigate("/product/categories")}>
+            <Button variant="outlined" size="large" onClick={() => navigate("/brands")}>
               Quay Lại
             </Button>
             <Button variant="outlined" size="large" onClick={handleSubmit}>
-              Sửa Danh Mục
+              Sửa Thương Hiệu
             </Button>
           </Box>
         </>
