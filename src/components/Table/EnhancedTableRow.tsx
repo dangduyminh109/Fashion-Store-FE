@@ -14,7 +14,7 @@ import type { HeadCell, RowData } from "./interface";
 import type { AppDispatch } from "~/store";
 import type { Params } from "~/utils/createApiThunk";
 import type Response from "~/types/response";
-
+import defaultImage from "~/assets/images/default-image.png";
 interface EnhancedTableRowProps<Data extends RowData> {
   isItemSelected: boolean;
   headCells: HeadCell<Data>[];
@@ -100,42 +100,75 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
           />
         )}
       </TableCell>
-      {headCells.map((head, idx) => (
-        <TableCell
-          key={String(head.id)}
-          align="left"
-          sx={{
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            maxWidth: "200px",
-            whiteSpace: "nowrap",
-          }}
-        >
-          {typeof row[head.id] === "boolean" ? (
-            <Switch
-              checked={row[head.id]}
-              slotProps={{ input: { "aria-label": "controlled" } }}
-              color="success"
-              onClick={() => handleSwitch({ path, field: String(head.id), id: row.id })}
-            />
-          ) : idx === 0 && row.children != null ? (
-            <>
+
+      {headCells.map((head, idx) => {
+        if (head.id === "image" && isParentRow) {
+          return (
+            <TableCell padding="checkbox" key={String(head.id)} align="center">
               <Box
                 sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "5px",
+                  maxHeight: "50px",
+                  maxWidth: "50px",
+                  overflow: "hidden",
+                  margin: "0 auto",
+                  "& img": { objectFit: "cover", width: "100%" },
                 }}
               >
-                <ArrowForwardIosIcon
-                  onClick={() => setRowOpen(rowOpen === index ? -1 : index)}
-                  fontSize="small"
-                  sx={{
-                    transform: rowOpen === index ? "rotate(90deg)" : "rotate(0)",
-                    cursor: "pointer",
-                    color: "text.secondary",
-                  }}
+                <img src={row["image"] || defaultImage} alt="" />
+              </Box>
+            </TableCell>
+          );
+        } else {
+          return (
+            <TableCell
+              key={String(head.id)}
+              align="left"
+              sx={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "200px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {typeof row[head.id] === "boolean" ? (
+                <Switch
+                  checked={row[head.id]}
+                  slotProps={{ input: { "aria-label": "controlled" } }}
+                  color="success"
+                  onClick={() => handleSwitch({ path, field: String(head.id), id: row.id })}
                 />
+              ) : idx === 0 && row.children != null ? (
+                <>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                    }}
+                  >
+                    <ArrowForwardIosIcon
+                      onClick={() => setRowOpen(rowOpen === index ? -1 : index)}
+                      fontSize="small"
+                      sx={{
+                        transform: rowOpen === index ? "rotate(90deg)" : "rotate(0)",
+                        cursor: "pointer",
+                        color: "text.secondary",
+                      }}
+                    />
+                    <Typography
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth: "150px",
+                        whiteSpace: "nowrap",
+                      }}
+                      variant="body1"
+                    >
+                      {row[head.id] || "-"}
+                    </Typography>
+                  </Box>
+                </>
+              ) : (
                 <Typography
                   sx={{
                     overflow: "hidden",
@@ -147,23 +180,11 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                 >
                   {row[head.id] || "-"}
                 </Typography>
-              </Box>
-            </>
-          ) : (
-            <Typography
-              sx={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "150px",
-                whiteSpace: "nowrap",
-              }}
-              variant="body1"
-            >
-              {row[head.id] || "-"}
-            </Typography>
-          )}
-        </TableCell>
-      ))}
+              )}
+            </TableCell>
+          );
+        }
+      })}
       {isParentRow ? (
         <ActionGroup
           path={path}

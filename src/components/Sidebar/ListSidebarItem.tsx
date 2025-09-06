@@ -39,7 +39,7 @@ const Line = () => {
 
 const ListSidebarItem = ({ isShow }: { isShow: boolean }) => {
   const [activeId, setActiveId] = useState(
-    JSON.parse(localStorage.getItem("SidebarActiveItem") || '"tong-quan"')
+    JSON.parse(localStorage.getItem("SidebarActiveItem") || '"dashboard"')
   );
   const [openId, setOpenId] = useState(() => {
     const parent = menuItem.find((i) => i.children?.some((c) => c.id === activeId));

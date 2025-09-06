@@ -13,14 +13,17 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import TuneIcon from "@mui/icons-material/Tune";
 import AddIcon from "@mui/icons-material/Add";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { useNavigate } from "react-router-dom";
 interface ToolbarProps {
   addNewLabel?: string;
   hasTrash: boolean;
   trash: boolean;
   handleTrash: () => any;
+  createPath?: string;
 }
 const Toolbar = (Props: ToolbarProps) => {
-  const { addNewLabel, hasTrash, handleTrash, trash } = Props;
+  const { addNewLabel, hasTrash, handleTrash, trash, createPath } = Props;
+  const navigate = useNavigate();
   return (
     <Stack direction={"row"} gap={"10px"} flexWrap={"wrap"} justifyContent={"space-between"}>
       <Box sx={{ width: "100%", maxWidth: "350px" }}>
@@ -43,12 +46,6 @@ const Toolbar = (Props: ToolbarProps) => {
             fullWidth
             sx={{
               pr: "5px",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.primary",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.secondary",
-              },
             }}
             endAdornment={
               <InputAdornment position="end">
@@ -86,7 +83,11 @@ const Toolbar = (Props: ToolbarProps) => {
       </Box>
       {addNewLabel && (
         <Box>
-          <Button variant="contained" startIcon={<AddIcon />}>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => createPath && navigate(createPath)}
+          >
             {`thêm mới ${addNewLabel}`}
           </Button>
         </Box>

@@ -72,6 +72,46 @@ const getTheme = (mode: boolean) => {
           },
         },
       },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            "& .MuiOutlinedInput-notchedOutline": {
+              borderColor: theme.palette.text.primary,
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              borderColor: theme.palette.text.secondary,
+            },
+            "& input:-webkit-autofill": {
+              WebkitBoxShadow: `0 0 0 100px transparent inset`,
+              WebkitTextFillColor: theme.palette.text.primary,
+              caretColor: theme.palette.text.primary,
+              transition: "background-color 5000s ease-in-out 0s",
+            },
+          }),
+        },
+      },
+      MuiTextField: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            "& .MuiInputLabel-root": {
+              color: theme.palette.text.primary,
+            },
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: theme.palette.text.secondary,
+            },
+          }),
+        },
+      },
+      MuiInputLabel: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            color: theme.palette.text.primary,
+            "&.Mui-focused": {
+              color: theme.palette.text.secondary,
+            },
+          }),
+        },
+      },
     },
   });
 };

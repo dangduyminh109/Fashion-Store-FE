@@ -125,7 +125,7 @@ function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer sx={{ width: "100%", overflow: "auto" }}>
-          <Table sx={{ minWidth: 1200 }}>
+          <Table>
             <EnhancedTableHead
               headCells={headCells}
               numSelected={selected.length}

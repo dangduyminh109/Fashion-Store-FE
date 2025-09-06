@@ -6,12 +6,12 @@ const menuItem = [
     title: "Tổng quan",
     icon: <DashboardIcon fontSize="large" />,
     to: "/",
-    id: "tong-quan",
+    id: "dashboard",
   },
   {
     title: "Sản phẩm",
     icon: <InventoryIcon fontSize="large" />,
-    id: "san-pham",
+    id: "products",
     children: [
       {
         title: "Danh sách sản phẩm",
@@ -21,7 +21,7 @@ const menuItem = [
       {
         title: "Danh mục",
         to: "/product/categories",
-        id: "category",
+        id: "categories",
       },
     ],
   },

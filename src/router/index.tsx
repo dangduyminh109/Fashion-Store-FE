@@ -9,6 +9,8 @@ import { PublicRoute } from "./PublicRoute";
 const Dashboard = lazy(() => import("~/pages/Dashboard"));
 const Product = lazy(() => import("~/pages/Product"));
 const Category = lazy(() => import("~/pages/Category"));
+const CreateCategory = lazy(() => import("~/pages/Category/create"));
+const EditCategory = lazy(() => import("~/pages/Category/edit"));
 
 export default createBrowserRouter([
   {
@@ -29,6 +31,14 @@ export default createBrowserRouter([
       {
         path: "/product/categories",
         element: <Category />,
+      },
+      {
+        path: "/category/create",
+        element: <CreateCategory />,
+      },
+      {
+        path: "/category/edit/:id",
+        element: <EditCategory />,
       },
     ],
   },

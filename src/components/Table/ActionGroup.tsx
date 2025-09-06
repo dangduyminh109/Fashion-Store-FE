@@ -59,7 +59,7 @@ export default function ActionGroup(props: Props) {
   }
 
   function handleEdit() {
-    navigate("/");
+    navigate(`${path}/edit/${String(id)}`);
   }
   return (
     <TableCell

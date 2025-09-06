@@ -112,19 +112,6 @@ export const Login = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSubmit();
             }}
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.primary",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.secondary",
-              },
-              "& input:-webkit-autofill": {
-                WebkitBoxShadow: "0 0 0 100px transparent inset",
-                WebkitTextFillColor: mode ? "#fff" : "#1F2937",
-                transition: "background-color 5000s ease-in-out 0s",
-              },
-            }}
           ></OutlinedInput>
         </FormControl>
 
@@ -149,14 +136,6 @@ export const Login = () => {
             onChange={(e) => setPassword(e.currentTarget.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSubmit();
-            }}
-            sx={{
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.primary",
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderColor: "text.secondary",
-              },
             }}
             endAdornment={
               <InputAdornment position="end">

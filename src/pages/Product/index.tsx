@@ -25,6 +25,7 @@ const listBreadcrumb = [
 
 interface Product {
   id: number;
+  image?: string;
   name: string;
   categoryName: string;
   brandName: string;
@@ -44,6 +45,11 @@ function createData(product: Product): Product {
 }
 
 const headCells: HeadCell<Product>[] = [
+  {
+    id: "image",
+    label: "Hình ảnh",
+    hasSort: false,
+  },
   {
     id: "name",
     label: "Tên sản phẩm",
@@ -105,6 +111,7 @@ function Mapper(data: ProductResponse[]) {
         categoryName: p.categoryName,
         brandName: p.brandName,
         status: p.status,
+        image: p.productImages.length > 0 ? p.productImages[0] : "",
         isFeatured: p.isFeatured,
         sku: p.variants
           .map((v: any) => v.sku)
@@ -162,6 +169,7 @@ function Mapper(data: ProductResponse[]) {
 }
 
 const Product = () => {
+  localStorage.setItem("SidebarActiveItem", '"products"');
   const dispatch = useDispatch<AppDispatch>();
   const [trash, setTrash] = useState(false);
   const { status, data, message, code } = useSelector((state: RootState) => state.product);

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { memo, useContext } from "react";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import MenuOpenIcon from "@mui/icons-material/MenuOpen";
@@ -39,4 +39,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

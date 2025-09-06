@@ -26,6 +26,11 @@ const listBreadcrumb = [
 
 const headCells: HeadCell<CategoryResponse>[] = [
   {
+    id: "image",
+    label: "Hình ảnh",
+    hasSort: false,
+  },
+  {
     id: "name",
     label: "Tên danh mục",
     hasSort: true,
@@ -67,7 +72,13 @@ function Category() {
   return (
     <Fragment>
       <Breadcrumb listBreadcrumb={listBreadcrumb} title="Danh Mục danh mục" />
-      <Toolbar addNewLabel="danh mục" hasTrash={true} handleTrash={handleTrash} trash={trash} />
+      <Toolbar
+        addNewLabel="danh mục"
+        hasTrash={true}
+        handleTrash={handleTrash}
+        trash={trash}
+        createPath="/category/create"
+      />
       <Divider sx={{ m: "20px 0", bgcolor: "text.primary" }} />
       {status === "loading" && (
         <Box
@@ -82,7 +93,7 @@ function Category() {
           <CircularProgress sx={{ color: "text.secondary" }} />
         </Box>
       )}
-      {status != "loading" && code != 1000 && <Box>{message}</Box>}
+      {status != "loading" && code != 1000 && <Box margin={"0 auto"}>{message}</Box>}
       {status != "loading" && code == 1000 && tableData && (
         <EnhancedTable<CategoryResponse>
           headCells={headCells}
