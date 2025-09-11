@@ -20,6 +20,11 @@ const menuItem = [
         id: "products",
       },
       {
+        title: "Thuộc tính",
+        to: "/product/attributes",
+        id: "attributes",
+      },
+      {
         title: "Danh mục",
         to: "/product/categories",
         id: "categories",

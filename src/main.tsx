@@ -13,9 +13,9 @@ import AppProvider from "./context/AppProvider";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-      <AppProvider>
-        <CssBaseline />
-        <RouterProvider router={router} />
-      </AppProvider>
+    <AppProvider>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </AppProvider>
   </StrictMode>
 );

@@ -21,6 +21,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { BackDropContext } from "~/context/BackDrop";
+import type CategoryTree from "~/types/categoryTree";
+import flattenCategory from "~/utils/flattenCategory";
 
 const listBreadcrumb = [
   {
@@ -36,31 +38,6 @@ const listBreadcrumb = [
     url: "/category/edit/:id",
   },
 ];
-
-interface CategoryTree {
-  id: number;
-  name: string;
-  slug: string;
-  children?: CategoryTree[];
-}
-
-function flattenCategory(tree: CategoryTree[], level = 0): CategoryTree[] {
-  const list: CategoryTree[] = [];
-  for (const item of tree) {
-    const cloned: CategoryTree = {
-      id: item.id,
-      slug: item.slug,
-      name: `${"-- ".repeat(level)}${item.name}`,
-    };
-
-    list.push(cloned);
-
-    if (item.children && item.children.length > 0) {
-      list.push(...flattenCategory(item.children, level + 1));
-    }
-  }
-  return list;
-}
 
 function Edit() {
   const [categoryTree, setCategoryTree] = useState<CategoryTree[]>([]);
@@ -83,7 +60,9 @@ function Edit() {
       try {
         const [category, tree] = await Promise.all([
           axiosClient.get("http://localhost:8081/fashion-store/api/admin/category/" + id),
-          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree"),
+          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree", {
+            params: { id },
+          }),
         ]);
         if (category.data.code == 1000) {
           setName(category.data.result.name);
@@ -106,7 +85,7 @@ function Edit() {
         if (error.response?.data?.message) {
           toast.error(error.response.data.message);
         } else {
-          toast.error("Cập nhật không thành công! Có lỗi xãy ra!");
+          toast.error("Tải dử liệu không thành công! Có lỗi xãy ra!");
         }
       } finally {
         setLoading(false);

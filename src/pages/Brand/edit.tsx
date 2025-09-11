@@ -65,7 +65,7 @@ function Edit() {
         if (error.response?.data?.message) {
           toast.error(error.response.data.message);
         } else {
-          toast.error("Cập nhật không thành công! Có lỗi xãy ra!");
+          toast.error("Tải dử liệu không thành công! Có lỗi xãy ra!");
         }
       } finally {
         setLoading(false);

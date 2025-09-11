@@ -47,7 +47,7 @@ interface EnhancedTableProps<Data extends RowData> {
   trash: boolean;
   entity: string;
   deleteOrRestore: AsyncThunk<Response, Params, { rejectValue: Response }>;
-  updateStatus: AsyncThunk<Response, Params, { rejectValue: Response }>;
+  updateStatus?: AsyncThunk<Response, Params, { rejectValue: Response }>;
 }
 
 function EnhancedTable<Data extends RowData>(props: EnhancedTableProps<Data>) {

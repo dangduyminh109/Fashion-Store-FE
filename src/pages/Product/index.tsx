@@ -189,7 +189,13 @@ const Product = () => {
   return (
     <Fragment>
       <Breadcrumb listBreadcrumb={listBreadcrumb} title="Danh sách sản phẩm" />
-      <Toolbar addNewLabel="sản phẩm" hasTrash={true} handleTrash={handleTrash} trash={trash} />
+      <Toolbar
+        addNewLabel="sản phẩm"
+        hasTrash={true}
+        handleTrash={handleTrash}
+        trash={trash}
+        createPath="/product/create"
+      />
       <Divider sx={{ m: "20px 0", bgcolor: "text.primary" }} />
       {status === "loading" && (
         <Box

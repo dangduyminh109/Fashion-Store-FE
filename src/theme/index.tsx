@@ -106,6 +106,8 @@ const getTheme = (mode: boolean) => {
         styleOverrides: {
           root: ({ theme }) => ({
             color: theme.palette.text.primary,
+            backgroundColor: theme.palette.background.default,
+            padding: "0 5px",
             "&.Mui-focused": {
               color: theme.palette.text.secondary,
             },

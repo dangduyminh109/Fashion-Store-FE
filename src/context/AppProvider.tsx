@@ -1,6 +1,8 @@
 import { type ReactNode } from "react";
 import { ToastContainer } from "react-toastify";
 import { Provider } from "react-redux";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 import { SidebarProvider } from "./SidebarContext";
 import { AuthProvider } from "./AuthContext";
@@ -22,7 +24,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
               rtl={false}
               pauseOnHover={false}
             />
-            <SidebarProvider>{children}</SidebarProvider>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <SidebarProvider>{children}</SidebarProvider>
+            </LocalizationProvider>
           </ThemeModeProvider>
         </BackDrop>
       </AuthProvider>

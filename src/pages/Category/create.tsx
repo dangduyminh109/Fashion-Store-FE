@@ -22,6 +22,8 @@ import { toast } from "react-toastify";
 import axiosClient from "~/hooks/useFetch";
 import { BackDropContext } from "~/context/BackDrop";
 import Breadcrumb from "~/components/Breadcrumb";
+import type CategoryTree from "~/types/categoryTree";
+import flattenCategory from "~/utils/flattenCategory";
 
 const listBreadcrumb = [
   {
@@ -38,30 +40,6 @@ const listBreadcrumb = [
   },
 ];
 
-interface CategoryTree {
-  id: number;
-  name: string;
-  slug: string;
-  children?: CategoryTree[];
-}
-
-function flattenCategory(tree: CategoryTree[], level = 0): CategoryTree[] {
-  const list: CategoryTree[] = [];
-  for (const item of tree) {
-    const cloned: CategoryTree = {
-      id: item.id,
-      slug: item.slug,
-      name: `${"-- ".repeat(level)}${item.name}`,
-    };
-
-    list.push(cloned);
-
-    if (item.children && item.children.length > 0) {
-      list.push(...flattenCategory(item.children, level + 1));
-    }
-  }
-  return list;
-}
 
 function Create() {
   const [categoryTree, setCategoryTree] = useState<CategoryTree[]>([]);

@@ -15,6 +15,7 @@ import type { AppDispatch } from "~/store";
 import type { Params } from "~/utils/createApiThunk";
 import type Response from "~/types/response";
 import defaultImage from "~/assets/images/default-image.png";
+
 interface EnhancedTableRowProps<Data extends RowData> {
   isItemSelected: boolean;
   headCells: HeadCell<Data>[];
@@ -33,7 +34,7 @@ interface EnhancedTableRowProps<Data extends RowData> {
   handleClick: (id: number) => void;
   setRowOpen: React.Dispatch<React.SetStateAction<number>>;
   deleteOrRestore: AsyncThunk<Response, Params, { rejectValue: Response }>;
-  updateStatus: AsyncThunk<Response, Params, { rejectValue: Response }>;
+  updateStatus?: AsyncThunk<Response, Params, { rejectValue: Response }>;
 }
 
 export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTableRowProps<Data>) {
@@ -61,18 +62,19 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
   const dispatch = useDispatch<AppDispatch>();
 
   async function handleSwitch({ path, field, id }: { path: string; field: string; id: string }) {
-    let fieldRequest = field;
-    if (fieldRequest === "isFeatured") fieldRequest = "featured";
-    let url = `${path}/${String(id)}/${fieldRequest}`;
-    if (!isParentRow && childPath) url = `${path}/${childPath}/${String(id)}/${fieldRequest}`;
-    try {
-      const result = await dispatch(updateStatus({ url, method: "patch" })).unwrap();
-      toast.success(result.message);
-    } catch (err: any) {
-      toast.error(err.message ?? "Có lỗi xảy ra!");
+    if (updateStatus) {
+      let fieldRequest = field;
+      if (fieldRequest === "isFeatured") fieldRequest = "featured";
+      let url = `${path}/${String(id)}/${fieldRequest}`;
+      if (!isParentRow && childPath) url = `${path}/${childPath}/${String(id)}/${fieldRequest}`;
+      try {
+        const result = await dispatch(updateStatus({ url, method: "patch" })).unwrap();
+        toast.success(result.message);
+      } catch (err: any) {
+        toast.error(err.message ?? "Có lỗi xảy ra!");
+      }
     }
   }
-
   return (
     <TableRow
       role="checkbox"
@@ -137,7 +139,7 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                   color="success"
                   onClick={() => handleSwitch({ path, field: String(head.id), id: row.id })}
                 />
-              ) : idx === 0 && row.children != null ? (
+              ) : idx === (head.id === "image" ? 0 : 1) && row.children != null ? (
                 <>
                   <Box
                     sx={{
