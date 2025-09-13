@@ -189,7 +189,7 @@ function Create() {
                         color="success"
                         checked={status}
                         onChange={() => setStatus(!status)}
-                        name="gilad"
+                        name="status"
                       />
                     }
                     label={status ? "Hoạt động" : "Không hoạt động"}

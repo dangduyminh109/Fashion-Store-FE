@@ -31,6 +31,12 @@ const Supplier = lazy(() => import("~/pages/Supplier"));
 const CreateSupplier = lazy(() => import("~/pages/Supplier/create"));
 const EditSupplier = lazy(() => import("~/pages/Supplier/edit"));
 
+const Role = lazy(() => import("~/pages/Role"));
+const CreateRole = lazy(() => import("~/pages/Role/create"));
+const EditRole = lazy(() => import("~/pages/Role/edit"));
+
+const Permission = lazy(() => import("~/pages/Permission"));
+
 export default createBrowserRouter([
   {
     element: (
@@ -93,6 +99,24 @@ export default createBrowserRouter([
       {
         path: "/import-receipt/edit/:id",
         element: <EditImportReceipt />,
+      },
+
+      {
+        path: "/user/roles",
+        element: <Role />,
+      },
+      {
+        path: "/role/create",
+        element: <CreateRole />,
+      },
+      {
+        path: "/role/edit/:id",
+        element: <EditRole />,
+      },
+
+      {
+        path: "/user/permissions",
+        element: <Permission />,
       },
 
       {

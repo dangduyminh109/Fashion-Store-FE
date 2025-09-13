@@ -49,13 +49,13 @@ const menuItem = [
       },
       {
         title: "Vai Trò",
-        to: "/role",
-        id: "role",
+        to: "/user/roles",
+        id: "roles",
       },
       {
         title: "Phân Quền",
-        to: "/permission",
-        id: "permission",
+        to: "/user/permissions",
+        id: "permissions",
       },
     ],
   },
