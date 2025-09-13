@@ -905,6 +905,9 @@ function Create() {
                           key={item.id}
                           sx={{
                             "&:last-child td, &:last-child th": { border: 0 },
+                            "& .MuiFormControl-root": {
+                              margin: " 10px !important",
+                            },
                           }}
                         >
                           <TableCell sx={{ whiteSpace: "nowrap" }}>{item.value}</TableCell>

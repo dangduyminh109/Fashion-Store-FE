@@ -1,4 +1,3 @@
-import * as yup from "yup";
 import { useContext, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { useNavigate } from "react-router-dom";

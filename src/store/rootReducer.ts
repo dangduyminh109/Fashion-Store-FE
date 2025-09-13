@@ -4,10 +4,14 @@ import productReducer from "~/features/product/productSlice";
 import categoryReducer from "~/features/category/categorySlice";
 import brandReducer from "~/features/brand/brandSlice";
 import attributeReducer from "~/features/attribute/attributeSlice";
+import importReceiptReducer from "~/features/importReceipt/importReceiptSlice";
+import supplierReducer from "~/features/supplier/supplierSlice";
 
 export const rootReducer = combineReducers({
   product: productReducer,
   category: categoryReducer,
   brand: brandReducer,
   attribute: attributeReducer,
+  importReceipt: importReceiptReducer,
+  supplier: supplierReducer,
 });

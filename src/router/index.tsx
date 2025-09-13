@@ -19,9 +19,17 @@ const Category = lazy(() => import("~/pages/Category"));
 const CreateCategory = lazy(() => import("~/pages/Category/create"));
 const EditCategory = lazy(() => import("~/pages/Category/edit"));
 
+const ImportReceipt = lazy(() => import("~/pages/ImportReceipt"));
+const CreateImportReceipt = lazy(() => import("~/pages/ImportReceipt/create"));
+const EditImportReceipt = lazy(() => import("~/pages/ImportReceipt/edit"));
+
 const Brand = lazy(() => import("~/pages/Brand"));
 const CreateBrand = lazy(() => import("~/pages/Brand/create"));
 const EditBrand = lazy(() => import("~/pages/Brand/edit"));
+
+const Supplier = lazy(() => import("~/pages/Supplier"));
+const CreateSupplier = lazy(() => import("~/pages/Supplier/create"));
+const EditSupplier = lazy(() => import("~/pages/Supplier/edit"));
 
 export default createBrowserRouter([
   {
@@ -75,6 +83,19 @@ export default createBrowserRouter([
       },
 
       {
+        path: "/product/import-receipts",
+        element: <ImportReceipt />,
+      },
+      {
+        path: "/import-receipt/create",
+        element: <CreateImportReceipt />,
+      },
+      {
+        path: "/import-receipt/edit/:id",
+        element: <EditImportReceipt />,
+      },
+
+      {
         path: "/brands",
         element: <Brand />,
       },
@@ -85,6 +106,18 @@ export default createBrowserRouter([
       {
         path: "/brand/edit/:id",
         element: <EditBrand />,
+      },
+      {
+        path: "/suppliers",
+        element: <Supplier />,
+      },
+      {
+        path: "/supplier/create",
+        element: <CreateSupplier />,
+      },
+      {
+        path: "/supplier/edit/:id",
+        element: <EditSupplier />,
       },
     ],
   },

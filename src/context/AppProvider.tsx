@@ -9,6 +9,7 @@ import { AuthProvider } from "./AuthContext";
 import { BackDrop } from "./BackDrop";
 import ThemeModeProvider from "./ThemeContext";
 import store from "~/store";
+import { GlobalStyle } from "~/components/GlobalStyles";
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   return (
@@ -24,6 +25,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
               rtl={false}
               pauseOnHover={false}
             />
+            <GlobalStyle />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <SidebarProvider>{children}</SidebarProvider>
             </LocalizationProvider>
