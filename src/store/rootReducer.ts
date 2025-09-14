@@ -9,6 +9,7 @@ import supplierReducer from "~/features/supplier/supplierSlice";
 import roleReducer from "~/features/role/roleSlice";
 import userReducer from "~/features/user/userSlice";
 import voucherReducer from "~/features/voucher/voucherSlice";
+import customerReducer from "~/features/customer/customerSlice";
 
 export const rootReducer = combineReducers({
   product: productReducer,
@@ -20,4 +21,5 @@ export const rootReducer = combineReducers({
   role: roleReducer,
   user: userReducer,
   voucher: voucherReducer,
+  customer: customerReducer,
 });

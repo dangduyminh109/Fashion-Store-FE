@@ -174,7 +174,7 @@ function Create() {
             <Controller
               name="discountType"
               control={control}
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <FormControl fullWidth error={!!errors.discountType} required>
                   <InputLabel shrink id="demo-simple-select-label">
                     Đơn vị

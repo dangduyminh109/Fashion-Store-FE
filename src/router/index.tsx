@@ -45,6 +45,10 @@ const Voucher = lazy(() => import("~/pages/Voucher"));
 const CreateVoucher = lazy(() => import("~/pages/Voucher/create"));
 const EditVoucher = lazy(() => import("~/pages/Voucher/edit"));
 
+const Customer = lazy(() => import("~/pages/Customer"));
+const CreateCustomer = lazy(() => import("~/pages/Customer/create"));
+const EditCustomer = lazy(() => import("~/pages/Customer/edit"));
+
 export default createBrowserRouter([
   {
     element: (
@@ -177,6 +181,19 @@ export default createBrowserRouter([
       {
         path: "/voucher/edit/:id",
         element: <EditVoucher />,
+      },
+
+      {
+        path: "/customers",
+        element: <Customer />,
+      },
+      {
+        path: "/customer/create",
+        element: <CreateCustomer />,
+      },
+      {
+        path: "/customer/edit/:id",
+        element: <EditCustomer />,
       },
     ],
   },

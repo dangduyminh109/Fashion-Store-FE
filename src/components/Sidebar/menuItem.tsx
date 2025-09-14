@@ -4,6 +4,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import StoreIcon from "@mui/icons-material/Store";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
+import GroupIcon from "@mui/icons-material/Group";
 const menuItem = [
   {
     title: "Tổng quan",
@@ -77,6 +78,12 @@ const menuItem = [
     icon: <LocalOfferIcon fontSize="large" />,
     id: "vouchers",
     to: "/vouchers",
+  },
+  {
+    title: "Khách Hàng",
+    icon: <GroupIcon fontSize="large" />,
+    id: "customers",
+    to: "/customers",
   },
 ];
 

@@ -13,7 +13,6 @@ const createSchema = yup.object({
   phone: yup.string().nullable().optional(),
   roleId: yup.string().nullable().optional(),
   avatar: yup.mixed<File>().nullable().optional(),
-  avatarPreview: yup.string().nullable().optional(),
 });
 
 const editSchema = yup.object({
