@@ -7,6 +7,7 @@ import attributeReducer from "~/features/attribute/attributeSlice";
 import importReceiptReducer from "~/features/importReceipt/importReceiptSlice";
 import supplierReducer from "~/features/supplier/supplierSlice";
 import roleReducer from "~/features/role/roleSlice";
+import userReducer from "~/features/user/userSlice";
 
 export const rootReducer = combineReducers({
   product: productReducer,
@@ -16,4 +17,5 @@ export const rootReducer = combineReducers({
   importReceipt: importReceiptReducer,
   supplier: supplierReducer,
   role: roleReducer,
+  user: userReducer,
 });

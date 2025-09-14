@@ -104,9 +104,9 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
       </TableCell>
 
       {headCells.map((head, idx) => {
-        if (head.id === "image" && isParentRow) {
+        if ((head.id === "image" || head.id === "avatar") && isParentRow) {
           return (
-            <TableCell padding="checkbox" key={String(head.id)} align="center">
+            <TableCell padding="checkbox" key={String(head.id)}>
               <Box
                 sx={{
                   maxHeight: "50px",
@@ -116,7 +116,7 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                   "& img": { objectFit: "cover", width: "100%" },
                 }}
               >
-                <img src={row["image"] || defaultImage} alt="" />
+                <img src={row["image"] || row["avatar"] || defaultImage} alt="" />
               </Box>
             </TableCell>
           );
@@ -139,7 +139,8 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                   color="success"
                   onClick={() => handleSwitch({ path, field: String(head.id), id: row.id })}
                 />
-              ) : idx === (head.id === "image" ? 0 : 1) && row.children != null ? (
+              ) : idx === (head.id === "image" || head.id === "avatar" ? 0 : 1) &&
+                row.children != null ? (
                 <>
                   <Box
                     sx={{
