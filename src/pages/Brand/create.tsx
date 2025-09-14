@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -18,6 +20,9 @@ import { toast } from "react-toastify";
 import axiosClient from "~/hooks/useFetch";
 import { BackDropContext } from "~/context/BackDrop";
 import Breadcrumb from "~/components/Breadcrumb";
+import { Controller, useForm } from "react-hook-form";
+import schema from "~/schemas/brandSchema";
+import getLastError from "~/utils/onErrorValidate";
 
 const listBreadcrumb = [
   {
@@ -31,34 +36,34 @@ const listBreadcrumb = [
 ];
 
 function Create() {
-  const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-  const [status, setStatus] = useState<boolean>(true);
   const { setBackDrop } = useContext(BackDropContext);
 
   const navigate = useNavigate();
+
+  const { control, handleSubmit } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      status: true,
+    },
+  });
 
   function handleChangeFile(e: any) {
     setImage(e.target.files?.[0] ?? null);
     e.target.value = "";
   }
 
-  async function handleSubmit() {
-    if (name == "") {
-      toast.error("Tên thương hiệu không được để trống!");
-      return;
-    }
+  const onSubmit = async (data: any) => {
     setBackDrop(true);
     try {
       const formData = new FormData();
-      formData.append("status", String(status));
-      formData.append("name", name);
+      formData.append("status", String(data.status));
+      formData.append("name", data.name);
       if (image) {
         formData.append("image", image);
-      } else {
-        const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
-        formData.append("image", emptyFile);
       }
+
       const res = await axiosClient.post("/brand", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -79,11 +84,16 @@ function Create() {
     } finally {
       setBackDrop(false);
     }
-  }
+  };
+
+  const onError = (data: any) => {
+    toast.warning(getLastError(data));
+  };
+
   return (
     <Fragment>
       <Breadcrumb listBreadcrumb={listBreadcrumb} title="Tạo Mới Thương Hiệu" />
-      <>
+      <form onSubmit={handleSubmit(onSubmit, onError)}>
         <Typography variant="h2">Thông Tin Chung</Typography>
         <Grid
           sx={{
@@ -91,36 +101,53 @@ function Create() {
             border: (theme) => `1px dashed ${theme.palette.text.primary}`,
             mt: 2,
             p: 2,
+            "& .MuiFormControl-root ": {
+              m: 0,
+            },
           }}
           container
-          spacing={3}
+          spacing={2}
         >
           <Grid size={12}>
-            <TextField
-              required
-              id="outlined-required"
-              label="Tên thương hiệu"
-              fullWidth
-              onChange={(e) => setName(e.target.value)}
+            <Controller
+              name="name"
+              control={control}
+              render={({ field, fieldState }) => (
+                <TextField
+                  {...field}
+                  label="Tên thương hiệu"
+                  variant="outlined"
+                  fullWidth
+                  required
+                  margin="normal"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                />
+              )}
             />
           </Grid>
           <Grid size={12}>
-            <FormControl component="fieldset" variant="standard">
-              <Typography>Trạng thái</Typography>
-              <FormGroup>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      color="success"
-                      checked={status}
-                      onChange={() => setStatus(!status)}
-                      name="gilad"
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset" variant="standard">
+                  <Typography>Trạng thái</Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          color="success"
+                          checked={field.value}
+                          onChange={(e) => field.onChange(e.target.checked)}
+                        />
+                      }
+                      label={field.value ? "Hoạt động" : "Không hoạt động"}
                     />
-                  }
-                  label={status ? "Hoạt động" : "Không hoạt động"}
-                />
-              </FormGroup>
-            </FormControl>
+                  </FormGroup>
+                </FormControl>
+              )}
+            />
           </Grid>
         </Grid>
         <Typography variant="h2" mt={2}>
@@ -185,11 +212,11 @@ function Create() {
           <Button variant="outlined" size="large" onClick={() => navigate("/brands")}>
             Quay Lại
           </Button>
-          <Button variant="outlined" size="large" onClick={handleSubmit}>
+          <Button variant="outlined" size="large" type="submit">
             Tạo Thương Hiệu
           </Button>
         </Box>
-      </>
+      </form>
     </Fragment>
   );
 }

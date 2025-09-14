@@ -41,6 +41,10 @@ const EditRole = lazy(() => import("~/pages/Role/edit"));
 
 const Permission = lazy(() => import("~/pages/Permission"));
 
+const Voucher = lazy(() => import("~/pages/Voucher"));
+const CreateVoucher = lazy(() => import("~/pages/Voucher/create"));
+const EditVoucher = lazy(() => import("~/pages/Voucher/edit"));
+
 export default createBrowserRouter([
   {
     element: (
@@ -148,6 +152,7 @@ export default createBrowserRouter([
         path: "/brand/edit/:id",
         element: <EditBrand />,
       },
+
       {
         path: "/suppliers",
         element: <Supplier />,
@@ -159,6 +164,19 @@ export default createBrowserRouter([
       {
         path: "/supplier/edit/:id",
         element: <EditSupplier />,
+      },
+
+      {
+        path: "/vouchers",
+        element: <Voucher />,
+      },
+      {
+        path: "/voucher/create",
+        element: <CreateVoucher />,
+      },
+      {
+        path: "/voucher/edit/:id",
+        element: <EditVoucher />,
       },
     ],
   },

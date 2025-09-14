@@ -3,6 +3,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
 import StoreIcon from "@mui/icons-material/Store";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 const menuItem = [
   {
     title: "Tổng quan",
@@ -62,14 +63,20 @@ const menuItem = [
   {
     title: "Thương Hiệu",
     icon: <StoreIcon fontSize="large" />,
-    id: "brand",
+    id: "brands",
     to: "/brands",
   },
   {
     title: "Nhà Cung Cấp",
     icon: <AddBusinessIcon fontSize="large" />,
-    id: "supplier",
+    id: "suppliers",
     to: "/suppliers",
+  },
+  {
+    title: "Voucher",
+    icon: <LocalOfferIcon fontSize="large" />,
+    id: "vouchers",
+    to: "/vouchers",
   },
 ];
 

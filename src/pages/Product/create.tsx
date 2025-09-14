@@ -739,7 +739,7 @@ function Create() {
                         control={control}
                         render={({ field, fieldState }) => (
                           <DatePicker
-                            label="Ngày khuyến mãi"
+                            label="Ngày bắt đầu KM"
                             value={field.value || null}
                             onChange={(newValue) => field.onChange(newValue)}
                             slotProps={{
@@ -759,7 +759,7 @@ function Create() {
                         control={control}
                         render={({ field, fieldState }) => (
                           <DatePicker
-                            label="Ngày khuyến mãi"
+                            label="Ngày kết thúc KM"
                             value={field.value || null}
                             onChange={(newValue) => field.onChange(newValue)}
                             slotProps={{

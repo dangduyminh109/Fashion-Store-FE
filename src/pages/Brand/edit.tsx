@@ -1,5 +1,9 @@
 import { Fragment } from "react/jsx-runtime";
-import Breadcrumb from "~/components/Breadcrumb";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -7,17 +11,19 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
-import CircularProgress from "@mui/material/CircularProgress";
-import axiosClient from "~/hooks/useFetch";
-import { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate, useParams } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
+
 import { BackDropContext } from "~/context/BackDrop";
+import getLastError from "~/utils/onErrorValidate";
+import { Controller, useForm } from "react-hook-form";
+import schema from "~/schemas/brandSchema";
+import axiosClient from "~/hooks/useFetch";
+import Breadcrumb from "~/components/Breadcrumb";
 
 const listBreadcrumb = [
   {
@@ -31,9 +37,7 @@ const listBreadcrumb = [
 ];
 
 function Edit() {
-  const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-  const [status, setStatus] = useState<boolean>(true);
   const [previewImg, setPreviewImg] = useState<string>("");
   const [imageDelete, setImageDelete] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,6 +46,14 @@ function Edit() {
   const { setBackDrop } = useContext(BackDropContext);
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const { control, handleSubmit, reset } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      status: true,
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,8 +64,10 @@ function Edit() {
         );
 
         if (brand.data.code == 1000) {
-          setName(brand.data.result.name);
-          setStatus(brand.data.result.status);
+          reset({
+            name: brand.data.result.name,
+            status: brand.data.result.status,
+          });
           setPreviewImg(brand.data.result.image);
         } else if (brand.data.code != 9401 || brand.data.code != 9400) {
           toast(brand.data.result.message);
@@ -82,24 +96,18 @@ function Edit() {
     e.target.value = "";
   }
 
-  async function handleSubmit() {
-    if (name == "") {
-      toast.error("Tên thương hiệu không được để trống!");
-      return;
-    }
+  const onSubmit = async (data: any) => {
     setBackDrop(true);
     try {
       const formData = new FormData();
-      formData.append("status", String(status));
-      formData.append("name", name);
+      formData.append("status", String(data.status));
+      formData.append("name", data.name);
       formData.append("imageDelete", String(imageDelete));
 
       if (image) {
         formData.append("image", image);
-      } else {
-        const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
-        formData.append("image", emptyFile);
       }
+
       const res = await axiosClient.put("/brand/" + id, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
@@ -115,12 +123,16 @@ function Edit() {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Cập nhật không thành công! Có lỗi xãy ra!");
+        toast.error("Tạo không thành công! Có lỗi xãy ra!");
       }
     } finally {
       setBackDrop(false);
     }
-  }
+  };
+
+  const onError = (data: any) => {
+    toast.warning(getLastError(data));
+  };
 
   return (
     <Fragment>
@@ -141,7 +153,7 @@ function Edit() {
       )}
       {!loading && error && <Box margin={"0 auto"}>{error}</Box>}
       {!loading && !error && (
-        <>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Typography variant="h2">Thông Tin Chung</Typography>
           <Grid
             sx={{
@@ -149,42 +161,53 @@ function Edit() {
               border: (theme) => `1px dashed ${theme.palette.text.primary}`,
               mt: 2,
               p: 2,
+              "& .MuiFormControl-root ": {
+                m: 0,
+              },
             }}
             container
-            spacing={3}
+            spacing={2}
           >
             <Grid size={12}>
-              <TextField
-                required
-                id="outlined-required"
-                label="Tên thương hiệu"
-                value={name}
-                fullWidth
-                slotProps={{
-                  inputLabel: {
-                    shrink: Boolean(name),
-                  },
-                }}
-                onChange={(e) => setName(e.target.value)}
+              <Controller
+                name="name"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="Tên thương hiệu"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                  />
+                )}
               />
             </Grid>
             <Grid size={12}>
-              <FormControl component="fieldset" variant="standard">
-                <Typography>Trạng thái</Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        color="success"
-                        checked={status}
-                        onChange={() => setStatus(!status)}
-                        name="gilad"
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <Typography>Trạng thái</Typography>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            color="success"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        }
+                        label={field.value ? "Hoạt động" : "Không hoạt động"}
                       />
-                    }
-                    label={status ? "Hoạt động" : "Không hoạt động"}
-                  />
-                </FormGroup>
-              </FormControl>
+                    </FormGroup>
+                  </FormControl>
+                )}
+              />
             </Grid>
           </Grid>
 
@@ -256,11 +279,11 @@ function Edit() {
             <Button variant="outlined" size="large" onClick={() => navigate("/brands")}>
               Quay Lại
             </Button>
-            <Button variant="outlined" size="large" onClick={handleSubmit}>
+            <Button variant="outlined" size="large" type="submit">
               Sửa Thương Hiệu
             </Button>
           </Box>
-        </>
+        </form>
       )}
     </Fragment>
   );

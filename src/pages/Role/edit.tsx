@@ -75,6 +75,7 @@ function Edit() {
   }, []);
 
   const onSubmit = async (data: any) => {
+    setBackDrop(true);
     try {
       const payload = {
         name: data.name,
