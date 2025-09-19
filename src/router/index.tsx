@@ -49,6 +49,14 @@ const Customer = lazy(() => import("~/pages/Customer"));
 const CreateCustomer = lazy(() => import("~/pages/Customer/create"));
 const EditCustomer = lazy(() => import("~/pages/Customer/edit"));
 
+const Topic = lazy(() => import("~/pages/Topic"));
+const CreateTopic = lazy(() => import("~/pages/Topic/create"));
+const EditTopic = lazy(() => import("~/pages/Topic/edit"));
+
+const Post = lazy(() => import("~/pages/Post"));
+const CreatePost = lazy(() => import("~/pages/Post/create"));
+const EditPost = lazy(() => import("~/pages/Post/edit"));
+
 export default createBrowserRouter([
   {
     element: (
@@ -194,6 +202,32 @@ export default createBrowserRouter([
       {
         path: "/customer/edit/:id",
         element: <EditCustomer />,
+      },
+
+      {
+        path: "/posts",
+        element: <Post />,
+      },
+      {
+        path: "/post/create",
+        element: <CreatePost />,
+      },
+      {
+        path: "/post/edit/:id",
+        element: <EditPost />,
+      },
+
+      {
+        path: "/post/topics",
+        element: <Topic />,
+      },
+      {
+        path: "/topic/create",
+        element: <CreateTopic />,
+      },
+      {
+        path: "/topic/edit/:id",
+        element: <EditTopic />,
       },
     ],
   },

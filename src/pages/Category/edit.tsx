@@ -1,5 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import Breadcrumb from "~/components/Breadcrumb";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
@@ -23,6 +25,9 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import { BackDropContext } from "~/context/BackDrop";
 import type CategoryTree from "~/types/categoryTree";
 import flattenCategory from "~/utils/flattenCategory";
+import { Controller, useForm } from "react-hook-form";
+import schema from "~/schemas/categorySchema";
+import getLastError from "~/utils/onErrorValidate";
 
 const listBreadcrumb = [
   {
@@ -41,33 +46,42 @@ const listBreadcrumb = [
 
 function Edit() {
   const [categoryTree, setCategoryTree] = useState<CategoryTree[]>([]);
-  const [parentId, setParentId] = useState<string>("");
-  const [name, setName] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
-  const [status, setStatus] = useState<boolean>(true);
   const [previewImg, setPreviewImg] = useState<string>("");
   const [imageDelete, setImageDelete] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-
   const { setBackDrop } = useContext(BackDropContext);
+
   const navigate = useNavigate();
   const { id } = useParams();
+
+  const { control, handleSubmit, reset } = useForm({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      name: "",
+      parentId: undefined,
+      status: true,
+    },
+  });
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const [category, tree] = await Promise.all([
-          axiosClient.get("http://localhost:8081/fashion-store/api/admin/category/" + id),
+          axiosClient.get("/category/" + id),
           axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree", {
             params: { id },
           }),
         ]);
         if (category.data.code == 1000) {
-          setName(category.data.result.name);
-          setParentId(String(category.data.result.parentId || ""));
-          setStatus(category.data.result.status);
+          reset({
+            name: category.data.result.name,
+            parentId: category.data.result.parentId,
+            status: category.data.result.status,
+          });
+          resizeTo;
           setPreviewImg(category.data.result.image);
         } else if (category.data.code != 9401 || category.data.code != 9400) {
           toast(category.data.result.message);
@@ -102,24 +116,16 @@ function Edit() {
     e.target.value = "";
   }
 
-  async function handleSubmit() {
-    if (name == "") {
-      toast.error("Tên danh mục không được để trống!");
-      return;
-    }
+  const onSubmit = async (data: any) => {
     setBackDrop(true);
     try {
       const formData = new FormData();
-      formData.append("status", String(status));
-      formData.append("name", name);
+      formData.append("status", String(data.status));
+      formData.append("name", data.name);
       formData.append("imageDelete", String(imageDelete));
-      formData.append("parentId", parentId);
-
+      formData.append("parentId", String(data.parentId));
       if (image) {
         formData.append("image", image);
-      } else {
-        const emptyFile = new File([], "empty.jpg", { type: "image/jpeg" });
-        formData.append("image", emptyFile);
       }
       const res = await axiosClient.put("/category/" + id, formData, {
         headers: {
@@ -136,12 +142,16 @@ function Edit() {
       if (error.response?.data?.message) {
         toast.error(error.response.data.message);
       } else {
-        toast.error("Cập nhật không thành công! Có lỗi xãy ra!");
+        toast.error("Tạo không thành công! Có lỗi xãy ra!");
       }
     } finally {
       setBackDrop(false);
     }
-  }
+  };
+
+  const onError = (data: any) => {
+    toast.warning(getLastError(data));
+  };
 
   return (
     <Fragment>
@@ -162,7 +172,7 @@ function Edit() {
       )}
       {!loading && error && <Box margin={"0 auto"}>{error}</Box>}
       {!loading && !error && (
-        <>
+        <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Typography variant="h2">Thông Tin Chung</Typography>
           <Grid
             sx={{
@@ -175,59 +185,72 @@ function Edit() {
             spacing={3}
           >
             <Grid size={12}>
-              <TextField
-                required
-                id="outlined-required"
-                label="Tên danh mục"
-                value={name}
-                fullWidth
-                slotProps={{
-                  inputLabel: {
-                    shrink: Boolean(name),
-                  },
-                }}
-                onChange={(e) => setName(e.target.value)}
+              <Controller
+                name="name"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <TextField
+                    {...field}
+                    label="Tên danh mục"
+                    variant="outlined"
+                    fullWidth
+                    required
+                    margin="normal"
+                    error={!!fieldState.error}
+                    helperText={fieldState.error?.message}
+                  />
+                )}
               />
             </Grid>
             <Grid size={12}>
-              <FormControl fullWidth>
-                <InputLabel shrink id="demo-simple-select-label">
-                  Danh mục cha
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  value={parentId}
-                  onChange={(e) => setParentId(e.target.value)}
-                  displayEmpty
-                  label={"Danh mục cha"}
-                  inputProps={{ "aria-label": "Without label" }}
-                >
-                  <MenuItem value="">Không chọn</MenuItem>
-                  {categoryTree.map((item) => (
-                    <MenuItem value={item.id} key={item.id}>
-                      {item.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              <Controller
+                name="parentId"
+                control={control}
+                render={({ field }) => (
+                  <FormControl fullWidth>
+                    <InputLabel shrink id="demo-simple-select-label">
+                      Danh Mục Cha
+                    </InputLabel>
+                    <Select
+                      {...field}
+                      labelId="demo-simple-select-label"
+                      displayEmpty
+                      label={"Danh Mục Cha"}
+                      inputProps={{ "aria-label": "Without label" }}
+                    >
+                      <MenuItem value="">Không chọn</MenuItem>
+                      {categoryTree.map((item) => (
+                        <MenuItem value={item.id} key={item.id}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+              />
             </Grid>
             <Grid size={12}>
-              <FormControl component="fieldset" variant="standard">
-                <Typography>Trạng thái</Typography>
-                <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Switch
-                        color="success"
-                        checked={status}
-                        onChange={() => setStatus(!status)}
-                        name="gilad"
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <Typography>Trạng thái</Typography>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            color="success"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        }
+                        label={field.value ? "Hoạt động" : "Không hoạt động"}
                       />
-                    }
-                    label={status ? "Hoạt động" : "Không hoạt động"}
-                  />
-                </FormGroup>
-              </FormControl>
+                    </FormGroup>
+                  </FormControl>
+                )}
+              />
             </Grid>
           </Grid>
 
@@ -299,11 +322,11 @@ function Edit() {
             <Button variant="outlined" size="large" onClick={() => navigate("/product/categories")}>
               Quay Lại
             </Button>
-            <Button variant="outlined" size="large" onClick={handleSubmit}>
+            <Button variant="outlined" size="large" type="submit">
               Sửa Danh Mục
             </Button>
           </Box>
-        </>
+        </form>
       )}
     </Fragment>
   );

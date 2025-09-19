@@ -5,6 +5,7 @@ import StoreIcon from "@mui/icons-material/Store";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import GroupIcon from "@mui/icons-material/Group";
+import ArticleIcon from "@mui/icons-material/Article";
 const menuItem = [
   {
     title: "Tổng quan",
@@ -58,6 +59,23 @@ const menuItem = [
         title: "Phân Quền",
         to: "/user/permissions",
         id: "permissions",
+      },
+    ],
+  },
+  {
+    title: "Bài Viết",
+    icon: <ArticleIcon fontSize="large" />,
+    id: "post",
+    children: [
+      {
+        title: "Danh Sách Bài Viết",
+        to: "/posts",
+        id: "posts",
+      },
+      {
+        title: "Chủ Đề",
+        to: "/post/topics",
+        id: "topics",
       },
     ],
   },

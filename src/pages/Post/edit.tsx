@@ -1,112 +1,134 @@
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Fragment } from "react/jsx-runtime";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
-import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Switch from "@mui/material/Switch";
-import CircularProgress from "@mui/material/CircularProgress";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import CloseIcon from "@mui/icons-material/Close";
+import FormControl from "@mui/material/FormControl";
+import { useNavigate, useParams } from "react-router-dom";
 import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { toast } from "react-toastify";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
-import axiosClient from "~/hooks/useFetch";
 import { BackDropContext } from "~/context/BackDrop";
-import Breadcrumb from "~/components/Breadcrumb";
-import type CategoryTree from "~/types/categoryTree";
-import flattenCategory from "~/utils/flattenCategory";
-import { Controller, useForm } from "react-hook-form";
-import schema from "~/schemas/categorySchema";
 import getLastError from "~/utils/onErrorValidate";
+import { Controller, useForm } from "react-hook-form";
+import schema from "~/schemas/postSchema";
+import axiosClient from "~/hooks/useFetch";
+import Breadcrumb from "~/components/Breadcrumb";
+import type Topic from "~/types/topic";
+import TinyMCE from "~/components/TinyMCE";
 
 const listBreadcrumb = [
   {
-    title: "Sản Phẩm",
-    url: "/products",
+    title: "Chủ Đề Bài Viết",
+    url: "/posts",
   },
   {
-    title: "Danh Mục",
-    url: "/product/categories",
-  },
-  {
-    title: "Tạo Mới Danh Mục",
-    url: "/category/create",
+    title: "Chỉnh sửa Chủ Đề",
+    url: "/post/edit/:id",
   },
 ];
 
-function Create() {
-  const [categoryTree, setCategoryTree] = useState<CategoryTree[]>([]);
-  const [image, setImage] = useState<File | null>(null);
+function Edit() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { setBackDrop } = useContext(BackDropContext);
+  const [topicList, setTopicList] = useState<Topic[]>([]);
+  const [content, setContent] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+  const [previewImg, setPreviewImg] = useState<string>("");
+  const [imageDelete, setImageDelete] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
-  const { control, handleSubmit } = useForm({
+  const { setBackDrop } = useContext(BackDropContext);
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: "",
-      parentId: undefined,
+      title: "",
       status: true,
     },
   });
 
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
-        const tree = await axiosClient.get(
-          "http://localhost:8081/fashion-store/api/category/getTree"
-        );
-        if (tree.data.code == 1000) {
-          const value = flattenCategory(tree.data.result, 0);
-          setCategoryTree(value);
-        } else if (tree.data.code != 9401 || tree.data.code != 9400) {
-          toast(tree.data.result.message);
+        const [post, topic] = await Promise.all([
+          axiosClient.get("/post/" + id),
+          axiosClient.get("/topic"),
+        ]);
+
+        if (post.data.code == 1000) {
+          reset({
+            title: post.data.result.title,
+            status: post.data.result.status,
+            topicId: post.data.result.topicId,
+          });
+          if (post.data.result.content) setContent(post.data.result.content);
+          if (post.data.result.image) setPreviewImg(post.data.result.image);
+        } else if (post.data.code != 9401 || post.data.code != 9400) {
+          toast(post.data.result.message);
+        }
+
+        if (topic.data.code == 1000) {
+          setTopicList(topic.data.result);
+        } else if (topic.data.code != 9401 || topic.data.code != 9400) {
+          toast(topic.data.result.message);
         }
       } catch (error: any) {
-        toast.error("Tải danh sách mục cha không thành công!");
+        if (error.response?.data?.code == 9401 || error.response?.data?.code == 9400) {
+          setError(error.response.data.message);
+        }
+        if (error.response?.data?.message) {
+          toast.error(error.response.data.message);
+        } else {
+          toast.error("Tải dử liệu không thành công! Có lỗi xãy ra!");
+        }
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
-  function handleChangeFile(e: any) {
-    setImage(e.target.files?.[0] ?? null);
-    e.target.value = "";
-  }
-
   const onSubmit = async (data: any) => {
+    if (!content || content === "") {
+      toast.error("Nội dung bài viết không được để trống!");
+      return;
+    }
     setBackDrop(true);
     try {
       const formData = new FormData();
       formData.append("status", String(data.status));
-      formData.append("name", data.name);
-      if (String(data.parentId)) formData.append("parentId", String(data.parentId));
+      formData.append("title", data.title);
+      formData.append("topicId", data.topicId);
+      formData.append("imageDelete", String(imageDelete));
+      formData.append(`content`, content);
       if (image) {
         formData.append("image", image);
       }
-      const res = await axiosClient.post("/category", formData, {
+
+      const res = await axiosClient.put("/post/" + id, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
       if (res.data.code == 1000) {
-        navigate("/product/categories", { state: { message: res.data.message } });
+        navigate("/posts", { state: { message: res.data.message } });
         return;
       }
       toast.error(res.data.message);
@@ -125,9 +147,17 @@ function Create() {
     toast.warning(getLastError(data));
   };
 
+  function handleChangeFile(e: any) {
+    setImage(e.target.files?.[0] ?? null);
+    if (e.target.files?.[0]) {
+      setPreviewImg(URL.createObjectURL(e.target.files?.[0]));
+    }
+    e.target.value = "";
+  }
+
   return (
     <Fragment>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Tạo Mới Danh Mục" />
+      <Breadcrumb listBreadcrumb={listBreadcrumb} title="Chỉnh Sửa Chủ Đề" />
 
       {loading && (
         <Box
@@ -142,8 +172,8 @@ function Create() {
           <CircularProgress sx={{ color: "text.secondary" }} />
         </Box>
       )}
-
-      {!loading && (
+      {!loading && error && <Box margin={"0 auto"}>{error}</Box>}
+      {!loading && !error && (
         <form onSubmit={handleSubmit(onSubmit, onError)}>
           <Typography variant="h2">Thông Tin Chung</Typography>
           <Grid
@@ -161,12 +191,12 @@ function Create() {
           >
             <Grid size={12}>
               <Controller
-                name="name"
+                name="title"
                 control={control}
                 render={({ field, fieldState }) => (
                   <TextField
                     {...field}
-                    label="Tên danh mục"
+                    label="Tên bài viết"
                     variant="outlined"
                     fullWidth
                     required
@@ -179,22 +209,22 @@ function Create() {
             </Grid>
             <Grid size={12}>
               <Controller
-                name="parentId"
+                name="topicId"
                 control={control}
                 render={({ field }) => (
                   <FormControl fullWidth>
                     <InputLabel shrink id="demo-simple-select-label">
-                      Danh Mục Cha
+                      Chủ Đề
                     </InputLabel>
                     <Select
                       {...field}
                       labelId="demo-simple-select-label"
                       displayEmpty
-                      label={"Danh Mục Cha"}
+                      label={"Chủ Đề"}
                       inputProps={{ "aria-label": "Without label" }}
                     >
                       <MenuItem value="">Không chọn</MenuItem>
-                      {categoryTree.map((item) => (
+                      {topicList.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {item.name}
                         </MenuItem>
@@ -228,6 +258,19 @@ function Create() {
               />
             </Grid>
           </Grid>
+          <Typography variant="h2" mt={3}>
+            Nội Dung
+          </Typography>
+          <Box
+            sx={{
+              borderRadius: "10px",
+              border: (theme) => `1px dashed ${theme.palette.text.primary}`,
+              mt: 2,
+              p: 2,
+            }}
+          >
+            <TinyMCE desc={content} setDesc={setContent} />
+          </Box>
           <Typography variant="h2" mt={2}>
             Hình ảnh
           </Typography>
@@ -262,13 +305,13 @@ function Create() {
                 },
               }}
             >
-              {image ? (
-                <img src={URL.createObjectURL(image)} alt="Ảnh danh mục" />
+              {previewImg ? (
+                <img src={previewImg} alt="Ảnh thương hiệu" />
               ) : (
                 <FileUploadIcon fontSize="large" sx={{ fontSize: "54px" }} />
               )}
             </Box>
-            {image && (
+            {previewImg && (
               <IconButton
                 size="small"
                 sx={{
@@ -280,7 +323,11 @@ function Create() {
                     backgroundColor: "error.main",
                   },
                 }}
-                onClick={() => setImage(null)}
+                onClick={() => {
+                  setImage(null);
+                  setPreviewImg("");
+                  setImageDelete(true);
+                }}
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
@@ -289,11 +336,11 @@ function Create() {
           <Box
             sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mt: 3 }}
           >
-            <Button variant="outlined" size="large" onClick={() => navigate("/product/categories")}>
+            <Button variant="outlined" size="large" onClick={() => navigate("/posts")}>
               Quay Lại
             </Button>
             <Button variant="outlined" size="large" type="submit">
-              Tạo Danh Mục
+              Sửa Chủ Đề
             </Button>
           </Box>
         </form>
@@ -302,4 +349,4 @@ function Create() {
   );
 }
 
-export default Create;
+export default Edit;
