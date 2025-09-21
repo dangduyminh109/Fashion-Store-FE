@@ -47,6 +47,7 @@ import formatToLocalDateTime from "~/utils/formatToLocalDateTime";
 import type { SelectedAttributeType } from "./create";
 import schema from "~/schemas/productSchema";
 import type Variant from "~/types/variant";
+const API_PATH = import.meta.env.VITE_API_PATH;
 
 const listBreadcrumb = [
   {
@@ -123,7 +124,7 @@ function Edit() {
         setLoading(true);
         const [product, tree, brand, attribute] = await Promise.all([
           axiosClient.get("/product/" + id),
-          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree"),
+          axiosClient.get(`${API_PATH}category/getTree`),
           axiosClient.get("/brand"),
           axiosClient.get("/attribute"),
         ]);

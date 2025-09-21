@@ -24,7 +24,6 @@ import { Controller, useForm } from "react-hook-form";
 import schema from "~/schemas/brandSchema";
 import axiosClient from "~/hooks/useFetch";
 import Breadcrumb from "~/components/Breadcrumb";
-
 const listBreadcrumb = [
   {
     title: "Thương Hiệu",
@@ -59,9 +58,7 @@ function Edit() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const brand = await axiosClient.get(
-          "http://localhost:8081/fashion-store/api/admin/brand/" + id
-        );
+        const brand = await axiosClient.get(`/brand/` + id);
 
         if (brand.data.code == 1000) {
           reset({

@@ -2,10 +2,11 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import PersonIcon from "@mui/icons-material/Person";
 import StoreIcon from "@mui/icons-material/Store";
-import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import GroupIcon from "@mui/icons-material/Group";
 import ArticleIcon from "@mui/icons-material/Article";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 const menuItem = [
   {
     title: "Tổng quan",
@@ -87,7 +88,7 @@ const menuItem = [
   },
   {
     title: "Nhà Cung Cấp",
-    icon: <AddBusinessIcon fontSize="large" />,
+    icon: <LocalShippingIcon fontSize="large" />,
     id: "suppliers",
     to: "/suppliers",
   },
@@ -102,6 +103,12 @@ const menuItem = [
     icon: <GroupIcon fontSize="large" />,
     id: "customers",
     to: "/customers",
+  },
+  {
+    title: "Đơn Hàng",
+    icon: <ShoppingCartIcon fontSize="large" />,
+    id: "orders",
+    to: "/orders",
   },
 ];
 

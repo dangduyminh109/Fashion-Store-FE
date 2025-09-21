@@ -29,6 +29,7 @@ import flattenCategory from "~/utils/flattenCategory";
 import { Controller, useForm } from "react-hook-form";
 import schema from "~/schemas/categorySchema";
 import getLastError from "~/utils/onErrorValidate";
+const API_PATH = import.meta.env.VITE_API_PATH;
 
 const listBreadcrumb = [
   {
@@ -65,9 +66,7 @@ function Create() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const tree = await axiosClient.get(
-          "http://localhost:8081/fashion-store/api/category/getTree"
-        );
+        const tree = await axiosClient.get(`${API_PATH}/category/getTree`);
         if (tree.data.code == 1000) {
           const value = flattenCategory(tree.data.result, 0);
           setCategoryTree(value);

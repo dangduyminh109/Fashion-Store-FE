@@ -44,6 +44,7 @@ import ConfirmModel from "~/components/ConfirmModel";
 import getLastError from "~/utils/onErrorValidate";
 import formatToLocalDateTime from "~/utils/formatToLocalDateTime";
 import schema from "~/schemas/productSchema";
+const API_PATH = import.meta.env.VITE_API_PATH;
 
 const listBreadcrumb = [
   {
@@ -124,7 +125,7 @@ function Create() {
       try {
         setLoading(true);
         const [tree, brand, attribute] = await Promise.all([
-          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree"),
+          axiosClient.get(`${API_PATH}/category/getTree`),
           axiosClient.get("/brand"),
           axiosClient.get("/attribute"),
         ]);

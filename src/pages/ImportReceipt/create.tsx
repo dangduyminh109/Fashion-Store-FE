@@ -423,6 +423,7 @@ function Create() {
                             sx={{
                               maxHeight: 300,
                               overflowY: "auto",
+                              overflowX: "hidden",
                             }}
                           >
                             {listOption.length == 0 && (
@@ -446,13 +447,19 @@ function Create() {
                                         },
                                       }}
                                     >
-                                      <img src={item.image} alt="ảnh sản phẩm" />
-                                      <Box>
+                                      <Box
+                                        sx={{
+                                          display: "flex",
+                                          alignItems: "center",
+                                        }}
+                                      >
+                                        <img src={item.image} alt="ảnh sản phẩm" />
+                                      </Box>
+                                      <Box sx={{ overflow: "hidden" }}>
                                         <Typography
                                           variant="body2"
                                           sx={{
                                             maxWidth: "100%",
-                                            overflow: "hidden",
                                             textOverflow: "ellipsis",
                                             whiteSpace: "nowrap",
                                           }}
@@ -461,7 +468,7 @@ function Create() {
                                         </Typography>
                                         <Typography variant="body2">
                                           {` Sku: ${item.sku} | Giá trị: ${item.value} | Tồn kho:
-                                        ${item.inventory}`}
+                                                      ${item.inventory}`}
                                         </Typography>
                                       </Box>
                                     </Box>

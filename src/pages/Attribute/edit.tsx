@@ -65,9 +65,7 @@ function Edit() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const attribute = await axiosClient.get(
-          "http://localhost:8081/fashion-store/api/admin/attribute/" + id
-        );
+        const attribute = await axiosClient.get(`/attribute/` + id);
         if (attribute.data.code == 1000) {
           const data = attribute.data.result;
           setValue("name", data.name);

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+const API_PATH = import.meta.env.VITE_API_PATH;
 const axiosClient = axios.create({
-  baseURL: "http://localhost:8081/fashion-store/api/admin",
+  baseURL: `${API_PATH}/admin`,
 });
 
 // Gắn token cho mỗi request
@@ -26,7 +26,7 @@ axiosClient.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const res = await axios.post(
-          "http://localhost:8081/fashion-store/api/admin" + "/auth/refresh",
+          `${API_PATH}/admin` + "/auth/refresh",
           {
             token: localStorage.getItem("token"),
           },

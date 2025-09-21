@@ -12,6 +12,7 @@ import voucherReducer from "~/features/voucher/voucherSlice";
 import customerReducer from "~/features/customer/customerSlice";
 import topicReducer from "~/features/topic/topicSlice";
 import postReducer from "~/features/post/postSlice";
+import orderReducer from "~/features/order/orderSlice";
 
 export const rootReducer = combineReducers({
   product: productReducer,
@@ -26,4 +27,5 @@ export const rootReducer = combineReducers({
   customer: customerReducer,
   topic: topicReducer,
   post: postReducer,
+  order: orderReducer,
 });

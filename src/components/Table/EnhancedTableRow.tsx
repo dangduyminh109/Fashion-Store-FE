@@ -167,7 +167,9 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                       }}
                       variant="body1"
                     >
-                      {row[head.id] || "-"}
+                      {head.isMoney
+                        ? Number(row[head.id]).toLocaleString("vi-VN") + "đ" || "-"
+                        : row[head.id] || "-"}
                     </Typography>
                   </Box>
                 </>
@@ -181,7 +183,9 @@ export default function EnhancedTableRow<Data extends RowData>(props: EnhancedTa
                   }}
                   variant="body1"
                 >
-                  {row[head.id] || "-"}
+                  {head.isMoney
+                    ? Number(row[head.id]).toLocaleString("vi-VN") + "đ" || "-"
+                    : row[head.id] || "-"}
                 </Typography>
               )}
             </TableCell>

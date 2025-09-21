@@ -53,9 +53,7 @@ function Edit() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const topic = await axiosClient.get(
-          "http://localhost:8081/fashion-store/api/admin/topic/" + id
-        );
+        const topic = await axiosClient.get("/topic/" + id);
 
         if (topic.data.code == 1000) {
           reset({

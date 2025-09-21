@@ -28,6 +28,7 @@ import flattenCategory from "~/utils/flattenCategory";
 import { Controller, useForm } from "react-hook-form";
 import schema from "~/schemas/categorySchema";
 import getLastError from "~/utils/onErrorValidate";
+const API_PATH = import.meta.env.VITE_API_PATH;
 
 const listBreadcrumb = [
   {
@@ -71,7 +72,7 @@ function Edit() {
       try {
         const [category, tree] = await Promise.all([
           axiosClient.get("/category/" + id),
-          axiosClient.get("http://localhost:8081/fashion-store/api/category/getTree", {
+          axiosClient.get(`${API_PATH}/category/getTree`, {
             params: { id },
           }),
         ]);
