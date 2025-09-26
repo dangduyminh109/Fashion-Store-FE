@@ -18,13 +18,13 @@ const getTheme = (mode: boolean) => {
         light: mode ? "#333E5A" : "#fff",
       },
       primary: {
-        light: mode ? "#40495bff" : "#e8c2b0ff",
+        light: mode ? "#40495bff" : "#E6F5FA",
         main: mode ? "#2A3650" : "#f17544ff",
         dark: mode ? "#3B4165" : "#ea6734ff",
       },
       background: {
         default: mode ? "#364363" : "#fff",
-        paper: mode ? "#1E293B" : "#FFF2EC",
+        paper: mode ? "#1E293B" : "#E6F5FA",
       },
       text: {
         primary: mode ? "#fff" : "#1F2937",
