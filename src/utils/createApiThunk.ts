@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import axiosClient from "~/hooks/useFetch";
-import type Response from "~/types/response";
+import axiosClient from "~/admin/hooks/useFetch";
+import type Response from "~/admin/types/response";
 
 export interface Params {
   url: string;

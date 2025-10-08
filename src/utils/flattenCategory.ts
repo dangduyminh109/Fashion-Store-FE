@@ -1,4 +1,4 @@
-import type CategoryTree from "~/types/categoryTree";
+import type CategoryTree from "~/admin/types/categoryTree";
 
 export default function flattenCategory(tree: CategoryTree[], level = 0): CategoryTree[] {
   const list: CategoryTree[] = [];
