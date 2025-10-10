@@ -1,11 +1,16 @@
 import { lazy } from "react";
+import ClientProvider from "~/client/context/ClientProvider";
 
 import MainLayout from "~/Layout/MainLayout";
 const Home = lazy(() => import("~/client/pages/Home"));
 
 const ClientRoutes = [
   {
-    element: <MainLayout />,
+    element: (
+      <ClientProvider>
+        <MainLayout />
+      </ClientProvider>
+    ),
     children: [
       {
         path: "",
