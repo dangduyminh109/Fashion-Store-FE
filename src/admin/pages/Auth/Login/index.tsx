@@ -16,8 +16,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 import { ThemeContext } from "~/admin/context/ThemeContext";
 import axiosClient from "~/admin/hooks/useFetch";
-import LogoWhite from "~/assets/images/logo-white.png";
-import LogoBlack from "~/assets/images/logo-black.png";
+import LogoWhite from "~/assets/images/Logo/logo-white.png";
+import LogoBlack from "~/assets/images/Logo/logo-black.png";
 import { AuthContext } from "~/admin/context/AuthContext";
 
 export const Login = () => {

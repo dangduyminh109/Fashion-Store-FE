@@ -5,14 +5,14 @@ const theme = createTheme({
     fontFamily: ['"Roboto"', "sans-serif"].join(","),
     fontSize: 16,
     h1: { fontSize: "3.5rem", fontWeight: 700 },
-    h2: { fontSize: "2.5rem", fontWeight: 600 },
+    h2: { fontSize: "3.5rem", fontWeight: 600 },
     h3: { fontSize: "1.8rem", fontWeight: 600 },
     body1: { fontSize: "1.6rem" },
     button: { textTransform: "none", fontWeight: 600 },
   },
   palette: {
     secondary: {
-      main: "#ea6734ff",
+      main: "#FE7712",
     },
     primary: {
       light: "#40495bff",
@@ -20,11 +20,11 @@ const theme = createTheme({
     },
     background: {
       default: "#fff",
-      paper: "#40495bff",
+      paper: "#2A3650",
     },
     text: {
       secondary: "#fff",
-      primary: "#40495bff",
+      primary: "#2A3650",
     },
     success: {
       main: "#10B981",

@@ -7,8 +7,8 @@ import List from "@mui/material/List";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 
 import SidebarContext from "~/admin/context/SidebarContext";
-import LogoBlack from "~/assets/images/logo-black.png";
-import LogoWhite from "~/assets/images/logo-white.png";
+import LogoBlack from "~/assets/images/Logo/logo-black.png";
+import LogoWhite from "~/assets/images/Logo/logo-white.png";
 import ListSidebarItem from "./ListSidebarItem";
 import { useTheme } from "@mui/material";
 import { ThemeContext } from "~/admin/context/ThemeContext";

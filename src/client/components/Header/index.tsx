@@ -2,7 +2,7 @@ import gsap from "gsap";
 import Box from "@mui/material/Box";
 import { useLayoutEffect, useRef } from "react";
 import Container from "@mui/material/Container";
-import logo from "~/assets/images/logo-white.png";
+import logo from "~/assets/images/Logo/logo-white.png";
 import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
@@ -25,7 +25,7 @@ export const Header = () => {
     const logo = document.querySelector(".header-left") as HTMLElement | null;
     ScrollTrigger.create({
       trigger: "#category",
-      start: "top 20%",
+      start: "top 80%",
       onEnter: () => logo?.classList.add("active"),
       onLeaveBack: () => logo?.classList.remove("active"),
     });
@@ -64,6 +64,7 @@ export const Header = () => {
         bgcolor: "transparent",
         height: "45px",
         position: "sticky",
+        p: "0 10px",
         top: 0,
         left: 0,
         zIndex: 1000,
@@ -198,7 +199,15 @@ export const Header = () => {
             <PersonIcon fontSize="large" />
           </IconButton>
           <IconButton aria-label="cart">
-            <StyledBadge badgeContent={4} color="secondary">
+            <StyledBadge
+              badgeContent={4}
+              color="secondary"
+              sx={{
+                "& .MuiBadge-badge": {
+                  color: "text.secondary",
+                },
+              }}
+            >
               <ShoppingCartIcon fontSize="large" />
             </StyledBadge>
           </IconButton>
