@@ -26,7 +26,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import axiosClient from "~/admin/hooks/useFetch";
 import type DashboardResponse from "~/admin/types/dashboard";
 import defaultImage from "~/assets/images/default-image.png";
-import { DashboardCard } from "./dashboardCard ";
+import { DashboardCard } from "./dashboardCard";
 import Breadcrumb from "~/admin/components/Breadcrumb";
 import Typography from "@mui/material/Typography";
 
@@ -52,6 +52,7 @@ const xLabels = [
 ];
 
 function Dashboard() {
+  localStorage.setItem("SidebarActiveItem", '"dashboard"');
   const [loading, setLoading] = useState<boolean>(false);
   const [data, setData] = useState<DashboardResponse | null>(null);
   useEffect(() => {

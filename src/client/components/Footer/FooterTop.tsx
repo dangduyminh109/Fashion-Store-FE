@@ -55,7 +55,7 @@ function FooterTopItem({
 export const FooterTop = () => {
   return (
     <Box
-      className="footer-top native-scroll"
+      className="footer-top"
       sx={{
         bgcolor: "secondary.main",
         width: "100%",
@@ -64,6 +64,7 @@ export const FooterTop = () => {
       }}
     >
       <Box
+        className="native-scroll"
         sx={{
           width: "80%",
           mx: "auto",
@@ -73,7 +74,7 @@ export const FooterTop = () => {
           },
         }}
       >
-        <Box sx={{ display: "flex", overflow: "auto", gap: "10px" }}>
+        <Box sx={{ display: "flex", overflow: "auto", gap: "20px" }}>
           <FooterTopItem
             title="Hotline: 19001993"
             desc="Dịch vụ hỗ trợ bạn 24/7"

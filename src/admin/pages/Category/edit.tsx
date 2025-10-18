@@ -124,7 +124,7 @@ function Edit() {
       formData.append("status", String(data.status));
       formData.append("name", data.name);
       formData.append("imageDelete", String(imageDelete));
-      formData.append("parentId", String(data.parentId));
+      if (data.parentId && data.parentId != -1) formData.append("parentId", String(data.parentId));
       if (image) {
         formData.append("image", image);
       }
@@ -217,9 +217,12 @@ function Edit() {
                       labelId="demo-simple-select-label"
                       displayEmpty
                       label={"Danh Mục Cha"}
+                      value={field.value ?? "-1"}
                       inputProps={{ "aria-label": "Without label" }}
                     >
-                      <MenuItem value="">Không chọn</MenuItem>
+                      <MenuItem value="-1" selected>
+                        Không chọn
+                      </MenuItem>
                       {categoryTree.map((item) => (
                         <MenuItem value={item.id} key={item.id}>
                           {item.name}

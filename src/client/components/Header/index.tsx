@@ -2,7 +2,6 @@ import gsap from "gsap";
 import Box from "@mui/material/Box";
 import { useLayoutEffect, useRef } from "react";
 import Container from "@mui/material/Container";
-import logo from "~/assets/images/Logo/logo-white.png";
 import { Link } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
@@ -12,6 +11,9 @@ import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useDispatch } from "react-redux";
+
+import logo from "~/assets/images/Logo/logo-white.png";
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
@@ -21,13 +23,20 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 }));
 export const Header = () => {
   const headerRef = useRef(null);
+  const categoryRef = useRef<HTMLDivElement | null>(null);
+
+  const dispatch = useDispatch();
+  function ToggleDrawer() {
+    dispatch({ type: "sidebar/toggle" });
+  }
+
   useLayoutEffect(() => {
-    const logo = document.querySelector(".header-left") as HTMLElement | null;
+    const logos = document.querySelectorAll<HTMLElement>(".header-logo");
     ScrollTrigger.create({
       trigger: "#category",
       start: "top 80%",
-      onEnter: () => logo?.classList.add("active"),
-      onLeaveBack: () => logo?.classList.remove("active"),
+      onEnter: () => logos.forEach((logo) => logo.classList.add("active")),
+      onLeaveBack: () => logos.forEach((logo) => logo.classList.remove("active")),
     });
 
     gsap.fromTo(
@@ -54,6 +63,24 @@ export const Header = () => {
       }
     );
   }, []);
+
+  useLayoutEffect(() => {
+    const headerCategoryList = document.getElementById("header-category");
+    const categoryEl = categoryRef.current;
+    if (!categoryEl || !headerCategoryList) return;
+
+    const handleEnter = () => headerCategoryList.classList.add("active");
+    const handleLeave = () => headerCategoryList.classList.remove("active");
+
+    categoryEl.addEventListener("mouseenter", handleEnter);
+    headerCategoryList.addEventListener("mouseleave", handleLeave);
+
+    return () => {
+      categoryEl.removeEventListener("mouseenter", handleEnter);
+      headerCategoryList.removeEventListener("mouseleave", handleLeave);
+    };
+  }, []);
+
   return (
     <Container
       component={"header"}
@@ -67,7 +94,7 @@ export const Header = () => {
         p: "0 10px",
         top: 0,
         left: 0,
-        zIndex: 1000,
+        zIndex: 110,
         pb: "5px",
         background: "transparent",
         transition: "0.5s ease",
@@ -90,14 +117,62 @@ export const Header = () => {
         }}
       >
         <Box
-          className="header-effect header-left"
+          className="header-effect header-logo"
           sx={{
-            height: "100%",
             width: "20%",
+            height: "100%",
             display: "flex",
             alignItems: "center",
             gap: "10px",
-            padding: "3px",
+            pt: "5px",
+            "& a": {
+              height: "100%",
+              display: {
+                xs: "none",
+                md: "block",
+              },
+            },
+            "& img": {
+              objectFit: "contain",
+              height: "100%",
+              padding: "3px 5px",
+              transition: "0.3s ease",
+              borderRadius: "5px",
+            },
+            "&.active img": {
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+            },
+          }}
+        >
+          <IconButton
+            aria-label="menu"
+            onClick={ToggleDrawer}
+            sx={{
+              display: {
+                xs: "flex",
+                md: "none",
+              },
+            }}
+          >
+            <MenuIcon fontSize="large" />
+          </IconButton>
+          <Link to={"/"}>
+            <img src={logo} alt="logo" />
+          </Link>
+          <IconButton aria-label="cart">
+            <SearchIcon fontSize="large" />
+          </IconButton>
+        </Box>
+        <Box
+          className="header-logo"
+          sx={{
+            height: "100%",
+            pt: "5px",
+            display: {
+              xs: "none",
+              sm: "block",
+              md: "none",
+            },
             "& a": {
               height: "100%",
             },
@@ -116,20 +191,6 @@ export const Header = () => {
           <Link to={"/"}>
             <img src={logo} alt="logo" />
           </Link>
-          <IconButton
-            aria-label="menu"
-            sx={{
-              display: {
-                xs: "inline-block",
-                sm: "none",
-              },
-            }}
-          >
-            <MenuIcon fontSize="large" />
-          </IconButton>
-          <IconButton aria-label="cart">
-            <SearchIcon fontSize="large" />
-          </IconButton>
         </Box>
         <Box
           ref={headerRef}
@@ -137,13 +198,16 @@ export const Header = () => {
           sx={{
             display: {
               xs: "none",
-              sm: "block",
+              md: "block",
             },
             padding: "10 5px",
             alignItems: "center",
             height: "100%",
             width: "100%",
-            maxWidth: "500px",
+            maxWidth: {
+              lg: "500px",
+              xs: "400px",
+            },
             clipPath: "polygon(0% 0%, 100% 0%, 98% 100%, 2% 100%)",
             borderRadius: "0 0 40px 40px",
             bgcolor: "background.paper",
@@ -172,7 +236,7 @@ export const Header = () => {
             <Box component={"li"}>
               <Link to="/">Sản phẩm</Link>
             </Box>
-            <Box component={"li"}>
+            <Box component={"li"} ref={categoryRef}>
               <Link to="/">Danh mục</Link>
             </Box>
             <Box component={"li"}>

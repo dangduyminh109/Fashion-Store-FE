@@ -4,25 +4,25 @@ import Grid from "@mui/material/Grid";
 import { Fragment, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import { CartItem } from "~/client/components/CartItem";
 import PrimaryButton from "~/client/components/PrimaryButton";
-import { BlogItem } from "./BlogItem";
 import { useFetch } from "~/client/hooks/useFetch";
-import type PostFeatured from "~/client/types/PostFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Blog = () => {
-  const { data, loading, error } = useFetch<PostFeatured[]>({
-    endpoint: "/post/featured",
+export const FeaturedProduct = () => {
+  const { data, loading, error } = useFetch<ProductFeatured[]>({
+    endpoint: "/product/featured?quantity=8",
     method: "get",
   });
-
   useLayoutEffect(() => {
     if (!data || loading || error) return;
     const ctx = gsap.context(() => {
-      gsap.from(".card-blog-item-wrapper", {
+      gsap.from(".card-item-wrapper", {
         scrollTrigger: {
-          trigger: "#blog",
+          trigger: "#NewProduct",
           start: "top 50%",
           toggleActions: "play none none none",
           once: true,
@@ -42,7 +42,7 @@ export const Blog = () => {
       {!error && (
         <Box
           component="section"
-          id="blog"
+          id="NewProduct"
           sx={{
             width: "100%",
             py: 5,
@@ -62,37 +62,31 @@ export const Blog = () => {
                 flexWrap: "wrap",
                 alignItems: "center",
                 justifyContent: "space-between",
-                mb: 4,
+                mb: 2,
               }}
             >
               <Typography
                 variant="h2"
                 sx={{
                   fontWeight: 700,
-                  color: "text.default",
+                  color: "text.primary",
                 }}
               >
-                Bài Viết
+                Sản Phẩm Nổi Bật
               </Typography>
-              <PrimaryButton size="large" sx={{ padding: "8px 30px" }}>
-                Xem Tất Cả
-              </PrimaryButton>
             </Box>
-            {data && !loading && (
-              <Grid container spacing={2} alignItems={"stretch"}>
-                {data.map((item) => {
-                  return (
-                    <Grid
-                      size={{ xs: 6, md: 4, lg: 3 }}
-                      className="card-blog-item-wrapper"
-                      key={item.id}
-                    >
-                      <BlogItem data={item} />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            )}
+            <Grid container spacing={2}>
+              {data &&
+                !loading &&
+                data.map((product, index) => (
+                  <Grid size={{ xs: 6, md: 4, lg: 3 }} key={index} className="card-item-wrapper">
+                    <CartItem key={product.id} data={product} isNew={false} />
+                  </Grid>
+                ))}
+            </Grid>
+            <Box textAlign={"center"}>
+              <PrimaryButton sx={{ padding: "10px 20px" }}>Xem Thêm Sản Phẩm</PrimaryButton>
+            </Box>
           </Box>
         </Box>
       )}

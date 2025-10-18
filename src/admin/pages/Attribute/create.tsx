@@ -110,7 +110,6 @@ function Create() {
   function handleRemoveValue(item: any) {
     const prevList = getValues("listAttributeValue");
     const index = listAttributeValue?.indexOf(item);
-    console.log(index);
 
     const newList = prevList?.filter((item, idx) => index != idx);
     setListAttributeValue(newList);

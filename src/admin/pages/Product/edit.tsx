@@ -124,7 +124,7 @@ function Edit() {
         setLoading(true);
         const [product, tree, brand, attribute] = await Promise.all([
           axiosClient.get("/product/" + id),
-          axiosClient.get(`${API_PATH}category/getTree`),
+          axiosClient.get(`${API_PATH}/category/getTree`),
           axiosClient.get("/brand"),
           axiosClient.get("/attribute"),
         ]);

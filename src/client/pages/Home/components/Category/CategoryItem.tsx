@@ -4,12 +4,12 @@ import { useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-import categoryImg from "~/assets/images/image.png";
+import defaultCategory from "~/assets/images/default-category.png";
+import type CategoryFeatured from "~/client/types/CategoryFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const CategoryItem = () => {
+export const CategoryItem = ({ data }: { data: CategoryFeatured }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -27,7 +27,7 @@ export const CategoryItem = () => {
   }, []);
   return (
     <Box sx={{ minWidth: "150px", maxWidth: "200px" }}>
-      <Link to="/">
+      <Link to={`/${data.slug}`}>
         <Box
           sx={{
             position: "relative",
@@ -45,17 +45,20 @@ export const CategoryItem = () => {
               transition: "0.3s",
               transform: "scale(0.6)",
             },
-            "&: hover .category-item__circle": {
+            "&:hover .category-item__circle": {
               transform: "scale(1.3)",
               backgroundColor: "primary.main",
               opacity: 1,
+            },
+            "&:hover .img1": {
+              display: "none",
             },
             "& img.active": {
               transform: "scale(1.1)",
             },
           }}
         >
-          <img src={categoryImg} alt="category" ref={imgRef} />
+          <img src={data.image || defaultCategory} alt="category" ref={imgRef} />
           <Box
             className="category-item__circle"
             sx={{
@@ -79,7 +82,7 @@ export const CategoryItem = () => {
             whiteSpace: "nowrap",
           }}
         >
-          Mountain bike
+          {data.name}
         </Typography>
         <Box
           component={"p"}
@@ -89,7 +92,7 @@ export const CategoryItem = () => {
             margin: "5px 0 10px",
           }}
         >
-          19 sản phẩm
+          {data.productCount} sản phẩm
         </Box>
       </Link>
     </Box>

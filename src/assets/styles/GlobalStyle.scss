@@ -25,6 +25,9 @@ ol {
   list-style: none;
 }
 
-.MuiPickersOutlinedInput-root {
-  border: 1px solid #fff !important;
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }

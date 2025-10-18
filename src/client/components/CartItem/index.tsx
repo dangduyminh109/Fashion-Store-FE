@@ -1,65 +1,174 @@
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
+import { Fragment } from "react/jsx-runtime";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import IconButton from "@mui/material/IconButton";
 
 import defaultImg from "~/assets/images/default-image.png";
+import type ProductFeatured from "~/client/types/ProductFeatured";
+import type Variant from "~/client/types/variant";
 
-interface Props {
-  images: string[];
-}
+export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew: boolean }) => {
+  const imgRef = useRef<HTMLImageElement>(null);
+  const imgsecondRef = useRef<HTMLImageElement>(null);
+  function handlePrice(variantList: Variant[]) {
+    let minSalePrice = -1;
+    let minPromotionPrice = -1;
+    variantList.forEach((item) => {
+      if (item.promotionalPrice) {
+        if (minPromotionPrice < 0 || item.promotionalPrice < minPromotionPrice) {
+          minPromotionPrice = item.promotionalPrice;
+          minSalePrice = item.salePrice;
+        }
+      } else if (item.salePrice < minSalePrice || minSalePrice < 0) {
+        minSalePrice = item.salePrice;
+        minPromotionPrice = item.salePrice;
+      }
+    });
+    return {
+      minSalePrice,
+      minPromotionPrice,
+    };
+  }
+  function handleChangeImage(img: string) {
+    if (imgRef.current) {
+      let oldImg = imgRef.current.src;
+      imgRef.current.src = img;
+      if (imgsecondRef.current && imgsecondRef.current.src == img) {
+        imgsecondRef.current.src = oldImg;
+      }
+    }
+  }
 
-export const CartItem = (props: Props) => {
   return (
     <Box
       sx={{
         padding: "10px",
-        position: "static",
+        position: "relative",
         display: "block",
         backgroundColor: "#fff",
         border: "none",
         borderRadius: "0px",
       }}
     >
+      {isNew && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: "3%",
+            right: "6%",
+            bgcolor: "error.main",
+            p: "2px 8px",
+            zIndex: "100",
+            color: "#fff",
+            borderRadius: "999px",
+          }}
+        >
+          New
+        </Box>
+      )}
       <Box
         sx={{
           overflow: "hidden",
           width: "100%",
           aspectRatio: "1 / 1.5",
+          position: "relative",
           "& a": {
             width: "100%",
-            height: "100%",
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             transition: "ease-in-out 0.3s",
-          },
-          "&:hover": {
-            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
-          },
-          "&:hover a": {
-            transform: "scale(1.05, 1.05)",
+            height: "100%",
           },
           "& img": {
             maxWidth: "100%",
-            Height: "100%",
-            objectFit: "contain",
+            objectFit: "cover",
             transform: "scale(1.05, 1.05)",
+            height: "100%",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            transition: "ease-in-out 0.3s",
+            ":last-child": {
+              opacity: 0,
+              visibility: "hidden",
+            },
           },
-          "& img:last-child": {
-            display: "none",
+          "&:hover": {
+            boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+            "& a": {
+              transform: "scale(1.05, 1.05)",
+            },
+            "& img": {
+              ":last-child": {
+                opacity: 1,
+                visibility: "visible",
+              },
+              ":first-of-type": {
+                opacity: 0,
+                visibility: "hidden",
+              },
+            },
           },
-          "&:hover img:last-child": {
-            display: "block",
+          "& .card-hover__btn": {
+            opacity: 0,
+            transform: "translateY(30%)",
+            transition: "0.3s ease",
           },
-          "&:hover img:first-of-type": {
-            display: "none",
+          "&:hover .card-hover__btn": {
+            opacity: 1,
+            transform: "translateY(0)",
           },
         }}
       >
         <Link to={"/"}>
-          <img src={props.images[0] || defaultImg} alt="sản phẩm" />
-          <img src={props.images[1] || props.images[0] || defaultImg} alt="sản phẩm" />
+          <img ref={imgRef} src={data.productImages[0] || defaultImg} alt="ảnh sản phẩm" />
+          <img
+            ref={imgsecondRef}
+            src={data.productImages[1] || data.productImages[0] || defaultImg}
+            alt="ảnh sản phẩm"
+          />
         </Link>
+        <Box
+          className="card-hover__btn"
+          sx={{
+            position: "absolute",
+            width: "100%",
+            bottom: "20px",
+            display: "flex",
+            gap: "10px",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant="contained"
+            startIcon={<AddShoppingCartIcon />}
+            sx={{
+              "&:hover": {
+                bgcolor: "secondary.main",
+              },
+            }}
+          >
+            Giỏ hàng
+          </Button>
+          <IconButton
+            sx={{
+              color: "text.secondary",
+              bgcolor: "primary.main",
+              "&:hover": {
+                bgcolor: "secondary.main",
+              },
+            }}
+            aria-label="view product"
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       </Box>
 
       <Box p={"10px 0"}>
@@ -71,36 +180,42 @@ export const CartItem = (props: Props) => {
             height: "35px",
           }}
         >
-          {props.images.length > 0 &&
-            props.images.map((img, index) => (
-              <Box
-                className="card-desc__option active"
-                key={index}
-                sx={{
-                  width: "35px",
-                  cursor: "pointer",
-                  transition: "0.3s",
-                  "&.active": {
-                    border: "1px solid #000",
-                  },
-                  "&.white": {
-                    backgroundColor: "#fff",
-                    width: "33px",
-                    height: "33px",
-                  },
-                  "&:hover": {
-                    transform: "scale(1.1, 1.1)",
-                  },
-                  "& img": {
-                    objectFit: "cover",
-                    width: "100%",
-                    height: "100%",
-                  },
-                }}
-              >
-                <img src={img} />
-              </Box>
-            ))}
+          {data.productImages.length > 0 &&
+            data.productImages.map((img, index) => {
+              if (index < 3) {
+                return (
+                  <Box
+                    onClick={() => handleChangeImage(img)}
+                    className="card-desc__option active"
+                    key={index}
+                    sx={{
+                      width: "35px",
+                      transition: "0.3s",
+                      "&.active": {
+                        border: "1px solid #000",
+                      },
+                      "&.white": {
+                        backgroundColor: "#fff",
+                        width: "33px",
+                        height: "33px",
+                      },
+                      "&:hover": {
+                        transform: "scale(1.1, 1.1)",
+                      },
+                      "& img": {
+                        objectFit: "cover",
+                        width: "100%",
+                        height: "100%",
+                      },
+                    }}
+                  >
+                    <Link to={"/"}>
+                      <img src={img} />
+                    </Link>
+                  </Box>
+                );
+              }
+            })}
         </Box>
         <Box
           component={"p"}
@@ -110,30 +225,65 @@ export const CartItem = (props: Props) => {
             mt: "5px",
           }}
         >
-          EGA BIKE
+          {data.brandName || data.categoryName}
         </Box>
-        <Typography component={"h4"} fontSize={"1.8rem"} fontWeight={600}>
-          <Link to={"/"}> Xe đạp đường trường Allez 2021</Link>
+        <Typography
+          component={"h4"}
+          sx={{
+            fontSize: "1.8rem",
+            fontWeight: "600",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            lineHeight: 1.4,
+            height: "calc(1.4em * 2)",
+            "& a": {
+              transition: "0.3s ease",
+            },
+            "&:hover a": {
+              color: "secondary.main",
+            },
+          }}
+        >
+          <Link to={"/"}>{data.name}</Link>
         </Typography>
-        <Box component={"p"} mt={"5px"}>
-          <Box component={"span"} sx={{ textDecoration: "line-through" }}>
-            24,580,000đ
-          </Box>
-          <Box
-            component={"span"}
-            sx={{
-              bgcolor: "secondary.main",
-              color: "text.secondary",
-              ml: "5px",
-              padding: "2px 5px",
-              borderRadius: "999px",
-            }}
-          >
-            -35%
-          </Box>
+        <Box
+          component={"p"}
+          sx={{
+            mt: "5px",
+            lineHeight: "1rem",
+            minHeight: "2rem",
+          }}
+        >
+          {handlePrice(data.variants).minSalePrice >
+            handlePrice(data.variants).minPromotionPrice && (
+            <Fragment>
+              <Box component={"span"} sx={{ textDecoration: "line-through" }}>
+                {handlePrice(data.variants).minSalePrice.toLocaleString("vi-VN")}đ
+              </Box>
+              <Box
+                component={"span"}
+                sx={{
+                  bgcolor: "secondary.main",
+                  color: "text.secondary",
+                  ml: "5px",
+                  padding: "2px 5px",
+                  borderRadius: "999px",
+                }}
+              >
+                -
+                {100 -
+                  Math.floor(
+                    (handlePrice(data.variants).minPromotionPrice /
+                      handlePrice(data.variants).minSalePrice) *
+                      100
+                  )}
+                %
+              </Box>
+            </Fragment>
+          )}
         </Box>
         <Box component={"strong"} color={"secondary.main"} fontWeight={600} fontSize={"1.8rem"}>
-          15,990,000đ
+          {handlePrice(data.variants).minPromotionPrice.toLocaleString("vi-VN")}đ
         </Box>
         <Box
           component={"p"}

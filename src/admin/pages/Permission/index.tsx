@@ -140,7 +140,6 @@ const Role = () => {
   };
 
   const onError = (data: any) => {
-    console.log(data);
     toast.warning(getLastError(data));
   };
 

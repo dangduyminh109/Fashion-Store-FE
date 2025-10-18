@@ -4,24 +4,42 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { Link } from "react-router-dom";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+
 import defaultImg from "~/assets/images/default-image.png";
-
 import PrimaryButton from "~/client/components/PrimaryButton";
+import type PostFeatured from "~/client/types/PostFeatured";
+function truncateHtmlText(html: string, wordLimit = 20) {
+  if (!html) return "";
 
-interface Props {
-  thumbnail?: string;
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  const text = div.textContent || div.innerText || "";
+
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = text;
+  const decoded = textarea.value;
+
+  const words = decoded.trim().split(/\s+/);
+  if (words.length <= wordLimit) return decoded;
+
+  return words.slice(0, wordLimit).join(" ") + "...";
 }
 
-export const BlogItem = (props: Props) => {
+export const BlogItem = ({ data }: { data: PostFeatured }) => {
   return (
     <Card
       sx={{
         bgcolor: "background.default",
+        height: "100%",
         "& .blog-img": {
           display: "block",
           width: "100%",
           aspectRatio: "1/0.6",
           overflow: "hidden",
+          position: "relative",
         },
         "& .blog-img img": {
           transition: "0.3s",
@@ -32,10 +50,40 @@ export const BlogItem = (props: Props) => {
         "&:hover .blog-img img": {
           transform: "scale(1.1, 1.1)",
         },
+        "& .card-hover__btn": {
+          opacity: 0,
+          transform: "translate(-50%, -30%)",
+          transition: "0.3s ease",
+        },
+        "&:hover .card-hover__btn": {
+          opacity: 1,
+          transform: "translate(-50%, -50%)",
+        },
       }}
     >
       <Link to={"/"} className="blog-img">
-        <img src={props.thumbnail || defaultImg} alt="ảnh bài viết" />
+        <img src={data.image || defaultImg} alt="ảnh bài viết" />
+        <Box
+          className="card-hover__btn"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+          }}
+        >
+          <IconButton
+            sx={{
+              color: "text.secondary",
+              bgcolor: "primary.main",
+              "&:hover": {
+                bgcolor: "secondary.main",
+              },
+            }}
+            aria-label="view product"
+          >
+            <VisibilityIcon />
+          </IconButton>
+        </Box>
       </Link>
       <CardContent>
         <Link to={"/"}>
@@ -55,7 +103,7 @@ export const BlogItem = (props: Props) => {
               },
             }}
           >
-            Top 5 xe đạp thể thao chính hãng không thể bỏ qua
+            {data.title}
           </Typography>
         </Link>
         <Typography variant="body2" display={"flex"} alignItems={"center"}>
@@ -73,9 +121,7 @@ export const BlogItem = (props: Props) => {
             textOverflow: "ellipsis",
           }}
         >
-          Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-          across all continents except Antarctica Lizards are a widespread group of squamate
-          reptiles, with over 6,000 species, ranging across all continents except Antarctica
+          {truncateHtmlText(data.content, 20)}
         </Typography>
       </CardContent>
       <CardActions sx={{ padding: "0 16px 16px" }}>

@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { useLayoutEffect, useRef } from "react";
+import Siderbar from "~/client/components/Sidebar";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -69,6 +70,7 @@ const MainLayout = () => {
 
   return (
     <div id="smooth-wrapper">
+      <Siderbar />
       <Outlet />
     </div>
   );
