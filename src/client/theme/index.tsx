@@ -39,6 +39,42 @@ const theme = createTheme({
       main: "#3B82F6",
     },
   },
+
+  components: {
+    MuiCssBaseline: {
+      styleOverrides: `
+        html, body {
+          scrollbar-width: thin;
+          scrollbar-color: #2A3650 transparent !important;
+          overflow: "overlay"
+        }
+
+        *::-webkit-scrollbar {
+          width: 8px !important;
+          height: 8px !important;
+        }
+
+        *::-webkit-scrollbar-button {
+          display: none !important;
+          width: 0 !important;
+          height: 0 !important;
+        }
+
+        *::-webkit-scrollbar-thumb {
+          background-color: #2A3650;
+          border-radius: 8px;
+        }
+
+        *::-webkit-scrollbar-thumb:hover {
+          background-color: #2A3650;
+        }
+
+        *::-webkit-scrollbar-track {
+          background-color: transparent !important;
+        }
+      `,
+    },
+  },
 });
 
 export default theme;

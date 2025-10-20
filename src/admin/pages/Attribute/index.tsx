@@ -30,7 +30,7 @@ const headCells: HeadCell<Attribute>[] = [
     hasSort: true,
   },
   {
-    id: "attributeDisplayType",
+    id: "displayType",
     label: "Loại hiển thị",
     hasSort: false,
   },
@@ -44,7 +44,7 @@ const headCells: HeadCell<Attribute>[] = [
 interface Attribute {
   id: number;
   name: string;
-  attributeDisplayType: string;
+  displayType: string;
   listAttributeValue: string;
 }
 
@@ -58,7 +58,7 @@ function Attribute() {
       return {
         id: item.id,
         name: item.name,
-        attributeDisplayType: item.attributeDisplayType,
+        displayType: item.displayType,
         listAttributeValue: item.listAttributeValue
           .map((value) => value.value)
           .filter((item) => item != null)

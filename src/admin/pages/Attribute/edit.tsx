@@ -47,7 +47,7 @@ function Edit() {
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
-      attributeDisplayType: "TEXT",
+      displayType: "TEXT",
       listAttributeValue: [
         {
           id: "",
@@ -69,7 +69,7 @@ function Edit() {
         if (attribute.data.code == 1000) {
           const data = attribute.data.result;
           setValue("name", data.name);
-          setValue("attributeDisplayType", data.attributeDisplayType);
+          setValue("displayType", data.attributeDisplayType);
           data.listAttributeValue?.forEach((attributeValue: AttributeValue, index: number) => {
             setValue(`listAttributeValue.${index}.id`, `${attributeValue?.id}` || "");
             setValue(`listAttributeValue.${index}.color`, attributeValue?.color || "");
@@ -104,8 +104,9 @@ function Edit() {
     try {
       const formData = new FormData();
       formData.append(`name`, data.name);
-      formData.append(`attributeDisplayType`, data.attributeDisplayType);
+      formData.append(`displayType`, data.displayType);
       data.listAttributeValue.forEach((item: any, index: number) => {
+        formData.append(`listAttributeValue[${index}].id`, item.id);
         formData.append(`listAttributeValue[${index}].value`, item.value);
         formData.append(`listAttributeValue[${index}].color`, item.color);
         formData.append(`listAttributeValue[${index}].imageDelete`, item.imageDelete || false);
@@ -212,7 +213,7 @@ function Edit() {
             </Grid>
             <Grid size={12}>
               <Controller
-                name="attributeDisplayType"
+                name="displayType"
                 control={control}
                 render={({ field }) => (
                   <FormControl fullWidth>

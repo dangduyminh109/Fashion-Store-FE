@@ -43,7 +43,7 @@ function Create() {
     resolver: yupResolver(schema),
     defaultValues: {
       name: "",
-      attributeDisplayType: "TEXT",
+      displayType: "TEXT",
       listAttributeValue: [
         {
           value: "",
@@ -60,7 +60,7 @@ function Create() {
     try {
       const formData = new FormData();
       formData.append(`name`, data.name);
-      formData.append(`attributeDisplayType`, data.attributeDisplayType);
+      formData.append(`displayType`, data.displayType);
       data.listAttributeValue.forEach((item: any, index: number) => {
         formData.append(`listAttributeValue[${index}].value`, item.value);
         formData.append(`listAttributeValue[${index}].color`, item.color);
@@ -150,7 +150,7 @@ function Create() {
           </Grid>
           <Grid size={12}>
             <Controller
-              name="attributeDisplayType"
+              name="displayType"
               control={control}
               render={({ field }) => (
                 <FormControl fullWidth>

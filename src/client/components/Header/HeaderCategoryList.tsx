@@ -59,7 +59,11 @@ export const HeaderCategoryList = () => {
         display: "flex",
         justifyContent: "center",
         width: "100%",
-        "&.active .menu-wrapper": {
+        opacity: 0,
+        visibility: "hidden",
+        transform: "translateY(20px)",
+        transition: "all 0.3s ease",
+        "&.active": {
           opacity: 1,
           visibility: "visible",
           transform: "translateY(0)",
@@ -74,10 +78,6 @@ export const HeaderCategoryList = () => {
           borderRadius: 2,
           boxShadow: 3,
           p: 3,
-          opacity: 0,
-          visibility: "hidden",
-          transform: "translateY(20px)",
-          transition: "all 0.3s ease",
         }}
       >
         <Box

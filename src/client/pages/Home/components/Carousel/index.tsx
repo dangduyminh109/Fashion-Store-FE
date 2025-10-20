@@ -8,8 +8,8 @@ export const Carousel = () => {
   useLayoutEffect(() => {
     const header = document.querySelector("#header") as HTMLElement | null;
     ScrollTrigger.create({
-      trigger: "#category",
-      start: "top 80%",
+      trigger: "#header",
+      start: "top -20%",
       onEnter: () => header?.classList.add("active"),
       onLeaveBack: () => header?.classList.remove("active"),
     });

@@ -10,7 +10,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useDispatch } from "react-redux";
 
 import logo from "~/assets/images/Logo/logo-white.png";
@@ -31,14 +30,6 @@ export const Header = () => {
   }
 
   useLayoutEffect(() => {
-    const logos = document.querySelectorAll<HTMLElement>(".header-logo");
-    ScrollTrigger.create({
-      trigger: "#category",
-      start: "top 80%",
-      onEnter: () => logos.forEach((logo) => logo.classList.add("active")),
-      onLeaveBack: () => logos.forEach((logo) => logo.classList.remove("active")),
-    });
-
     gsap.fromTo(
       headerRef.current,
       {
@@ -99,20 +90,20 @@ export const Header = () => {
         background: "transparent",
         transition: "0.5s ease",
         "&.active": {
-          backgroundColor: "rgba(255, 255, 255, 0.5)",
+          backgroundColor: "#fff",
           backdropFilter: "blur(0.5px)",
+          boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px",
         },
       }}
     >
       <Box
         sx={{
+          width: "80%",
+          mx: "auto",
           height: "100%",
           display: "flex",
           gap: "10px",
-          justifyContent: {
-            xs: "space-between",
-            md: "space-around",
-          },
+          justifyContent: "space-between",
           alignItems: "center",
         }}
       >
@@ -138,9 +129,7 @@ export const Header = () => {
               padding: "3px 5px",
               transition: "0.3s ease",
               borderRadius: "5px",
-            },
-            "&.active img": {
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
             },
           }}
         >

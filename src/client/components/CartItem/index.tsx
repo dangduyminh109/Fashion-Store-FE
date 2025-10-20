@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
-import { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useMemo, useRef } from "react";
 import { Fragment } from "react/jsx-runtime";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -10,30 +10,13 @@ import IconButton from "@mui/material/IconButton";
 
 import defaultImg from "~/assets/images/default-image.png";
 import type ProductFeatured from "~/client/types/ProductFeatured";
-import type Variant from "~/client/types/variant";
+import handlePrice from "~/utils/handlePrice";
 
 export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew: boolean }) => {
+  const navigate = useNavigate();
   const imgRef = useRef<HTMLImageElement>(null);
   const imgsecondRef = useRef<HTMLImageElement>(null);
-  function handlePrice(variantList: Variant[]) {
-    let minSalePrice = -1;
-    let minPromotionPrice = -1;
-    variantList.forEach((item) => {
-      if (item.promotionalPrice) {
-        if (minPromotionPrice < 0 || item.promotionalPrice < minPromotionPrice) {
-          minPromotionPrice = item.promotionalPrice;
-          minSalePrice = item.salePrice;
-        }
-      } else if (item.salePrice < minSalePrice || minSalePrice < 0) {
-        minSalePrice = item.salePrice;
-        minPromotionPrice = item.salePrice;
-      }
-    });
-    return {
-      minSalePrice,
-      minPromotionPrice,
-    };
-  }
+
   function handleChangeImage(img: string) {
     if (imgRef.current) {
       let oldImg = imgRef.current.src;
@@ -43,6 +26,9 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
       }
     }
   }
+
+  const price = useMemo(() => handlePrice(data.variants), [data.variants]);
+  const { minSalePrice, minPromotionPrice } = price;
 
   return (
     <Box
@@ -126,7 +112,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
           },
         }}
       >
-        <Link to={"/"}>
+        <Link to={`/${data.slug}`}>
           <img ref={imgRef} src={data.productImages[0] || defaultImg} alt="ảnh sản phẩm" />
           <img
             ref={imgsecondRef}
@@ -165,6 +151,9 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
               },
             }}
             aria-label="view product"
+            onClick={() => {
+              navigate(`/${data.slug}`);
+            }}
           >
             <VisibilityIcon />
           </IconButton>
@@ -209,9 +198,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
                       },
                     }}
                   >
-                    <Link to={"/"}>
-                      <img src={img} />
-                    </Link>
+                    <img src={img} />
                   </Box>
                 );
               }
@@ -244,7 +231,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
             },
           }}
         >
-          <Link to={"/"}>{data.name}</Link>
+          <Link to={`/${data.slug}`}>{data.name}</Link>
         </Typography>
         <Box
           component={"p"}
@@ -254,11 +241,10 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
             minHeight: "2rem",
           }}
         >
-          {handlePrice(data.variants).minSalePrice >
-            handlePrice(data.variants).minPromotionPrice && (
+          {minSalePrice > minPromotionPrice && (
             <Fragment>
               <Box component={"span"} sx={{ textDecoration: "line-through" }}>
-                {handlePrice(data.variants).minSalePrice.toLocaleString("vi-VN")}đ
+                {minSalePrice.toLocaleString("vi-VN")}đ
               </Box>
               <Box
                 component={"span"}
@@ -270,20 +256,13 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
                   borderRadius: "999px",
                 }}
               >
-                -
-                {100 -
-                  Math.floor(
-                    (handlePrice(data.variants).minPromotionPrice /
-                      handlePrice(data.variants).minSalePrice) *
-                      100
-                  )}
-                %
+                -{100 - Math.floor((minPromotionPrice / minSalePrice) * 100)}%
               </Box>
             </Fragment>
           )}
         </Box>
         <Box component={"strong"} color={"secondary.main"} fontWeight={600} fontSize={"1.8rem"}>
-          {handlePrice(data.variants).minPromotionPrice.toLocaleString("vi-VN")}đ
+          {minPromotionPrice.toLocaleString("vi-VN")}đ
         </Box>
         <Box
           component={"p"}

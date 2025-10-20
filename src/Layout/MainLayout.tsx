@@ -1,10 +1,15 @@
+import "swiper/swiper-bundle.css";
 import { Outlet } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { useLayoutEffect, useRef } from "react";
-import Siderbar from "~/client/components/Sidebar";
+import Box from "@mui/material/Box";
 
+import Siderbar from "~/client/components/Sidebar";
+import { Header } from "~/client/components/Header";
+import { HeaderCategoryList } from "~/client/components/Header/HeaderCategoryList";
+import { Footer } from "~/client/components/Footer";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const MainLayout = () => {
@@ -43,19 +48,16 @@ const MainLayout = () => {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    const nativeScrollEls = document.querySelectorAll(".native-scroll");
-
-    nativeScrollEls.forEach((el) => {
-      el.addEventListener("mouseenter", () => {
-        hoverRef.current = true;
-        if (shiftPressedRef.current) {
-          smootherRef.current?.paused(true);
-        }
-      });
-      el.addEventListener("mouseleave", () => {
-        hoverRef.current = false;
-        smootherRef.current?.paused(false);
-      });
+    const nativeScrollMain = document.querySelector("main");
+    nativeScrollMain?.addEventListener("mouseenter", () => {
+      hoverRef.current = true;
+      if (shiftPressedRef.current) {
+        smootherRef.current?.paused(true);
+      }
+    });
+    nativeScrollMain?.addEventListener("mouseleave", () => {
+      hoverRef.current = false;
+      smootherRef.current?.paused(false);
     });
 
     return () => {
@@ -70,8 +72,13 @@ const MainLayout = () => {
 
   return (
     <div id="smooth-wrapper">
+      <Header />
+      <HeaderCategoryList />
       <Siderbar />
-      <Outlet />
+      <Box id="smooth-content" component={"main"}>
+        <Outlet />
+        <Footer />
+      </Box>
     </div>
   );
 };
