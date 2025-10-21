@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { Link } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import defaultCategory from "~/assets/images/default-category.png";
-import type CategoryFeatured from "~/client/types/CategoryFeatured";
+import type CategoryFeatured from "~/client/types/categoryFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 

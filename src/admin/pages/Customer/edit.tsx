@@ -113,7 +113,7 @@ function Edit() {
       const formData = new FormData();
       formData.append("fullName", data.fullName);
       formData.append("avatarDelete", String(avatarDelete));
-      formData.append("password", data.password);
+      formData.append("newPassword", data.newPassword);
       formData.append("status", data.status);
       formData.append("authProvider", data.authProvider);
 
@@ -209,7 +209,7 @@ function Edit() {
             </Grid>
             <Grid size={{ md: 6, sm: 12 }}>
               <Controller
-                name="password"
+                name="newPassword"
                 control={control}
                 render={({ field, fieldState }) => (
                   <FormControl sx={{ width: "100%" }} variant="outlined" error={!!fieldState.error}>

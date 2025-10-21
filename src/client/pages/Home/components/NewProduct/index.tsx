@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CartItem } from "~/client/components/CartItem";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
-import type ProductFeatured from "~/client/types/ProductFeatured";
+import type ProductFeatured from "~/client/types/productFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 

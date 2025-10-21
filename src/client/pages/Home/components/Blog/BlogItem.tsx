@@ -10,7 +10,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 
 import defaultImg from "~/assets/images/default-image.png";
 import PrimaryButton from "~/client/components/PrimaryButton";
-import type PostFeatured from "~/client/types/PostFeatured";
+import type PostFeatured from "~/client/types/postFeatured";
 function truncateHtmlText(html: string, wordLimit = 20) {
   if (!html) return "";
 

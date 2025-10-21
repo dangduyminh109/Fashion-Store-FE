@@ -7,7 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { BlogItem } from "./BlogItem";
 import { useFetch } from "~/client/hooks/useFetch";
-import type PostFeatured from "~/client/types/PostFeatured";
+import type PostFeatured from "~/client/types/postFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 

@@ -9,7 +9,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import IconButton from "@mui/material/IconButton";
 
 import defaultImg from "~/assets/images/default-image.png";
-import type ProductFeatured from "~/client/types/ProductFeatured";
+import type ProductFeatured from "~/client/types/productFeatured";
 import handlePrice from "~/utils/handlePrice";
 
 export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew: boolean }) => {

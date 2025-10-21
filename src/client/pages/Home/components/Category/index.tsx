@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import { CategoryItem } from "./CategoryItem";
 import { Fragment } from "react/jsx-runtime";
 
-import type CategoryFeatured from "~/client/types/CategoryFeatured";
+import type CategoryFeatured from "~/client/types/categoryFeatured";
 import { useFetch } from "~/client/hooks/useFetch";
 
 export function Category() {

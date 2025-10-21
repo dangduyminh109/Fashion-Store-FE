@@ -19,7 +19,7 @@ const createSchema = yup.object({
 
 const editSchema = yup.object({
   fullName: yup.string().required("Tên đăng nhập không được để trống"),
-  password: yup
+  newPassword: yup
     .string()
     .matches(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,

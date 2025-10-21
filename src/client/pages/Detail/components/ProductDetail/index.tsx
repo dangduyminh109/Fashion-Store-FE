@@ -16,7 +16,7 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Button from "@mui/material/Button";
 
-import type ProductFeatured from "~/client/types/ProductFeatured";
+import type ProductFeatured from "~/client/types/productFeatured";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import type Variant from "~/client/types/variant";
 import type AttributeValue from "~/client/types/attributeValue";

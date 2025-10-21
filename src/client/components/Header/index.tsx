@@ -1,8 +1,8 @@
 import gsap from "gsap";
 import Box from "@mui/material/Box";
-import { useLayoutEffect, useRef } from "react";
+import { Fragment, useContext, useLayoutEffect, useRef, useState } from "react";
 import Container from "@mui/material/Container";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Badge, { type BadgeProps } from "@mui/material/Badge";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -13,6 +13,17 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch } from "react-redux";
 
 import logo from "~/assets/images/Logo/logo-white.png";
+import AuthFormContext from "~/client/context/AuthFormContext";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Avatar from "@mui/material/Avatar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import Logout from "@mui/icons-material/Logout";
+import { AuthContext } from "~/client/context/AuthContext";
+import { Settings } from "@mui/icons-material";
+import Tooltip from "@mui/material/Tooltip";
+import { toast } from "react-toastify";
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
@@ -23,10 +34,30 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 export const Header = () => {
   const headerRef = useRef(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+  const { OpenAuthForm } = useContext(AuthFormContext);
+  const { customer, setCustomer } = useContext(AuthContext);
 
   const dispatch = useDispatch();
   function ToggleDrawer() {
     dispatch({ type: "sidebar/toggle" });
+  }
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  function handleLogout() {
+    localStorage.removeItem("customer-token");
+    localStorage.removeItem("customer");
+    setCustomer(null);
+    toast.success("Đăng xuất thành công!");
   }
 
   useLayoutEffect(() => {
@@ -248,10 +279,82 @@ export const Header = () => {
           }}
           className="header-effect"
         >
-          <IconButton aria-label="cart">
-            <PersonIcon fontSize="large" />
-          </IconButton>
-          <IconButton aria-label="cart">
+          {customer ? (
+            <Fragment>
+              <Tooltip title="Tài khoản">
+                <IconButton
+                  onClick={handleClick}
+                  size="small"
+                  aria-controls={open ? "account-menu" : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={open ? "true" : undefined}
+                >
+                  <Avatar sx={{ width: 32, height: 32 }} src={customer.avatar || ""}></Avatar>
+                </IconButton>
+              </Tooltip>
+              <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                slotProps={{
+                  paper: {
+                    elevation: 0,
+                    sx: {
+                      overflow: "visible",
+                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                      mt: 1.5,
+                      bgcolor: "background.default",
+                      "& .MuiAvatar-root": {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      "&::before": {
+                        content: '""',
+                        display: "block",
+                        position: "absolute",
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: "background.default",
+                        transform: "translateY(-50%) rotate(45deg)",
+                        zIndex: 0,
+                      },
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem onClick={handleClose}>
+                  <Avatar src={customer?.avatar || ""} /> {customer.fullName}
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                  <ListItemIcon>
+                    <Settings fontSize="medium" />
+                  </ListItemIcon>
+                  Cài Đặt
+                </MenuItem>
+                <Divider sx={{ bgcolor: "text.primary" }} />
+                <MenuItem onClick={handleLogout}>
+                  <ListItemIcon>
+                    <Logout fontSize="medium" />
+                  </ListItemIcon>
+                  Đăng Xuất
+                </MenuItem>
+              </Menu>
+            </Fragment>
+          ) : (
+            <IconButton aria-label="cart" onClick={OpenAuthForm}>
+              <PersonIcon fontSize="large" />
+            </IconButton>
+          )}
+
+          <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
             <StyledBadge
               badgeContent={4}
               color="secondary"

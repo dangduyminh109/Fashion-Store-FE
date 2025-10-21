@@ -7,7 +7,7 @@ import axiosClient from "~/client/hooks/useFetch";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-import type ProductFeatured from "~/client/types/ProductFeatured";
+import type ProductFeatured from "~/client/types/productFeatured";
 
 function Detail() {
   const [loading, setLoading] = useState<boolean>(false);

@@ -10,6 +10,7 @@ import Siderbar from "~/client/components/Sidebar";
 import { Header } from "~/client/components/Header";
 import { HeaderCategoryList } from "~/client/components/Header/HeaderCategoryList";
 import { Footer } from "~/client/components/Footer";
+import { AuthForm } from "~/client/components/AuthForm";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const MainLayout = () => {
@@ -71,15 +72,16 @@ const MainLayout = () => {
   }, []);
 
   return (
-    <div id="smooth-wrapper">
+    <Box id="smooth-wrapper">
       <Header />
       <HeaderCategoryList />
       <Siderbar />
+      <AuthForm />
       <Box id="smooth-content" component={"main"}>
         <Outlet />
         <Footer />
       </Box>
-    </div>
+    </Box>
   );
 };
 
