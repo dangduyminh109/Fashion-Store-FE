@@ -40,7 +40,11 @@ export function EmptyCart() {
 
         <Box
           sx={{
-            textAlign: "center",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "column",
+            height: "60vh",
+            display: "flex",
           }}
         >
           <Box

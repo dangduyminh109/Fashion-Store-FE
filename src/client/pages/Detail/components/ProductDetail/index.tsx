@@ -501,7 +501,6 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
                     type="text"
                     ref={inputRef}
                     value={1}
-                    readOnly
                     style={{
                       height: "100%",
                       maxWidth: "80px",

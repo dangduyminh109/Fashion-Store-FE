@@ -11,9 +11,6 @@ import { styled } from "@mui/material/styles";
 import SearchIcon from "@mui/icons-material/Search";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch } from "react-redux";
-
-import logo from "~/assets/images/Logo/logo-white.png";
-import AuthFormContext from "~/client/context/AuthFormContext";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Avatar from "@mui/material/Avatar";
@@ -24,6 +21,9 @@ import { AuthContext } from "~/client/context/AuthContext";
 import { Settings } from "@mui/icons-material";
 import Tooltip from "@mui/material/Tooltip";
 import { toast } from "react-toastify";
+
+import logo from "~/assets/images/Logo/logo-white.png";
+import AuthFormContext from "~/client/context/AuthFormContext";
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
@@ -37,7 +37,6 @@ export const Header = () => {
   const navigate = useNavigate();
   const { OpenAuthForm } = useContext(AuthFormContext);
   const { customer, setCustomer } = useContext(AuthContext);
-
   const dispatch = useDispatch();
   function ToggleDrawer() {
     dispatch({ type: "sidebar/toggle" });
@@ -113,7 +112,6 @@ export const Header = () => {
         bgcolor: "transparent",
         height: "45px",
         position: "sticky",
-        p: "0 10px",
         top: 0,
         left: 0,
         zIndex: 110,
@@ -330,7 +328,11 @@ export const Header = () => {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={handleClose}>
+                <MenuItem
+                  onClick={() => {
+                    navigate("/me");
+                  }}
+                >
                   <Avatar src={customer?.avatar || ""} /> {customer.fullName}
                 </MenuItem>
                 <MenuItem onClick={handleClose}>

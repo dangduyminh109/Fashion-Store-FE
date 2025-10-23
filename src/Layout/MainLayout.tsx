@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
-import { useLayoutEffect, useRef } from "react";
+import { useContext, useEffect, useLayoutEffect, useRef } from "react";
 import Box from "@mui/material/Box";
 
 import Siderbar from "~/client/components/Sidebar";
@@ -11,13 +11,16 @@ import { Header } from "~/client/components/Header";
 import { HeaderCategoryList } from "~/client/components/Header/HeaderCategoryList";
 import { Footer } from "~/client/components/Footer";
 import { AuthForm } from "~/client/components/AuthForm";
+import axiosClient from "~/client/hooks/useFetch";
+import { AuthContext } from "~/client/context/AuthContext";
+
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const MainLayout = () => {
   const shiftPressedRef = useRef(false);
   const hoverRef = useRef(false);
   const smootherRef = useRef<ScrollSmoother | null>(null);
-
+  const { setCustomer } = useContext(AuthContext);
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     if (smootherRef.current) return;
@@ -69,6 +72,24 @@ const MainLayout = () => {
         smootherRef.current = null;
       }
     };
+  }, []);
+
+  useEffect(() => {
+    async function getProfile() {
+      try {
+        const data = (await axiosClient.get("/customer/me")).data;
+        localStorage.setItem("customer", JSON.stringify(data.result));
+        setCustomer(data.result);
+      } catch (error: any) {
+        localStorage.removeItem("customer-token");
+        console.log("Get profile error!!!");
+      }
+    }
+    const token = localStorage.getItem("customer-token");
+    if (token) {
+      localStorage.setItem("customer-token", token);
+      getProfile();
+    }
   }, []);
 
   return (

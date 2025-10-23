@@ -1,11 +1,12 @@
 import { useContext, forwardRef, useRef } from "react";
-import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import type { TransitionProps } from "@mui/material/transitions";
-import { Box } from "@mui/material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 import logo from "~/assets/images/Logo/logo-black.png";
 import AuthFormContext from "~/client/context/AuthFormContext";
@@ -71,9 +72,9 @@ export const AuthForm = () => {
               sx={{ height: "100%", objectFit: "cover" }}
             />
           </Box>
-          <Button sx={{ minWidth: "auto", p: 1 }} aria-label="Close">
-            <i className="fa-solid fa-xmark" />
-          </Button>
+          <IconButton aria-label="Close" onClick={CloseAuthForm}>
+            <CloseIcon fontSize="large" />
+          </IconButton>
         </Box>
       </DialogTitle>
       <DialogContent
