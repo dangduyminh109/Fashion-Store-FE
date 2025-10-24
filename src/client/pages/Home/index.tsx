@@ -19,10 +19,12 @@ function Home() {
   useEffect(() => {
     async function handleSubmit() {
       try {
-        const data = (await axiosClient.get("/customer/me")).data;
-        localStorage.setItem("customer", JSON.stringify(data.result));
-        setCustomer(data.result);
-        toast.success("Đăng nhập thành công!");
+        const customer = (await axiosClient.get("/customer/me")).data;
+        if (customer && customer.code === 1000) {
+          localStorage.setItem("customer", JSON.stringify(customer.result));
+          setCustomer(customer.result);
+          toast.success("Đăng nhập thành công!");
+        }
       } catch (error: any) {
         let message = "Đăng nhập không thành công có lỗi xãy ra!!!";
         toast.error(message);

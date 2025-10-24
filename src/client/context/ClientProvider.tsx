@@ -10,6 +10,7 @@ import { AuthFormProvider } from "./AuthFormContext";
 import { BackDrop } from "./BackDrop";
 import { GlobalStyle } from "~/admin/components/GlobalStyles";
 import { AuthProvider } from "./AuthContext";
+import { CartProvider } from "./CartContext";
 const ClientProvider = ({ children }: { children: ReactNode }) => {
   return (
     <Provider store={store}>
@@ -22,13 +23,15 @@ const ClientProvider = ({ children }: { children: ReactNode }) => {
         pauseOnHover={false}
       />
       <AuthProvider>
-        <BackDrop>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <GlobalStyle />
-            <AuthFormProvider>{children}</AuthFormProvider>
-          </ThemeProvider>
-        </BackDrop>
+        <CartProvider>
+          <BackDrop>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <GlobalStyle />
+              <AuthFormProvider>{children}</AuthFormProvider>
+            </ThemeProvider>
+          </BackDrop>
+        </CartProvider>
       </AuthProvider>
     </Provider>
   );

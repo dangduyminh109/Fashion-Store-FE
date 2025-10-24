@@ -7,6 +7,7 @@ export default interface ProductFeatured {
   isFeatured: boolean;
   brandName: string;
   categoryName: string;
+  categoryId: number;
   slug: string;
   variants: Variant[];
   description: string;

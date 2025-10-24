@@ -24,6 +24,7 @@ import { toast } from "react-toastify";
 
 import logo from "~/assets/images/Logo/logo-white.png";
 import AuthFormContext from "~/client/context/AuthFormContext";
+import { CartContext } from "~/client/context/CartContext";
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
@@ -52,10 +53,13 @@ export const Header = () => {
     setAnchorEl(null);
   };
 
+  const { cart, setCart } = useContext(CartContext);
   function handleLogout() {
     localStorage.removeItem("customer-token");
     localStorage.removeItem("customer");
+    localStorage.setItem("cart", JSON.stringify([]));
     setCustomer(null);
+    setCart([]);
     toast.success("Đăng xuất thành công!");
   }
 
@@ -358,7 +362,7 @@ export const Header = () => {
 
           <IconButton aria-label="cart" onClick={() => navigate("/cart")}>
             <StyledBadge
-              badgeContent={4}
+              badgeContent={cart.length}
               color="secondary"
               sx={{
                 "& .MuiBadge-badge": {

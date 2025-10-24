@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { type SelectChangeEvent } from "@mui/material";
 import Add from "@mui/icons-material/Add";
 import Remove from "@mui/icons-material/Remove";
@@ -21,6 +21,12 @@ import PrimaryButton from "~/client/components/PrimaryButton";
 import type Variant from "~/client/types/variant";
 import type AttributeValue from "~/client/types/attributeValue";
 import { LeftBlock } from "./LeftBlock";
+import { CartContext } from "~/client/context/CartContext";
+import { toast } from "react-toastify";
+import type Cart from "~/client/types/cart";
+import { AuthContext } from "~/client/context/AuthContext";
+import axiosClient from "~/client/hooks/useFetch";
+import type CartVariant from "~/client/types/cart";
 
 function getAttributes(variantList: Variant[]) {
   let attributes: { [key: string]: AttributeValue[] } = {};
@@ -228,6 +234,66 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
       (item) => item.id == parseInt(e.target.value)
     );
     if (attributeValue) handleChangeVariant(attributeValue);
+  }
+
+  const { cart, setCart } = useContext(CartContext);
+  const { customer } = useContext(AuthContext);
+  async function handleAddToCart() {
+    if (inputRef.current && selectedVarriant) {
+      if (customer) {
+        try {
+          const data = (
+            await axiosClient.post("/cart", {
+              variantId: selectedVarriant.id,
+              quantity: parseInt(inputRef.current?.value || "1"),
+            })
+          ).data;
+          if (data && data.code === 1000) {
+            let newCart: Cart[] = cart.filter((item) => item.variant.id != data.result.variant.id);
+            newCart = [data.result, ...newCart];
+            setCart(newCart);
+            localStorage.setItem("cart", JSON.stringify(newCart));
+            toast.success("Sản phẩm đã được thêm vào giỏ!!!");
+          }
+        } catch (error: any) {
+          let message = "Thêm vào giỏ không thành công! có lỗi xãy ra!!!";
+          toast.error(message);
+        }
+      } else if (data) {
+        let isNew = true;
+        let newCart: Cart[] = cart.map((item) => {
+          if (item.variant.id === selectedVarriant.id) {
+            item.quantity =
+              item.quantity + parseInt(inputRef.current?.value || "1") > maxQuantity
+                ? maxQuantity
+                : item.quantity + parseInt(inputRef.current?.value || "1");
+            isNew = false;
+          }
+          return item;
+        });
+
+        if (isNew) {
+          let { variants, description, ...product } = data;
+          newCart = [
+            {
+              quantity: parseInt(inputRef.current?.value || "1"),
+              variant: {
+                ...selectedVarriant,
+                product: product,
+              },
+            } as CartVariant,
+            ...cart,
+          ];
+        }
+        setCart(newCart);
+        localStorage.setItem("cart", JSON.stringify(newCart));
+        toast.success("Sản phẩm đã được thêm vào giỏ!!!");
+      } else {
+        toast.error("Thêm vào giỏ hàng không thành công!");
+      }
+    } else {
+      toast.error("Thêm vào giỏ hàng không thành công!");
+    }
   }
 
   return (
@@ -537,6 +603,7 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
                       color: "text.primary",
                     },
                   }}
+                  onClick={() => handleAddToCart()}
                 >
                   {maxQuantity == 0 ? "Hết Hàng" : "Thêm vào giỏ"}
                 </PrimaryButton>

@@ -19,6 +19,8 @@ import PrimaryButton from "../PrimaryButton";
 import { BackDropContext } from "~/client/context/BackDrop";
 import AuthFormContext from "~/client/context/AuthFormContext";
 import { AuthContext } from "~/client/context/AuthContext";
+import getCart from "~/utils/getCart";
+import { CartContext } from "~/client/context/CartContext";
 const googleApi = import.meta.env.VITE_GOOGLE_API;
 
 export const Login = ({
@@ -37,6 +39,7 @@ export const Login = ({
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const { CloseAuthForm } = useContext(AuthFormContext);
   const { setCustomer } = useContext(AuthContext);
+  const { setCart } = useContext(CartContext);
 
   async function handleSubmit() {
     if (!email || !password) {
@@ -64,6 +67,7 @@ export const Login = ({
         setLoading(false);
         CloseAuthForm();
         toast.success("Đăng nhập thành công!");
+        getCart(setCart);
       } else {
         toast.error(res.message);
       }

@@ -13,6 +13,8 @@ import { Footer } from "~/client/components/Footer";
 import { AuthForm } from "~/client/components/AuthForm";
 import axiosClient from "~/client/hooks/useFetch";
 import { AuthContext } from "~/client/context/AuthContext";
+import { CartContext } from "~/client/context/CartContext";
+import getCart from "~/utils/getCart";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -21,6 +23,7 @@ const MainLayout = () => {
   const hoverRef = useRef(false);
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const { setCustomer } = useContext(AuthContext);
+  const { setCart } = useContext(CartContext);
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     if (smootherRef.current) return;
@@ -77,9 +80,11 @@ const MainLayout = () => {
   useEffect(() => {
     async function getProfile() {
       try {
-        const data = (await axiosClient.get("/customer/me")).data;
-        localStorage.setItem("customer", JSON.stringify(data.result));
-        setCustomer(data.result);
+        const customer = (await axiosClient.get("/customer/me")).data;
+        if (customer && customer.code === 1000) {
+          localStorage.setItem("customer", JSON.stringify(customer.result));
+          setCustomer(customer.result);
+        }
       } catch (error: any) {
         localStorage.removeItem("customer-token");
         console.log("Get profile error!!!");
@@ -87,9 +92,9 @@ const MainLayout = () => {
     }
     const token = localStorage.getItem("customer-token");
     if (token) {
-      localStorage.setItem("customer-token", token);
       getProfile();
     }
+    getCart(setCart);
   }, []);
 
   return (

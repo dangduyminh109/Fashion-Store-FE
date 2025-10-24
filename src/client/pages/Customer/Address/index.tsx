@@ -11,8 +11,8 @@ import PrimaryButton from "~/client/components/PrimaryButton";
 import { toast } from "react-toastify";
 import axiosClient from "~/client/hooks/useFetch";
 import type Address from "~/client/types/address";
-import { FormCreate } from "./components/FormCreate";
 import ConfirmModel from "~/client/components/ConfirmModel";
+import { FormAddress } from "./components/FormAddress";
 import { AuthContext } from "~/client/context/AuthContext";
 
 export const AddressPage = () => {
@@ -105,7 +105,7 @@ export const AddressPage = () => {
         p: 2,
       }}
     >
-      <FormCreate
+      <FormAddress
         showForm={showForm}
         setShowForm={setShowForm}
         addressData={addressData}

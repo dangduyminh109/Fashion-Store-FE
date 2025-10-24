@@ -5,16 +5,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import type { TransitionProps } from "@mui/material/transitions";
-import {
-  Box,
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  IconButton,
-  MenuItem,
-  Select,
-  TextField,
-} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Grid from "@mui/material/Grid";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import InputLabel from "@mui/material/InputLabel";
@@ -52,7 +50,7 @@ interface provinces {
   code: number;
 }
 
-export const FormCreate = (props: Props) => {
+export const FormAddress = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const { setBackDrop } = useContext(BackDropContext);
   const [provinces, setProvinces] = useState<provinces[]>([]);
@@ -88,6 +86,7 @@ export const FormCreate = (props: Props) => {
       handleSelectProvince(addressData.cityId);
       handleSelectWards(addressData.districtId);
     } else {
+      handleSelectProvince(1);
       reset();
     }
   }, [isUpdate, addressData]);
@@ -464,7 +463,7 @@ export const FormCreate = (props: Props) => {
                   <FormControlLabel
                     {...field}
                     control={<Checkbox />}
-                    label="Đặc làm mặc định"
+                    label="Đặt làm mặc định"
                     color="secondary"
                   />
                 )}
