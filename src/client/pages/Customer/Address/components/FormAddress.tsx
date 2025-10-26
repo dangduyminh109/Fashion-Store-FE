@@ -28,6 +28,8 @@ import axiosClient from "~/client/hooks/useFetch";
 import getLastError from "~/utils/onErrorValidate";
 import { AuthContext } from "~/client/context/AuthContext";
 import type Address from "~/client/types/address";
+import type addressResponse from "~/client/types/addressResponse";
+import { handleSelectProvince, handleSelectDistrict } from "~/utils/fetchAddress";
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -45,17 +47,13 @@ type Props = {
   setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
   setIsUpdate: React.Dispatch<React.SetStateAction<boolean>>;
 };
-interface provinces {
-  name: string;
-  code: number;
-}
 
 export const FormAddress = (props: Props) => {
   const [loading, setLoading] = useState(false);
   const { setBackDrop } = useContext(BackDropContext);
-  const [provinces, setProvinces] = useState<provinces[]>([]);
-  const [districts, setDistricts] = useState<provinces[]>([]);
-  const [wards, setWards] = useState<provinces[]>([]);
+  const [provinces, setProvinces] = useState<addressResponse[]>([]);
+  const [districts, setDistricts] = useState<addressResponse[]>([]);
+  const [wards, setWards] = useState<addressResponse[]>([]);
   const { showForm, setShowForm, setIsUpdate, isUpdate, addressData } = props;
 
   const { customer } = useContext(AuthContext);
@@ -83,10 +81,10 @@ export const FormAddress = (props: Props) => {
       setValue("districtId", addressData.districtId);
       setValue("wardId", addressData.wardId);
       setValue("isDefault", addressData.isDefault);
-      handleSelectProvince(addressData.cityId);
-      handleSelectWards(addressData.districtId);
+      handleSelectProvince(addressData.cityId, setLoading, setDistricts);
+      handleSelectDistrict(addressData.districtId, setLoading, setWards);
     } else {
-      handleSelectProvince(1);
+      handleSelectProvince(1, setLoading, setDistricts);
       reset();
     }
   }, [isUpdate, addressData]);
@@ -109,38 +107,6 @@ export const FormAddress = (props: Props) => {
     };
     fetchData();
   }, []);
-
-  async function handleSelectProvince(code: number) {
-    setLoading(true);
-    try {
-      const districts = await axiosClient.get("/address/districts/" + code);
-      if (districts.data.districts) {
-        setDistricts(districts.data.districts);
-      } else if (!districts.data.districts) {
-        toast.error("Không thể nạp dử liệu Quận/Huyện!");
-      }
-    } catch (error: any) {
-      toast.error("Không thể nạp dử liệu Quận/Huyện!");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function handleSelectWards(code: number) {
-    setLoading(true);
-    try {
-      const wards = await axiosClient.get("/address/wards/" + code);
-      if (wards.data.wards) {
-        setWards(wards.data.wards);
-      } else if (!wards.data.wards) {
-        toast.error("Không thể nạp dử liệu Xã/Phường!");
-      }
-    } catch (error: any) {
-      toast.error("Không thể nạp dử liệu Xã/Phường!");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const onSubmit = async (data: any) => {
     let city = provinces.find((item) => item.code == data.cityId);
@@ -333,7 +299,7 @@ export const FormAddress = (props: Props) => {
                 name="cityId"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth sx={{ color: "red" }}>
+                  <FormControl fullWidth>
                     <InputLabel shrink id="city-label" sx={{ color: "text.primary" }}>
                       Tĩnh/Thành Phố
                     </InputLabel>
@@ -345,7 +311,7 @@ export const FormAddress = (props: Props) => {
                       inputProps={{ "aria-label": "Without label" }}
                       onChange={(e) => {
                         field.onChange(e);
-                        handleSelectProvince(e.target.value);
+                        handleSelectProvince(e.target.value, setLoading, setDistricts);
                       }}
                       MenuProps={{
                         PaperProps: {
@@ -370,7 +336,7 @@ export const FormAddress = (props: Props) => {
                 name="districtId"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth sx={{ color: "red" }}>
+                  <FormControl fullWidth>
                     <InputLabel shrink id="district-label" sx={{ color: "text.primary" }}>
                       Quận/Huyện
                     </InputLabel>
@@ -382,7 +348,7 @@ export const FormAddress = (props: Props) => {
                       inputProps={{ "aria-label": "Without label" }}
                       onChange={(e) => {
                         field.onChange(e);
-                        handleSelectWards(e.target.value);
+                        handleSelectDistrict(e.target.value, setLoading, setWards);
                       }}
                       MenuProps={{
                         PaperProps: {
@@ -407,7 +373,7 @@ export const FormAddress = (props: Props) => {
                 name="wardId"
                 control={control}
                 render={({ field }) => (
-                  <FormControl fullWidth sx={{ color: "red" }}>
+                  <FormControl fullWidth>
                     <InputLabel shrink id="ward-label" sx={{ color: "text.primary" }}>
                       Xã/Phường
                     </InputLabel>

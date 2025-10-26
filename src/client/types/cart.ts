@@ -25,6 +25,5 @@ export interface CartVariant {
 
 export default interface Cart {
   quantity: number;
-  isSelect: boolean;
   variant: CartVariant;
 }

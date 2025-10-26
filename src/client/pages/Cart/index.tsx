@@ -1,7 +1,7 @@
 import { Fragment } from "react/jsx-runtime";
 import Breadcrumb from "~/client/components/Breadcrumb";
 import { EmptyCart } from "./components/EmptyCart";
-import { useCallback, useContext, useEffect, useRef } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "~/client/context/CartContext";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -9,7 +9,7 @@ import Add from "@mui/icons-material/Add";
 import IconButton from "@mui/material/IconButton";
 import Remove from "@mui/icons-material/Remove";
 import CloseIcon from "@mui/icons-material/Close";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import debounce from "lodash.debounce";
 import Checkbox from "@mui/material/Checkbox";
 
@@ -20,6 +20,7 @@ import axiosClient from "~/client/hooks/useFetch";
 import type Cart from "~/client/types/cart";
 import defaultImg from "~/assets/images/default-image.png";
 import { toast } from "react-toastify";
+import getPrice from "~/utils/getPrice";
 
 function CartPage() {
   const listBreadcrumb = [
@@ -32,10 +33,10 @@ function CartPage() {
       url: `/cart`,
     },
   ];
-
+  const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { customer } = useContext(AuthContext);
-
+  const [listSelectProduct, setListSelectProduct] = useState<number[]>([]);
   const updateCartApi = useRef(
     debounce((variantId: number, quantity: number) => {
       axiosClient.put("/cart", { variantId, quantity });
@@ -89,46 +90,32 @@ function CartPage() {
     [customer]
   );
 
-  function getPrice(cartItem: CartVariant) {
-    let displayPrice = 0;
-    let variant = cartItem.variant;
-    if (variant) {
-      if (
-        variant.promotionalPrice &&
-        new Date(variant.promotionEndTime).getTime() > Date.now() &&
-        new Date(variant.promotionStartTime).getTime() <= Date.now()
-      ) {
-        displayPrice = variant.promotionalPrice;
-      } else {
-        displayPrice = variant.salePrice;
-      }
-    }
-    return displayPrice * cartItem.quantity;
-  }
-
   const handleSelectProduct = useCallback(
     (cartItem: CartVariant) => {
-      setCart((prev) => {
-        return prev.map((item) => {
-          if (item.variant.id === cartItem.variant.id) {
-            return {
-              ...item,
-              isSelect: !item.isSelect,
-            };
-          }
-          return item;
-        });
-      });
+      let listSelectId: number[] = JSON.parse(localStorage.getItem("listSelectId") || "[]");
+      let newList = listSelectId;
+      if (newList.includes(cartItem.variant.id)) {
+        newList = listSelectId.filter((item) => item != cartItem.variant.id);
+      } else {
+        newList = [...listSelectId, cartItem.variant.id];
+      }
+      localStorage.setItem("listSelectId", JSON.stringify(newList));
+      setListSelectProduct(newList);
     },
     [customer]
   );
 
+  useEffect(() => {
+    let listId: number[] = JSON.parse(localStorage.getItem("listSelectId") || "[]");
+    setListSelectProduct(listId);
+  }, []);
+
   function getTotal() {
     return cart.reduce((total, item) => {
-      if (item.isSelect) {
+      if (listSelectProduct.includes(item.variant.id)) {
         return total + getPrice(item);
       }
-      return 0;
+      return total;
     }, 0);
   }
 
@@ -209,7 +196,7 @@ function CartPage() {
                         <CloseIcon />
                       </IconButton>
                       <Checkbox
-                        checked={item.isSelect}
+                        checked={listSelectProduct.includes(item.variant.id)}
                         onChange={() => handleSelectProduct(item)}
                       />
                       <Link to={"/" + item.variant.product.slug}>
@@ -337,7 +324,7 @@ function CartPage() {
                 </Typography>
                 <Box component={"ul"}>
                   {cart.map((item) => {
-                    if (item.isSelect) {
+                    if (listSelectProduct.includes(item.variant.id)) {
                       return (
                         <Box
                           component={"li"}
@@ -378,7 +365,7 @@ function CartPage() {
                     <Typography variant="body2">(Chưa áp dụng voucher)</Typography>
                   </Box>
                 </Box>
-                <PrimaryButton fullWidth sx={{ mt: 1 }}>
+                <PrimaryButton fullWidth sx={{ mt: 1 }} onClick={() => navigate("/checkout")}>
                   Thanh toán
                 </PrimaryButton>
               </Box>

@@ -7,6 +7,7 @@ import { AddressPage } from "~/client/pages/Customer/Address";
 const Home = lazy(() => import("~/client/pages/Home"));
 const Detail = lazy(() => import("~/client/pages/Detail"));
 const Cart = lazy(() => import("~/client/pages/Cart"));
+const Checkout = lazy(() => import("~/client/pages/Checkout"));
 
 const ClientRoutes = [
   {
@@ -23,6 +24,18 @@ const ClientRoutes = [
       {
         path: "cart",
         element: <Cart />,
+      },
+      {
+        path: "success",
+        element: <Cart />,
+      },
+      {
+        path: "error",
+        element: <Cart />,
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
       },
       {
         path: "me",

@@ -25,6 +25,7 @@ import { toast } from "react-toastify";
 import logo from "~/assets/images/Logo/logo-white.png";
 import AuthFormContext from "~/client/context/AuthFormContext";
 import { CartContext } from "~/client/context/CartContext";
+
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
