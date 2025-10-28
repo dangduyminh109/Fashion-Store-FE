@@ -8,6 +8,8 @@ const Home = lazy(() => import("~/client/pages/Home"));
 const Detail = lazy(() => import("~/client/pages/Detail"));
 const Cart = lazy(() => import("~/client/pages/Cart"));
 const Checkout = lazy(() => import("~/client/pages/Checkout"));
+const Success = lazy(() => import("~/client/pages/Success"));
+const Error = lazy(() => import("~/client/pages/Error"));
 
 const ClientRoutes = [
   {
@@ -27,11 +29,11 @@ const ClientRoutes = [
       },
       {
         path: "success",
-        element: <Cart />,
+        element: <Success />,
       },
       {
         path: "error",
-        element: <Cart />,
+        element: <Error />,
       },
       {
         path: "checkout",

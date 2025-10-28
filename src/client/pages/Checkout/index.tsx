@@ -204,7 +204,7 @@ function Checkout() {
       if (res.data.code == 1000) {
         if (data.paymentMethod === "BANK") window.location.href = res.data.result;
         else {
-          navigate("/");
+          navigate("/success");
           toast.success(res.data.message);
         }
       } else {
