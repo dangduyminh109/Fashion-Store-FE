@@ -1,10 +1,8 @@
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link, useNavigate } from "react-router-dom";
 import { useMemo, useRef } from "react";
 import { Fragment } from "react/jsx-runtime";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import IconButton from "@mui/material/IconButton";
 
@@ -112,7 +110,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
           },
         }}
       >
-        <Link to={`/${data.slug}`}>
+        <Link to={`/product/${data.slug}`}>
           <img ref={imgRef} src={data.productImages[0] || defaultImg} alt="ảnh sản phẩm" />
           <img
             ref={imgsecondRef}
@@ -125,23 +123,12 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
           sx={{
             position: "absolute",
             width: "100%",
-            bottom: "20px",
+            bottom: "60px",
             display: "flex",
             gap: "10px",
             justifyContent: "center",
           }}
         >
-          <Button
-            variant="contained"
-            startIcon={<AddShoppingCartIcon />}
-            sx={{
-              "&:hover": {
-                bgcolor: "secondary.main",
-              },
-            }}
-          >
-            Giỏ hàng
-          </Button>
           <IconButton
             sx={{
               color: "text.secondary",
@@ -152,7 +139,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
             }}
             aria-label="view product"
             onClick={() => {
-              navigate(`/${data.slug}`);
+              navigate(`/product/${data.slug}`);
             }}
           >
             <VisibilityIcon />
@@ -231,7 +218,7 @@ export const CartItem = ({ data, isNew = false }: { data: ProductFeatured; isNew
             },
           }}
         >
-          <Link to={`/${data.slug}`}>{data.name}</Link>
+          <Link to={`/product/${data.slug}`}>{data.name}</Link>
         </Typography>
         <Box
           component={"p"}

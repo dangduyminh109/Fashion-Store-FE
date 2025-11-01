@@ -27,6 +27,7 @@ import type Cart from "~/client/types/cart";
 import { AuthContext } from "~/client/context/AuthContext";
 import axiosClient from "~/client/hooks/useFetch";
 import type CartVariant from "~/client/types/cart";
+import { useNavigate } from "react-router-dom";
 
 function getAttributes(variantList: Variant[]) {
   let attributes: { [key: string]: AttributeValue[] } = {};
@@ -124,7 +125,7 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
   const [selectedAttribute, setSelectedAttribute] = useState<SelectedAttribute>({});
   const [disableAttribute, setDisableAttribute] = useState<DisableList>({});
   const inputRef = useRef<HTMLInputElement>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     if (data && data?.variants.length > 0) {
       let attributes = getAttributes(data.variants);
@@ -293,6 +294,24 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
       }
     } else {
       toast.error("Thêm vào giỏ hàng không thành công!");
+    }
+  }
+
+  function handleBuyNow() {
+    if (selectedVarriant && inputRef.current) {
+      localStorage.setItem(
+        "checkout-variant",
+        JSON.stringify([
+          {
+            quantity: parseInt(inputRef.current?.value),
+            variant: {
+              ...selectedVarriant,
+              product: data,
+            },
+          },
+        ])
+      );
+      navigate("/checkout");
     }
   }
 
@@ -611,6 +630,7 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
 
               <Button
                 disabled={maxQuantity == 0}
+                onClick={() => handleBuyNow()}
                 sx={{
                   mt: 1,
                   height: "40px",

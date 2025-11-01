@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -62,7 +62,6 @@ function Checkout() {
   const { OpenAuthForm } = useContext(AuthFormContext);
   const [products, setProducts] = useState<Cart[]>([]);
   const [openVoucher, setOpenVoucher] = useState(false);
-  const [listSelectProduct, setListSelectProduct] = useState<number[]>([]);
   const [selectedVoucher, setSelectedVoucher] = useState<Voucher | null>(null);
   const [provinces, setProvinces] = useState<addressResponse[]>([]);
   const [districts, setDistricts] = useState<addressResponse[]>([]);
@@ -72,11 +71,7 @@ function Checkout() {
   const { setBackDrop } = useContext(BackDropContext);
 
   useEffect(() => {
-    let listId: number[] = JSON.parse(localStorage.getItem("listSelectId") || "[]");
-    setListSelectProduct(listId);
-    let selectProduct = cart.filter((item) => {
-      return listId.includes(item.variant.id);
-    });
+    let selectProduct = JSON.parse(localStorage.getItem("checkout-variant") || "[]");
     setProducts(selectProduct);
   }, [cart]);
 
@@ -126,11 +121,8 @@ function Checkout() {
   }, []);
 
   function getTotal() {
-    return cart.reduce((total, item) => {
-      if (listSelectProduct.includes(item.variant.id)) {
-        return total + getPrice(item);
-      }
-      return total;
+    return products.reduce((total, item) => {
+      return total + getPrice(item);
     }, 0);
   }
 
@@ -170,15 +162,17 @@ function Checkout() {
     let city = provinces.find((item) => item.code == data.cityId);
     let district = districts.find((item) => item.code == data.districtId);
     let ward = wards.find((item) => item.code == data.wardId);
-    if (!customer || !city || !district || !ward || products.length <= 0) {
+    if (!city || !district || !ward || products.length <= 0) {
       toast.error("Có lỗi xãy ra!");
       return;
     }
     setBackDrop(true);
     try {
       const formData = new FormData();
-      formData.append(`customerName`, data.name);
-      formData.append(`customerId`, customer.id);
+      if (customer) {
+        formData.append(`customerId`, customer.id);
+      }
+      formData.append(`customerName`, data.customerName);
       formData.append(`address`, data.address);
       formData.append(`phone`, data.phone);
       formData.append(`cityId`, data.cityId);
@@ -188,6 +182,7 @@ function Checkout() {
       formData.append(`district`, district.name);
       formData.append(`ward`, ward.name);
       formData.append(`paymentMethod`, data.paymentMethod);
+      formData.append(`note`, data.note);
       if (selectedVoucher) {
         formData.append(`voucherId`, String(selectedVoucher.id));
       }
@@ -687,125 +682,125 @@ function Checkout() {
                 </Typography>
 
                 <Stack spacing={2}>
-                  {products.map(
-                    (item) =>
-                      listSelectProduct.includes(item.variant.id) && (
-                        <Stack
-                          key={item.variant.id}
-                          direction="row"
-                          spacing={3}
-                          alignItems="center"
-                          sx={{ borderBottom: "1px solid #ccc", pb: 1 }}
+                  {products.map((item) => (
+                    <Stack
+                      key={item.variant.id}
+                      direction="row"
+                      spacing={3}
+                      alignItems="center"
+                      sx={{ borderBottom: "1px solid #ccc", pb: 1 }}
+                    >
+                      <Box position="relative">
+                        <Box
+                          component="img"
+                          src={item.variant.product.productImages[0] || defaultImg}
+                          alt="ảnh sản phẩm"
+                          sx={{ width: 50, height: 50, objectFit: "contain" }}
+                        />
+                        <Box
+                          sx={{
+                            position: "absolute",
+                            top: -5,
+                            right: -5,
+                            width: 20,
+                            height: 20,
+                            borderRadius: "50%",
+                            bgcolor: "primary.main",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            fontSize: "0.8rem",
+                            color: "#fff",
+                          }}
                         >
-                          <Box position="relative">
-                            <Box
-                              component="img"
-                              src={item.variant.product.productImages[0] || defaultImg}
-                              alt="ảnh sản phẩm"
-                              sx={{ width: 50, height: 50, objectFit: "contain" }}
-                            />
-                            <Box
-                              sx={{
-                                position: "absolute",
-                                top: -5,
-                                right: -5,
-                                width: 20,
-                                height: 20,
-                                borderRadius: "50%",
-                                bgcolor: "primary.main",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontSize: "0.8rem",
-                                color: "#fff",
-                              }}
-                            >
-                              {item.quantity}
-                            </Box>
-                          </Box>
-                          <Box sx={{ flex: 1 }}>
-                            <Link to={"/" + item.variant.product.slug}>
-                              <Typography
-                                sx={{
-                                  fontSize: "1.6rem",
-                                  fontWeight: 600,
-                                  whiteSpace: "nowrap",
-                                  maxWidth: "250px",
-                                  overflow: "hidden",
-                                  textOverflow: "ellipsis",
-                                  transition: "0.3s ease",
-                                  "&:hover": {
-                                    color: "secondary.main",
-                                  },
-                                }}
-                              >
-                                {item.variant.product.name}
-                              </Typography>
-                            </Link>
-                            <Typography variant="body1">
-                              {item.variant.attributeValues.map((item) => item.value).join("-")}
-                            </Typography>
-                          </Box>
-                          <Typography color="secondary">
-                            {getPrice(item).toLocaleString("vi-VN")}đ
+                          {item.quantity}
+                        </Box>
+                      </Box>
+                      <Box sx={{ flex: 1 }}>
+                        <Link to={"/" + item.variant.product.slug}>
+                          <Typography
+                            sx={{
+                              fontSize: "1.6rem",
+                              fontWeight: 600,
+                              whiteSpace: "nowrap",
+                              maxWidth: "250px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              transition: "0.3s ease",
+                              "&:hover": {
+                                color: "secondary.main",
+                              },
+                            }}
+                          >
+                            {item.variant.product.name}
                           </Typography>
-                        </Stack>
-                      )
-                  )}
+                        </Link>
+                        <Typography variant="body1">
+                          {item.variant.attributeValues.map((item) => item.value).join("-")}
+                        </Typography>
+                      </Box>
+                      <Typography color="secondary">
+                        {getPrice(item).toLocaleString("vi-VN")}đ
+                      </Typography>
+                    </Stack>
+                  ))}
                 </Stack>
 
                 {/* Mã giảm giá */}
-                <Box>
-                  <Button
-                    variant="text"
-                    startIcon={<LocalOfferIcon />}
-                    sx={{ mt: 2, fontSize: "1.6rem" }}
-                    onClick={() => setOpenVoucher(true)}
-                  >
-                    Chọn mã giảm giá
-                  </Button>
-                  <ListVoucher
-                    openVoucher={openVoucher}
-                    setOpenVoucher={setOpenVoucher}
-                    setSelectedVoucher={setSelectedVoucher}
-                    totalPrice={getTotal()}
-                  />
-                  {selectedVoucher && (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
-                      <Typography>Đã chọn: </Typography>
-                      <Typography
-                        sx={{
-                          border: "1px solid",
-                          borderColor: "primary.main",
-                          color: "secondary.main",
-                          px: 1,
-                          py: 0.5,
-                          borderRadius: 1,
-                          fontSize: "1.4rem",
-                          whiteSpace: "nowrap",
-                          display: "flex",
-                          alignItems: "center",
-                        }}
+                {customer && (
+                  <Fragment>
+                    <Box>
+                      <Button
+                        variant="text"
+                        startIcon={<LocalOfferIcon />}
+                        sx={{ mt: 2, fontSize: "1.6rem" }}
+                        onClick={() => setOpenVoucher(true)}
                       >
-                        {selectedVoucher.name}
-                        <IconButton
-                          aria-label="delete"
-                          size="small"
-                          sx={{
-                            ml: "5px",
-                            height: "15px",
-                            width: "15px",
-                          }}
-                          onClick={() => setSelectedVoucher(null)}
-                        >
-                          <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                      </Typography>
+                        Chọn mã giảm giá
+                      </Button>
+                      <ListVoucher
+                        openVoucher={openVoucher}
+                        setOpenVoucher={setOpenVoucher}
+                        setSelectedVoucher={setSelectedVoucher}
+                        totalPrice={getTotal()}
+                      />
+                      {selectedVoucher && (
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+                          <Typography>Đã chọn: </Typography>
+                          <Typography
+                            sx={{
+                              border: "1px solid",
+                              borderColor: "primary.main",
+                              color: "secondary.main",
+                              px: 1,
+                              py: 0.5,
+                              borderRadius: 1,
+                              fontSize: "1.4rem",
+                              whiteSpace: "nowrap",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
+                            {selectedVoucher.name}
+                            <IconButton
+                              aria-label="delete"
+                              size="small"
+                              sx={{
+                                ml: "5px",
+                                height: "15px",
+                                width: "15px",
+                              }}
+                              onClick={() => setSelectedVoucher(null)}
+                            >
+                              <CloseIcon fontSize="inherit" />
+                            </IconButton>
+                          </Typography>
+                        </Box>
+                      )}
                     </Box>
-                  )}
-                </Box>
-
-                <Divider sx={{ my: 2 }} />
+                    <Divider sx={{ my: 2 }} />
+                  </Fragment>
+                )}
 
                 <Table
                   size="small"

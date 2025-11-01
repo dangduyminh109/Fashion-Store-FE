@@ -27,7 +27,7 @@ export const CategoryItem = ({ data }: { data: CategoryFeatured }) => {
   }, []);
   return (
     <Box sx={{ minWidth: "150px", maxWidth: "200px" }}>
-      <Link to={`/${data.slug}`}>
+      <Link to={`/category/${data.slug}`}>
         <Box
           sx={{
             position: "relative",

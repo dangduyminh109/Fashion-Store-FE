@@ -102,18 +102,18 @@ function Edit() {
             };
           });
           setValue("orderItems", listOrderItem);
-          if (Number(order.data.result.city)) {
-            setValue("city", Number(order.data.result.city));
+          if (Number(order.data.result.cityId)) {
+            setValue("city", Number(order.data.result.cityId));
           }
-          if (Number(order.data.result.district)) {
+          if (Number(order.data.result.districtId)) {
             try {
-              if (Number(order.data.result.district)) {
+              if (Number(order.data.result.districtId)) {
                 const districtList = (
                   await axiosClient.get(
-                    `${API_PATH}/address/districts/${Number(order.data.result.city)}`
+                    `${API_PATH}/address/districts/${Number(order.data.result.cityId)}`
                   )
                 ).data;
-                setValue("district", Number(order.data.result.district));
+                setValue("district", Number(order.data.result.districtId));
                 setDistricts(
                   districtList.districts.map((item: any) => ({ code: item.code, label: item.name }))
                 );
@@ -124,15 +124,15 @@ function Edit() {
               toast.error("Tải dử liệu Quận/Huyện thất bại!");
             }
           }
-          if (Number(order.data.result.ward)) {
+          if (Number(order.data.result.wardId)) {
             try {
-              if (Number(order.data.result.ward)) {
+              if (Number(order.data.result.wardId)) {
                 const wardList = (
                   await axiosClient.get(
-                    `${API_PATH}/address/wards/${Number(order.data.result.district)}`
+                    `${API_PATH}/address/wards/${Number(order.data.result.districtId)}`
                   )
                 ).data;
-                setValue("ward", Number(order.data.result.ward));
+                setValue("ward", Number(order.data.result.wardId));
                 setWards(
                   wardList.wards.map((item: any) => ({ code: item.code, label: item.name }))
                 );

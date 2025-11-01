@@ -147,6 +147,17 @@ function CartPage() {
     };
   }, []);
 
+  function handleCheckOut() {
+    let listSelectId: number[] = JSON.parse(localStorage.getItem("listSelectId") || "[]");
+    let checkoutVariant = cart.map((item) => {
+      if (listSelectId.includes(item.variant.id)) {
+        return item;
+      }
+    });
+    localStorage.setItem("checkout-variant", JSON.stringify(checkoutVariant));
+    navigate("/checkout");
+  }
+
   return (
     <Fragment>
       <Breadcrumb listBreadcrumb={listBreadcrumb} />
@@ -199,7 +210,7 @@ function CartPage() {
                         checked={listSelectProduct.includes(item.variant.id)}
                         onChange={() => handleSelectProduct(item)}
                       />
-                      <Link to={"/" + item.variant.product.slug}>
+                      <Link to={"/product/" + item.variant.product.slug}>
                         <Box
                           component="img"
                           src={item.variant.product.productImages[0] || defaultImg}
@@ -212,7 +223,7 @@ function CartPage() {
                         />
                       </Link>
                       <Box sx={{ flex: 1 }}>
-                        <Link to={"/" + item.variant.product.slug}>
+                        <Link to={"/product/" + item.variant.product.slug}>
                           <Typography
                             sx={{
                               fontSize: "1.6rem",
@@ -365,7 +376,7 @@ function CartPage() {
                     <Typography variant="body2">(Chưa áp dụng voucher)</Typography>
                   </Box>
                 </Box>
-                <PrimaryButton fullWidth sx={{ mt: 1 }} onClick={() => navigate("/checkout")}>
+                <PrimaryButton fullWidth sx={{ mt: 1 }} onClick={() => handleCheckOut()}>
                   Thanh toán
                 </PrimaryButton>
               </Box>
