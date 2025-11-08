@@ -3,7 +3,7 @@ import carousel from "~/assets/images/carousel-1.png";
 import { Carousel } from "./components/Carousel";
 import { Category } from "./components/Category";
 import { Offer } from "./components/Offer";
-import { Blog } from "./components/Blog";
+import { Post } from "./components/Post";
 import { NewProduct } from "./components/NewProduct";
 import { FeaturedProduct } from "./components/FeaturedProduct";
 import { useContext, useEffect } from "react";
@@ -11,10 +11,17 @@ import { useLocation } from "react-router-dom";
 import { AuthContext } from "~/client/context/AuthContext";
 import { toast } from "react-toastify";
 import axiosClient from "~/client/hooks/useFetch";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 
 function Home() {
   const location = useLocation();
   const { setCustomer } = useContext(AuthContext);
+
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
+
+  useEffect(() => {
+    setBreadcrumb([]);
+  }, []);
 
   useEffect(() => {
     async function handleSubmit() {
@@ -58,7 +65,7 @@ function Home() {
       <Offer />
       <NewProduct />
       <FeaturedProduct />
-      <Blog />
+      <Post />
     </Box>
   );
 }

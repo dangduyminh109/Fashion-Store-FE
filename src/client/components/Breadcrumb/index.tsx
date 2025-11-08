@@ -3,7 +3,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 
-interface listBreadcrumb {
+export interface listBreadcrumb {
   title: string;
   url: string;
 }

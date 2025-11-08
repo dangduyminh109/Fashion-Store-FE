@@ -1,19 +1,33 @@
 import { Fragment } from "react/jsx-runtime";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
-
-import Breadcrumb from "~/client/components/Breadcrumb";
 import ProductDetail from "./components/ProductDetail";
 import axiosClient from "~/client/hooks/useFetch";
 
 import type ProductFeatured from "~/client/types/productFeatured";
 import { SuggestProduct } from "./components/SuggestProduct";
 import { ProductDescription } from "./components/ProductDescription";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 function Detail() {
   const [product, setProduct] = useState<ProductFeatured | null>(null);
   const { slug } = useParams();
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
+
+  useEffect(() => {
+    const listBreadcrumb = [
+      {
+        title: "Trang Chủ",
+        url: "/",
+      },
+      {
+        title: product?.name || "",
+        url: `/${slug}`,
+      },
+    ];
+    setBreadcrumb(listBreadcrumb);
+  }, [product, slug]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,22 +47,10 @@ function Detail() {
       }
     };
     fetchData();
-  }, []);
-
-  const listBreadcrumb = [
-    {
-      title: "Trang Chủ",
-      url: "/",
-    },
-    {
-      title: product?.name || "",
-      url: `/${slug}`,
-    },
-  ];
+  }, [slug]);
 
   return (
     <Fragment>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} />
       <ProductDetail data={product} />
       <ProductDescription description={product?.description} />
       {product && <SuggestProduct productId={product?.id} />}

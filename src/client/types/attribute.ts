@@ -5,5 +5,4 @@ export default interface Attribute {
   name: string;
   attributeDisplayType: string;
   listAttributeValue: AttributeValue[];
-  status: boolean;
 }

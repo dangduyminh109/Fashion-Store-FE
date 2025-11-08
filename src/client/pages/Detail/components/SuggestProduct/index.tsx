@@ -9,10 +9,12 @@ import { CartItem } from "~/client/components/CartItem";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
 import type ProductFeatured from "~/client/types/productFeatured";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const SuggestProduct = ({ productId }: { productId: number }) => {
+  const navigate = useNavigate();
   const { data, loading, error } = useFetch<ProductFeatured[]>({
     endpoint: "/product/suggest/" + productId,
     method: "get",
@@ -39,7 +41,7 @@ export const SuggestProduct = ({ productId }: { productId: number }) => {
 
   return (
     <Fragment>
-      {!error && (
+      {!error && data && data?.length > 0 && (
         <Box
           component="section"
           id="NewProduct"
@@ -85,7 +87,12 @@ export const SuggestProduct = ({ productId }: { productId: number }) => {
                 ))}
             </Grid>
             <Box textAlign={"center"}>
-              <PrimaryButton sx={{ padding: "10px 20px" }}>Xem Thêm Sản Phẩm</PrimaryButton>
+              <PrimaryButton
+                sx={{ padding: "10px 20px" }}
+                onClick={() => navigate("/list-product")}
+              >
+                Xem Thêm Sản Phẩm
+              </PrimaryButton>
             </Box>
           </Box>
         </Box>

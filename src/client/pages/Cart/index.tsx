@@ -1,5 +1,4 @@
 import { Fragment } from "react/jsx-runtime";
-import Breadcrumb from "~/client/components/Breadcrumb";
 import { EmptyCart } from "./components/EmptyCart";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { CartContext } from "~/client/context/CartContext";
@@ -21,18 +20,9 @@ import type Cart from "~/client/types/cart";
 import defaultImg from "~/assets/images/default-image.png";
 import { toast } from "react-toastify";
 import getPrice from "~/utils/getPrice";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 
 function CartPage() {
-  const listBreadcrumb = [
-    {
-      title: "Trang Chủ",
-      url: "/",
-    },
-    {
-      title: "Giỏ Hàng",
-      url: `/cart`,
-    },
-  ];
   const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { customer } = useContext(AuthContext);
@@ -42,6 +32,22 @@ function CartPage() {
       axiosClient.put("/cart", { variantId, quantity });
     }, 1000)
   ).current;
+
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
+
+  useEffect(() => {
+    const listBreadcrumb = [
+      {
+        title: "Trang Chủ",
+        url: "/",
+      },
+      {
+        title: "Giỏ Hàng",
+        url: `/cart`,
+      },
+    ];
+    setBreadcrumb(listBreadcrumb);
+  }, []);
 
   const handleDecrease = useCallback(
     (cartItem: CartVariant) => {
@@ -149,18 +155,22 @@ function CartPage() {
 
   function handleCheckOut() {
     let listSelectId: number[] = JSON.parse(localStorage.getItem("listSelectId") || "[]");
-    let checkoutVariant = cart.map((item) => {
+    let checkoutVariant: CartVariant[] = [];
+    cart.forEach((item) => {
       if (listSelectId.includes(item.variant.id)) {
-        return item;
+        checkoutVariant.push(item);
       }
     });
+    if (checkoutVariant.length === 0) {
+      toast.info("Vui lòng chọn sản phẩm trước khi thanh toán!!!");
+      return;
+    }
     localStorage.setItem("checkout-variant", JSON.stringify(checkoutVariant));
     navigate("/checkout");
   }
 
   return (
     <Fragment>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} />
       {cart && cart.length > 0 ? (
         <Box
           component="section"

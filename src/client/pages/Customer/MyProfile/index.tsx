@@ -14,6 +14,7 @@ import PrimaryButton from "~/client/components/PrimaryButton";
 import { toast } from "react-toastify";
 import axiosClient from "~/client/hooks/useFetch";
 import { AuthContext } from "~/client/context/AuthContext";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 
 export const MyProfile = () => {
   const [fullname, setFullName] = useState<string>("");
@@ -28,10 +29,23 @@ export const MyProfile = () => {
   const [avatarPreview, setAvatarPreview] = useState<string>("");
 
   const { customer, setCustomer } = useContext(AuthContext);
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
 
   useEffect(() => {
-    console.log(customer?.email);
+    const listBreadcrumb = [
+      {
+        title: "Trang Chủ",
+        url: "/",
+      },
+      {
+        title: "Hồ Sơ",
+        url: `/me`,
+      },
+    ];
+    setBreadcrumb(listBreadcrumb);
+  }, []);
 
+  useEffect(() => {
     if (customer) {
       setFullName(customer.fullName);
       setPhone(customer.phone);

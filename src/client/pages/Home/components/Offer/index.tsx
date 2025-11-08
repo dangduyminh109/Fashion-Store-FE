@@ -10,10 +10,12 @@ import { CountDown } from "./CountDown";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
 import type ProductFeatured from "~/client/types/productFeatured";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Offer = () => {
+  const navigate = useNavigate();
   const { data, loading, error } = useFetch<ProductFeatured[]>({
     endpoint: "/product/sale",
     method: "get",
@@ -22,7 +24,7 @@ export const Offer = () => {
   useLayoutEffect(() => {
     if (!data || loading || error) return;
     const ctx = gsap.context(() => {
-      gsap.from(".card-item-wrapper", {
+      gsap.from("#offer .card-item-wrapper", {
         scrollTrigger: {
           trigger: "#offer",
           start: "top 50%",
@@ -37,7 +39,7 @@ export const Offer = () => {
       });
     });
     return () => ctx.revert();
-  }, []);
+  }, [data, loading, error]);
 
   return (
     <Fragment>
@@ -89,7 +91,12 @@ export const Offer = () => {
                 ))}
             </Grid>
             <Box textAlign={"center"}>
-              <PrimaryButton sx={{ padding: "10px 20px" }}>Xem Thêm Sản Phẩm</PrimaryButton>
+              <PrimaryButton
+                sx={{ padding: "10px 20px" }}
+                onClick={() => navigate("/list-product")}
+              >
+                Xem Thêm Sản Phẩm
+              </PrimaryButton>
             </Box>
           </Box>
         </Box>

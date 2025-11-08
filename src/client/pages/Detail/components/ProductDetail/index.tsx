@@ -583,6 +583,7 @@ export default function ProductDetail({ data }: { data: ProductFeatured | null }
                     <Remove />
                   </IconButton>
                   <input
+                    readOnly
                     type="text"
                     ref={inputRef}
                     value={1}

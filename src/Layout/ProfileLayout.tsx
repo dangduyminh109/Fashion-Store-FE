@@ -3,25 +3,12 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Outlet } from "react-router-dom";
-
-import Breadcrumb from "~/client/components/Breadcrumb";
 import { ProfileMenu } from "~/client/components/ProfileMenu";
 
 const ProfleLayout = () => {
-  const listBreadcrumb = [
-    {
-      title: "Trang Chủ",
-      url: "/",
-    },
-    {
-      title: "Hồ Sơ",
-      url: `/me`,
-    },
-  ];
 
   return (
     <Fragment>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} />
       <Box
         component="section"
         sx={{

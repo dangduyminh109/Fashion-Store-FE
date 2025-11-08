@@ -18,6 +18,9 @@ import FileUploadIcon from "@mui/icons-material/FileUpload";
 import FormControl from "@mui/material/FormControl";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
 import axiosClient from "~/admin/hooks/useFetch";
 import { BackDropContext } from "~/admin/context/BackDrop";
@@ -44,6 +47,7 @@ function Create() {
     defaultValues: {
       name: "",
       displayType: "TEXT",
+      status: true,
       listAttributeValue: [
         {
           value: "",
@@ -61,6 +65,7 @@ function Create() {
       const formData = new FormData();
       formData.append(`name`, data.name);
       formData.append(`displayType`, data.displayType);
+      formData.append(`status`, data.status);
       data.listAttributeValue.forEach((item: any, index: number) => {
         formData.append(`listAttributeValue[${index}].value`, item.value);
         formData.append(`listAttributeValue[${index}].color`, item.color);
@@ -169,6 +174,30 @@ function Create() {
                     <MenuItem value="COLOR">Màu sắc</MenuItem>
                     <MenuItem value="IMAGE">Hình ảnh</MenuItem>
                   </Select>
+                </FormControl>
+              )}
+            />
+          </Grid>
+
+          <Grid size={12}>
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <FormControl component="fieldset" variant="standard">
+                  <Typography>Trạng thái</Typography>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          color="success"
+                          checked={field.value}
+                          onChange={(e) => field.onChange(e.target.checked)}
+                        />
+                      }
+                      label={field.value ? "Hoạt động" : "Không hoạt động"}
+                    />
+                  </FormGroup>
                 </FormControl>
               )}
             />

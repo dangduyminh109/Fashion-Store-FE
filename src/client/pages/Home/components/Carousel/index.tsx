@@ -1,18 +1,10 @@
 import { Box, Typography, Button } from "@mui/material";
 import { useLayoutEffect } from "react";
 import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export const Carousel = () => {
   useLayoutEffect(() => {
-    const header = document.querySelector("#header") as HTMLElement | null;
-    ScrollTrigger.create({
-      trigger: "#header",
-      start: "top -20%",
-      onEnter: () => header?.classList.add("active"),
-      onLeaveBack: () => header?.classList.remove("active"),
-    });
     const ctx = gsap.context(() => {
       gsap.fromTo(
         "#carousel",

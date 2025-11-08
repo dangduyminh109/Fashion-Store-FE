@@ -20,12 +20,13 @@ import Logout from "@mui/icons-material/Logout";
 import { AuthContext } from "~/client/context/AuthContext";
 import { Settings } from "@mui/icons-material";
 import Tooltip from "@mui/material/Tooltip";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { toast } from "react-toastify";
 
 import logo from "~/assets/images/Logo/logo-white.png";
 import AuthFormContext from "~/client/context/AuthFormContext";
 import { CartContext } from "~/client/context/CartContext";
-
+import SearchBox from "./SearchBox";
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   "& .MuiBadge-badge": {
     right: 0,
@@ -34,6 +35,7 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
   },
 }));
 export const Header = () => {
+  const [openSearch, setOpenSearch] = useState(false);
   const headerRef = useRef(null);
   const categoryRef = useRef<HTMLDivElement | null>(null);
   const navigate = useNavigate();
@@ -65,6 +67,14 @@ export const Header = () => {
   }
 
   useLayoutEffect(() => {
+    const header = document.querySelector("#header") as HTMLElement | null;
+    ScrollTrigger.create({
+      trigger: "#header",
+      start: "top -20%",
+      onEnter: () => header?.classList.add("active"),
+      onLeaveBack: () => header?.classList.remove("active"),
+    });
+
     gsap.fromTo(
       headerRef.current,
       {
@@ -130,6 +140,7 @@ export const Header = () => {
         },
       }}
     >
+      <SearchBox open={openSearch} setOpen={setOpenSearch} handleSubmit={() => {}} />
       <Box
         sx={{
           width: "80%",
@@ -182,7 +193,12 @@ export const Header = () => {
           <Link to={"/"}>
             <img src={logo} alt="logo" />
           </Link>
-          <IconButton aria-label="cart">
+          <IconButton
+            aria-label="search"
+            onClick={() => {
+              setOpenSearch(true);
+            }}
+          >
             <SearchIcon fontSize="large" />
           </IconButton>
         </Box>
@@ -257,7 +273,7 @@ export const Header = () => {
             }}
           >
             <Box component={"li"}>
-              <Link to="/">Sản phẩm</Link>
+              <Link to="/list-product">Sản phẩm</Link>
             </Box>
             <Box component={"li"} ref={categoryRef}>
               <Link to="/">Danh mục</Link>

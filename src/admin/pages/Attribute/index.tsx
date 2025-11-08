@@ -10,7 +10,11 @@ import Breadcrumb from "~/admin/components/Breadcrumb";
 import Toolbar from "~/admin/components/Toolbar";
 import { type AppDispatch, type RootState } from "~/admin/store";
 import type attribute from "~/admin/types/attribute";
-import { fetchAttribute, deleteOrRestore } from "~/admin/features/attribute/attributeApi";
+import {
+  fetchAttribute,
+  deleteOrRestore,
+  updateStatus,
+} from "~/admin/features/attribute/attributeApi";
 
 const listBreadcrumb = [
   {
@@ -30,8 +34,13 @@ const headCells: HeadCell<Attribute>[] = [
     hasSort: true,
   },
   {
-    id: "displayType",
+    id: "attributeDisplayType",
     label: "Loại hiển thị",
+    hasSort: false,
+  },
+  {
+    id: "status",
+    label: "Trạng thái",
     hasSort: false,
   },
   {
@@ -44,8 +53,9 @@ const headCells: HeadCell<Attribute>[] = [
 interface Attribute {
   id: number;
   name: string;
-  displayType: string;
+  attributeDisplayType: string;
   listAttributeValue: string;
+  status: boolean;
 }
 
 function Attribute() {
@@ -58,7 +68,8 @@ function Attribute() {
       return {
         id: item.id,
         name: item.name,
-        displayType: item.displayType,
+        status: item.status ? true : false,
+        attributeDisplayType: item.attributeDisplayType,
         listAttributeValue: item.listAttributeValue
           .map((value) => value.value)
           .filter((item) => item != null)
@@ -117,6 +128,7 @@ function Attribute() {
           deleteAction={true}
           entity="thuộc tính"
           deleteOrRestore={deleteOrRestore}
+          updateStatus={updateStatus}
         />
       )}
     </Fragment>

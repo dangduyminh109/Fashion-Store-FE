@@ -11,6 +11,7 @@ import { BackDrop } from "./BackDrop";
 import { GlobalStyle } from "~/admin/components/GlobalStyles";
 import { AuthProvider } from "./AuthContext";
 import { CartProvider } from "./CartContext";
+import { BreadcrumbProvider } from "./BreadcrumbContext";
 const ClientProvider = ({ children }: { children: ReactNode }) => {
   return (
     <Provider store={store}>
@@ -23,15 +24,17 @@ const ClientProvider = ({ children }: { children: ReactNode }) => {
         pauseOnHover={false}
       />
       <AuthProvider>
-        <CartProvider>
-          <BackDrop>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <GlobalStyle />
-              <AuthFormProvider>{children}</AuthFormProvider>
-            </ThemeProvider>
-          </BackDrop>
-        </CartProvider>
+        <BreadcrumbProvider>
+          <CartProvider>
+            <BackDrop>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <GlobalStyle />
+                <AuthFormProvider>{children}</AuthFormProvider>
+              </ThemeProvider>
+            </BackDrop>
+          </CartProvider>
+        </BreadcrumbProvider>
       </AuthProvider>
     </Provider>
   );

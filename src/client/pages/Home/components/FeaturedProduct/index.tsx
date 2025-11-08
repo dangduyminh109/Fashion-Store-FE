@@ -9,10 +9,12 @@ import { CartItem } from "~/client/components/CartItem";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
 import type ProductFeatured from "~/client/types/productFeatured";
+import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const FeaturedProduct = () => {
+  const navigate = useNavigate();
   const { data, loading, error } = useFetch<ProductFeatured[]>({
     endpoint: "/product/featured?quantity=8",
     method: "get",
@@ -20,9 +22,9 @@ export const FeaturedProduct = () => {
   useLayoutEffect(() => {
     if (!data || loading || error) return;
     const ctx = gsap.context(() => {
-      gsap.from(".card-item-wrapper", {
+      gsap.from("#FeatureProduct .card-item-wrapper", {
         scrollTrigger: {
-          trigger: "#NewProduct",
+          trigger: "#FeatureProduct",
           start: "top 50%",
           toggleActions: "play none none none",
           once: true,
@@ -35,14 +37,14 @@ export const FeaturedProduct = () => {
       });
     });
     return () => ctx.revert();
-  }, []);
+  }, [data, loading, error]);
 
   return (
     <Fragment>
       {!error && (
         <Box
           component="section"
-          id="NewProduct"
+          id="FeatureProduct"
           sx={{
             width: "100%",
             py: 5,
@@ -85,7 +87,12 @@ export const FeaturedProduct = () => {
                 ))}
             </Grid>
             <Box textAlign={"center"}>
-              <PrimaryButton sx={{ padding: "10px 20px" }}>Xem Thêm Sản Phẩm</PrimaryButton>
+              <PrimaryButton
+                sx={{ padding: "10px 20px" }}
+                onClick={() => navigate("/list-product")}
+              >
+                Xem Thêm Sản Phẩm
+              </PrimaryButton>
             </Box>
           </Box>
         </Box>

@@ -8,6 +8,8 @@ const Home = lazy(() => import("~/client/pages/Home"));
 const Detail = lazy(() => import("~/client/pages/Detail"));
 const Cart = lazy(() => import("~/client/pages/Cart"));
 const Checkout = lazy(() => import("~/client/pages/Checkout"));
+const Product = lazy(() => import("~/client/pages/Product"));
+
 const Success = lazy(() => import("~/client/pages/Success"));
 const Error = lazy(() => import("~/client/pages/Error"));
 const NotFound = lazy(() => import("~/client/pages/NotFound"));
@@ -39,6 +41,10 @@ const ClientRoutes = [
       {
         path: "checkout",
         element: <Checkout />,
+      },
+      {
+        path: "list-product",
+        element: <Product />,
       },
       {
         path: "me",

@@ -15,6 +15,8 @@ import axiosClient from "~/client/hooks/useFetch";
 import { AuthContext } from "~/client/context/AuthContext";
 import { CartContext } from "~/client/context/CartContext";
 import getCart from "~/utils/getCart";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
+import Breadcrumb from "~/client/components/Breadcrumb";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -24,6 +26,7 @@ const MainLayout = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const { setCustomer } = useContext(AuthContext);
   const { setCart } = useContext(CartContext);
+  const { breadcrumb } = useContext(BreadcrumbContext);
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
     if (smootherRef.current) return;
@@ -55,7 +58,7 @@ const MainLayout = () => {
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
 
-    const nativeScrollMain = document.querySelector("main");
+    const nativeScrollMain = document.querySelector("#root");
     nativeScrollMain?.addEventListener("mouseenter", () => {
       hoverRef.current = true;
       if (shiftPressedRef.current) {
@@ -101,10 +104,13 @@ const MainLayout = () => {
     <Box id="smooth-wrapper">
       <Header />
       <HeaderCategoryList />
+      {breadcrumb && breadcrumb.length > 0 && <Breadcrumb listBreadcrumb={breadcrumb} />}
       <Siderbar />
       <AuthForm />
-      <Box id="smooth-content" component={"main"}>
-        <Outlet />
+      <Box id="smooth-content">
+        <Box component={"main"}>
+          <Outlet />
+        </Box>
         <Footer />
       </Box>
     </Box>

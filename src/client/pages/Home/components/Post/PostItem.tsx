@@ -28,26 +28,26 @@ function truncateHtmlText(html: string, wordLimit = 20) {
   return words.slice(0, wordLimit).join(" ") + "...";
 }
 
-export const BlogItem = ({ data }: { data: PostFeatured }) => {
+export const PostItem = ({ data }: { data: PostFeatured }) => {
   return (
     <Card
       sx={{
         bgcolor: "background.default",
         height: "100%",
-        "& .blog-img": {
+        "& .post-img": {
           display: "block",
           width: "100%",
           aspectRatio: "1/0.6",
           overflow: "hidden",
           position: "relative",
         },
-        "& .blog-img img": {
+        "& .post-img img": {
           transition: "0.3s",
           height: "100%",
           width: "100%",
           objectFit: "cover",
         },
-        "&:hover .blog-img img": {
+        "&:hover .post-img img": {
           transform: "scale(1.1, 1.1)",
         },
         "& .card-hover__btn": {
@@ -61,7 +61,7 @@ export const BlogItem = ({ data }: { data: PostFeatured }) => {
         },
       }}
     >
-      <Link to={"/"} className="blog-img">
+      <Link to={"/"} className="post-img">
         <img src={data.image || defaultImg} alt="ảnh bài viết" />
         <Box
           className="card-hover__btn"

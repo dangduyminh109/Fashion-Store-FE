@@ -42,18 +42,7 @@ import type addressResponse from "~/client/types/addressResponse";
 import axiosClient from "~/client/hooks/useFetch";
 import { handleSelectProvince, handleSelectDistrict } from "~/utils/fetchAddress";
 import { CartContext } from "~/client/context/CartContext";
-import Breadcrumb from "~/client/components/Breadcrumb";
-
-const listBreadcrumb = [
-  {
-    title: "Trang Chủ",
-    url: "/",
-  },
-  {
-    title: "Thanh toán",
-    url: `/checkout`,
-  },
-];
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -69,6 +58,21 @@ function Checkout() {
   const [selectedAddress, setSelectedAddress] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const { setBackDrop } = useContext(BackDropContext);
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
+
+  useEffect(() => {
+    const listBreadcrumb = [
+      {
+        title: "Trang Chủ",
+        url: "/",
+      },
+      {
+        title: "Thanh toán",
+        url: `/checkout`,
+      },
+    ];
+    setBreadcrumb(listBreadcrumb);
+  }, []);
 
   useEffect(() => {
     let selectProduct = JSON.parse(localStorage.getItem("checkout-variant") || "[]");
@@ -222,7 +226,6 @@ function Checkout() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
-      <Breadcrumb listBreadcrumb={listBreadcrumb} />
       <Box
         component="section"
         sx={{
@@ -293,7 +296,7 @@ function Checkout() {
                     },
                   }}
                 >
-                  {customer && customer.addresses && (
+                  {customer && customer.addresses.length > 0 && (
                     <Grid size={12}>
                       <FormControl fullWidth size="small">
                         <InputLabel shrink id="select-address" sx={{ color: "text.primary" }}>

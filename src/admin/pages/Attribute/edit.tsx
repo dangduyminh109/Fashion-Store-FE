@@ -19,6 +19,9 @@ import FormControl from "@mui/material/FormControl";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import CircularProgress from "@mui/material/CircularProgress";
+import FormGroup from "@mui/material/FormGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
 
 import axiosClient from "~/admin/hooks/useFetch";
 import { BackDropContext } from "~/admin/context/BackDrop";
@@ -70,6 +73,7 @@ function Edit() {
           const data = attribute.data.result;
           setValue("name", data.name);
           setValue("displayType", data.attributeDisplayType);
+          setValue("status", data.status);
           data.listAttributeValue?.forEach((attributeValue: AttributeValue, index: number) => {
             setValue(`listAttributeValue.${index}.id`, `${attributeValue?.id}` || "");
             setValue(`listAttributeValue.${index}.color`, attributeValue?.color || "");
@@ -105,6 +109,7 @@ function Edit() {
       const formData = new FormData();
       formData.append(`name`, data.name);
       formData.append(`displayType`, data.displayType);
+      formData.append(`status`, data.status);
       data.listAttributeValue.forEach((item: any, index: number) => {
         formData.append(`listAttributeValue[${index}].id`, item.id);
         formData.append(`listAttributeValue[${index}].value`, item.value);
@@ -232,6 +237,30 @@ function Edit() {
                       <MenuItem value="COLOR">Màu sắc</MenuItem>
                       <MenuItem value="IMAGE">Hình ảnh</MenuItem>
                     </Select>
+                  </FormControl>
+                )}
+              />
+            </Grid>
+
+            <Grid size={12}>
+              <Controller
+                name="status"
+                control={control}
+                render={({ field }) => (
+                  <FormControl component="fieldset" variant="standard">
+                    <Typography>Trạng thái</Typography>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            color="success"
+                            checked={field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                          />
+                        }
+                        label={field.value ? "Hoạt động" : "Không hoạt động"}
+                      />
+                    </FormGroup>
                   </FormControl>
                 )}
               />

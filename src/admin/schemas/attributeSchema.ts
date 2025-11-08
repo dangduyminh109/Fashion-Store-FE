@@ -3,6 +3,7 @@ import * as yup from "yup";
 const createSchema = yup.object({
   name: yup.string().required("Tên thuộc tính không được để trống!"),
   displayType: yup.string().default("TEXT").required("Loại hiển thị không được để trống!"),
+  status: yup.boolean().default(true),
   listAttributeValue: yup
     .array()
     .of(
@@ -30,6 +31,7 @@ const createSchema = yup.object({
 const editSchema = yup.object({
   name: yup.string().required("Tên thuộc tính không được để trống!"),
   displayType: yup.string().default("TEXT").required("Loại hiển thị không được để trống!"),
+  status: yup.boolean().default(true),
   listAttributeValue: yup
     .array()
     .of(

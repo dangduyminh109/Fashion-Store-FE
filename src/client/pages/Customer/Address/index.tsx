@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
@@ -14,6 +14,7 @@ import type Address from "~/client/types/address";
 import ConfirmModel from "~/client/components/ConfirmModel";
 import { FormAddress } from "./components/FormAddress";
 import { AuthContext } from "~/client/context/AuthContext";
+import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 
 export const AddressPage = () => {
   const [loading] = useState(false);
@@ -25,6 +26,21 @@ export const AddressPage = () => {
   const [isUpdate, setIsUpdate] = useState(false);
 
   const [open, setOpen] = useState<boolean>(false);
+  const { setBreadcrumb } = useContext(BreadcrumbContext);
+
+  useEffect(() => {
+    const listBreadcrumb = [
+      {
+        title: "Trang Chủ",
+        url: "/",
+      },
+      {
+        title: "Địa chỉ",
+        url: `/me/address`,
+      },
+    ];
+    setBreadcrumb(listBreadcrumb);
+  }, []);
 
   async function handleDelete() {
     setOpen(false);

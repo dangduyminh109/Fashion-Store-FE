@@ -5,13 +5,13 @@ import { Fragment, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PrimaryButton from "~/client/components/PrimaryButton";
-import { BlogItem } from "./BlogItem";
+import { PostItem } from "./PostItem";
 import { useFetch } from "~/client/hooks/useFetch";
 import type PostFeatured from "~/client/types/postFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export const Blog = () => {
+export const Post = () => {
   const { data, loading, error } = useFetch<PostFeatured[]>({
     endpoint: "/post/featured",
     method: "get",
@@ -20,9 +20,9 @@ export const Blog = () => {
   useLayoutEffect(() => {
     if (!data || loading || error) return;
     const ctx = gsap.context(() => {
-      gsap.from(".card-blog-item-wrapper", {
+      gsap.from("#post .card-item-wrapper", {
         scrollTrigger: {
-          trigger: "#blog",
+          trigger: "#post",
           start: "top 50%",
           toggleActions: "play none none none",
           once: true,
@@ -35,14 +35,14 @@ export const Blog = () => {
       });
     });
     return () => ctx.revert();
-  }, []);
+  }, [data, loading, error]);
 
   return (
     <Fragment>
       {!error && (
         <Box
           component="section"
-          id="blog"
+          id="post"
           sx={{
             width: "100%",
             py: 5,
@@ -78,21 +78,19 @@ export const Blog = () => {
                 Xem Tất Cả
               </PrimaryButton>
             </Box>
-            {data && !loading && (
-              <Grid container spacing={2} alignItems={"stretch"}>
-                {data.map((item) => {
-                  return (
-                    <Grid
-                      size={{ xs: 6, md: 4, lg: 3 }}
-                      className="card-blog-item-wrapper"
-                      key={item.id}
-                    >
-                      <BlogItem data={item} />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            )}
+            <Grid container spacing={2} alignItems={"stretch"}>
+              {data &&
+                !loading &&
+                data.map((post) => (
+                  <Grid
+                    size={{ xs: 6, md: 4, lg: 3 }}
+                    className="card-item-wrapper"
+                    key={post.id}
+                  >
+                    <PostItem data={post} />
+                  </Grid>
+                ))}
+            </Grid>
           </Box>
         </Box>
       )}
