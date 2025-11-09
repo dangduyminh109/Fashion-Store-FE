@@ -13,7 +13,7 @@ import LoyaltyIcon from "@mui/icons-material/Loyalty";
 import ArticleIcon from "@mui/icons-material/Article";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { Fragment, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import logo from "~/assets/images/Logo/logo-white.png";
@@ -24,7 +24,7 @@ import { SubCategory } from "../CategoryList/SubCategory";
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
-
+  const navigate = useNavigate();
   const handleClick = () => {
     setOpen(!open);
   };
@@ -82,7 +82,11 @@ export default function Sidebar() {
         {!isSubCategory && (
           <Fragment>
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/list-product");
+                }}
+              >
                 <ListItemIcon sx={{ minWidth: "0", mr: "5px" }}>
                   <InventoryIcon color="secondary" />
                 </ListItemIcon>
@@ -100,7 +104,11 @@ export default function Sidebar() {
             <CategoryList isOpen={open} />
 
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/list-product");
+                }}
+              >
                 <ListItemIcon sx={{ minWidth: "0", mr: "5px" }}>
                   <LoyaltyIcon color="secondary" />
                 </ListItemIcon>
@@ -109,7 +117,11 @@ export default function Sidebar() {
             </ListItem>
 
             <ListItem disablePadding>
-              <ListItemButton>
+              <ListItemButton
+                onClick={() => {
+                  navigate("/post");
+                }}
+              >
                 <ListItemIcon sx={{ minWidth: "0", mr: "5px" }}>
                   <ArticleIcon color="secondary" />
                 </ListItemIcon>

@@ -276,13 +276,13 @@ export const Header = () => {
               <Link to="/list-product">Sản phẩm</Link>
             </Box>
             <Box component={"li"} ref={categoryRef}>
-              <Link to="/">Danh mục</Link>
+              <Link to="/list-product">Danh mục</Link>
             </Box>
             <Box component={"li"}>
-              <Link to="/">Khuyến mãi</Link>
+              <Link to="/list-product">Khuyến mãi</Link>
             </Box>
             <Box component={"li"}>
-              <Link to="/">Bài viết</Link>
+              <Link to="/post">Bài viết</Link>
             </Box>
           </Box>
         </Box>

@@ -3,7 +3,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import IconButton from "@mui/material/IconButton";
 import Box from "@mui/material/Box";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -29,6 +29,7 @@ function truncateHtmlText(html: string, wordLimit = 20) {
 }
 
 export const PostItem = ({ data }: { data: PostFeatured }) => {
+  const navigate = useNavigate();
   return (
     <Card
       sx={{
@@ -61,7 +62,7 @@ export const PostItem = ({ data }: { data: PostFeatured }) => {
         },
       }}
     >
-      <Link to={"/"} className="post-img">
+      <Link to={"/post/" + data.slug} className="post-img">
         <img src={data.image || defaultImg} alt="ảnh bài viết" />
         <Box
           className="card-hover__btn"
@@ -86,7 +87,7 @@ export const PostItem = ({ data }: { data: PostFeatured }) => {
         </Box>
       </Link>
       <CardContent>
-        <Link to={"/"}>
+        <Link to={"/post/" + data.slug}>
           <Typography
             gutterBottom
             variant="h5"
@@ -108,7 +109,7 @@ export const PostItem = ({ data }: { data: PostFeatured }) => {
         </Link>
         <Typography variant="body2" display={"flex"} alignItems={"center"}>
           <CalendarMonthIcon />
-          15/07/2024
+          {new Date(data.createdAt).toLocaleDateString("vi-VN")}
         </Typography>
         <Typography
           variant="body2"
@@ -125,7 +126,14 @@ export const PostItem = ({ data }: { data: PostFeatured }) => {
         </Typography>
       </CardContent>
       <CardActions sx={{ padding: "0 16px 16px" }}>
-        <PrimaryButton sx={{ padding: "3px 15px" }}>Xem thêm</PrimaryButton>
+        <PrimaryButton
+          sx={{ padding: "3px 15px" }}
+          onClick={() => {
+            navigate("/post/" + data.slug);
+          }}
+        >
+          Xem Ngay
+        </PrimaryButton>
       </CardActions>
     </Card>
   );

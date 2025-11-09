@@ -2,16 +2,19 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Grid from "@mui/material/Grid";
 import { Fragment, useLayoutEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import PrimaryButton from "~/client/components/PrimaryButton";
-import { PostItem } from "./PostItem";
+import { PostItem } from "../../../../components/PostItem";
 import { useFetch } from "~/client/hooks/useFetch";
 import type PostFeatured from "~/client/types/postFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export const Post = () => {
+  const navigate = useNavigate();
   const { data, loading, error } = useFetch<PostFeatured[]>({
     endpoint: "/post/featured",
     method: "get",
@@ -74,7 +77,13 @@ export const Post = () => {
               >
                 Bài Viết
               </Typography>
-              <PrimaryButton size="large" sx={{ padding: "8px 30px" }}>
+              <PrimaryButton
+                size="large"
+                sx={{ padding: "8px 30px" }}
+                onClick={() => {
+                  navigate("/post");
+                }}
+              >
                 Xem Tất Cả
               </PrimaryButton>
             </Box>
@@ -82,11 +91,7 @@ export const Post = () => {
               {data &&
                 !loading &&
                 data.map((post) => (
-                  <Grid
-                    size={{ xs: 6, md: 4, lg: 3 }}
-                    className="card-item-wrapper"
-                    key={post.id}
-                  >
+                  <Grid size={{ xs: 6, md: 4, lg: 3 }} className="card-item-wrapper" key={post.id}>
                     <PostItem data={post} />
                   </Grid>
                 ))}

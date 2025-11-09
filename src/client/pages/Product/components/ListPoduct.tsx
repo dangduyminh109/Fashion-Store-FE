@@ -153,7 +153,7 @@ export const ListProduct = () => {
     let url = `/product?page=${value - 1}&size=${size}`;
 
     if (categoryId) {
-      url = url + `&categoryId=` + categoryId;
+      url = url + `&categoryIds=` + categoryId;
     }
     if (value * size >= listProduct.length + size) {
       dispatch(refillProduct({ url, method: "get" }));

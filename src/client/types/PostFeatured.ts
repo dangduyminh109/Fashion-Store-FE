@@ -4,4 +4,5 @@ export default interface PostFeatured {
   slug: string;
   image: string;
   content: string;
+  createdAt: Date;
 }

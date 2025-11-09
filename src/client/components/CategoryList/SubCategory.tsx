@@ -10,8 +10,11 @@ import type { AppDispatch, RootState } from "~/client/store";
 
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
+import { useNavigate } from "react-router-dom";
+import { toggleFilter } from "~/client/features/product/productSlice";
 
 export const SubCategory = ({ data }: { data: CategoryTree | undefined }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   let categoryList: CategoryTree[] = data?.children || [];
 
@@ -55,6 +58,10 @@ export const SubCategory = ({ data }: { data: CategoryTree | undefined }) => {
               disablePadding
             >
               <ListItemButton
+                onClick={() => {
+                  navigate(`/list-product`);
+                  dispatch(toggleFilter({ group: "categorys", key: String(data?.id) }));
+                }}
                 sx={{
                   pl: 4,
                   color: "text.secondary",
