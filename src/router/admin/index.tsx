@@ -5,6 +5,7 @@ import { Login } from "~/admin/pages/Auth/Login";
 import AppProvider from "~/admin/context/AdminProvider";
 import { PrivateRoute } from "./PrivateRoute";
 import { PublicRoute } from "./PublicRoute";
+import Profile from "~/admin/pages/Profile";
 
 const Dashboard = lazy(() => import("~/admin/pages/Dashboard"));
 const Product = lazy(() => import("~/admin/pages/Product"));
@@ -74,6 +75,10 @@ const AdminRoutes = [
       {
         path: "",
         element: <Dashboard />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
       {
         path: "products",
