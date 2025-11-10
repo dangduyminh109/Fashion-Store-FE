@@ -1,16 +1,21 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useLayoutEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
 import gsap from "gsap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import defaultCategory from "~/assets/images/default-category.png";
 import type CategoryFeatured from "~/client/types/categoryFeatured";
-
+import { setCategory } from "~/client/features/product/productSlice";
+import type { AppDispatch } from "~/client/store";
 gsap.registerPlugin(ScrollTrigger);
 
 export const CategoryItem = ({ data }: { data: CategoryFeatured }) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
@@ -25,9 +30,14 @@ export const CategoryItem = ({ data }: { data: CategoryFeatured }) => {
       ctx.revert();
     };
   }, []);
+  function handleChooseCategory(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id: number) {
+    e.preventDefault();
+    dispatch(setCategory({ [String(id)]: true }));
+    navigate(`/list-product`);
+  }
   return (
     <Box sx={{ minWidth: "150px", maxWidth: "200px" }}>
-      <Link to={`/category/${data.slug}`}>
+      <Link to={`/list-product`} onClick={(e) => handleChooseCategory(e, data.id)}>
         <Box
           sx={{
             position: "relative",

@@ -1,23 +1,22 @@
 import { Fragment } from "react/jsx-runtime";
-import type CategoryTree from "~/client/types/categoryTree";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import AddIcon from "@mui/icons-material/Add";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "~/client/store";
-
 import ListItem from "@mui/material/ListItem";
 import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
-import { toggleFilter } from "~/client/features/product/productSlice";
+
+import { setCategory } from "~/client/features/product/productSlice";
+import type CategoryTree from "~/client/types/categoryTree";
+import type { AppDispatch, RootState } from "~/client/store";
 
 export const SubCategory = ({ data }: { data: CategoryTree | undefined }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   let categoryList: CategoryTree[] = data?.children || [];
-
   if (!categoryList || categoryList.length === 0) {
     const { categoryData } = useSelector((state: RootState) => state.navbar);
     categoryList = categoryData || [];
@@ -29,6 +28,10 @@ export const SubCategory = ({ data }: { data: CategoryTree | undefined }) => {
     }
   }
 
+  function handleChooseCategory(id: number) {
+    navigate(`/list-product`);
+    dispatch(setCategory({ [String(id)]: true }));
+  }
   return (
     <Fragment>
       {categoryList &&
@@ -58,10 +61,7 @@ export const SubCategory = ({ data }: { data: CategoryTree | undefined }) => {
               disablePadding
             >
               <ListItemButton
-                onClick={() => {
-                  navigate(`/list-product`);
-                  dispatch(toggleFilter({ group: "categorys", key: String(data?.id) }));
-                }}
+                onClick={() => handleChooseCategory(category.id)}
                 sx={{
                   pl: 4,
                   color: "text.secondary",

@@ -1,12 +1,24 @@
 import Box from "@mui/material/Box";
 import { Fragment, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+
 import type { AppDispatch, RootState } from "~/client/store";
 import { fetchSidebar } from "~/client/features/sidebar/sidebarApi";
-import { Link } from "react-router-dom";
 import type CategoryTree from "~/client/types/categoryTree";
+import { setCategory } from "~/client/features/product/productSlice";
 
 function SubCategoryList({ subCategory, index }: { subCategory: CategoryTree; index: number }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  function handleChooseCategory(
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    subCategory: CategoryTree
+  ) {
+    e.preventDefault();
+    dispatch(setCategory({ [String(subCategory.id)]: true }));
+    navigate(`/list-product`);
+  }
   return (
     <Fragment>
       <Box component="li" sx={{ mb: 1, ml: index * 2, pr: 5 }}>
@@ -20,7 +32,9 @@ function SubCategoryList({ subCategory, index }: { subCategory: CategoryTree; in
             },
           }}
         >
-          <Link to={"/"}>{subCategory.name}</Link>
+          <Link to={"/"} onClick={(e) => handleChooseCategory(e, subCategory)}>
+            {subCategory.name}
+          </Link>
         </Box>
       </Box>
       {subCategory.children &&

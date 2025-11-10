@@ -17,7 +17,7 @@ import { CartContext } from "~/client/context/CartContext";
 import getCart from "~/utils/getCart";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 import Breadcrumb from "~/client/components/Breadcrumb";
-
+import ScrollTop from "~/client/components/ScrollToTopButton";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const MainLayout = () => {
@@ -113,6 +113,7 @@ const MainLayout = () => {
         </Box>
         <Footer />
       </Box>
+      <ScrollTop />
     </Box>
   );
 };

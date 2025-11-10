@@ -4,25 +4,51 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import Pagination from "@mui/material/Pagination";
 import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import { useSearchParams } from "react-router-dom";
 
 import { CartItem } from "~/client/components/CartItem";
 import { fetchProduct, refillProduct } from "~/client/features/product/productApi";
 import type { AppDispatch, RootState } from "~/client/store";
-import { setPage } from "~/client/features/product/productSlice";
+import { setPage, setTitle } from "~/client/features/product/productSlice";
 import type ProductFeatured from "~/client/types/productFeatured";
 import { priceDataFilter } from "./Filter";
 import handlePrice from "~/utils/handlePrice";
-
 export const ListProduct = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { listProduct, page, size, totalPage, filters, sort } = useSelector(
+  const { listProduct, page, size, totalPage, filters, sort, loading } = useSelector(
     (state: RootState) => state.product
   );
   const [productData, setProductData] = useState<ProductFeatured[]>([]);
-
+  const [searchParams] = useSearchParams();
+  const promotion = searchParams.get("promotion");
+  const search = searchParams.get("search");
   useEffect(() => {
-    dispatch(fetchProduct({ url: `/product?page=${page}&size=${size}`, method: "get" }));
-  }, []);
+    const categoryId = Object.entries(filters.categorys).reduce((result, [key, value]) => {
+      if (value) {
+        return result ? result + "," + key : key;
+      }
+      return result;
+    }, "");
+
+    let url = `/product?page=${0}&size=${size}`;
+    if (categoryId) {
+      url = url + `&categoryIds=` + categoryId;
+    }
+    if (search) {
+      url = url + "&search=" + search;
+    }
+    if (promotion) {
+      url = url + "&promotion=true";
+      dispatch(setTitle("Sản Phẩm Khuyến Mãi"));
+    }
+    dispatch(
+      fetchProduct({
+        url,
+        method: "get",
+      })
+    );
+  }, [filters.categorys, promotion]);
 
   useEffect(() => {
     let data = [];
@@ -173,15 +199,27 @@ export const ListProduct = () => {
           ))}
         </Grid>
       )}
-      {!productData ||
-        (productData.length === 0 && (
-          <Typography
-            variant="h3"
-            sx={{ display: "block", width: "100%", textAlign: "center", my: 2 }}
-          >
-            Không tìm thấy sản phẩm nào!!!
-          </Typography>
-        ))}
+      {loading == "pending" && (
+        <Box
+          sx={{
+            with: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress sx={{ color: "secondary.main" }} />
+        </Box>
+      )}
+      {loading == "succeeded" && (!productData || productData.length === 0) && (
+        <Typography
+          variant="h3"
+          sx={{ display: "block", width: "100%", textAlign: "center", my: 2 }}
+        >
+          Không tìm thấy sản phẩm nào!!!
+        </Typography>
+      )}
       <Pagination
         onChange={handleChange}
         page={page + 1}

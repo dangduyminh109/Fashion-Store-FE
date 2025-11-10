@@ -140,7 +140,7 @@ export const Header = () => {
         },
       }}
     >
-      <SearchBox open={openSearch} setOpen={setOpenSearch} handleSubmit={() => {}} />
+      <SearchBox open={openSearch} setOpen={setOpenSearch} />
       <Box
         sx={{
           width: "80%",
@@ -279,7 +279,7 @@ export const Header = () => {
               <Link to="/list-product">Danh mục</Link>
             </Box>
             <Box component={"li"}>
-              <Link to="/list-product">Khuyến mãi</Link>
+              <Link to="/list-product?promotion=true">Khuyến mãi</Link>
             </Box>
             <Box component={"li"}>
               <Link to="/post">Bài viết</Link>

@@ -8,6 +8,8 @@ import Checkbox from "@mui/material/Checkbox";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import { useFetch } from "~/client/hooks/useFetch";
 import type { AppDispatch, RootState } from "~/client/store";
@@ -16,7 +18,6 @@ import { fetchProduct } from "~/client/features/product/productApi";
 import type Brand from "~/client/types/brand";
 import type Attribute from "~/client/types/attribute";
 import type CategoryTree from "~/client/types/categoryTree";
-import { useEffect, useState } from "react";
 import type AttributeValue from "~/client/types/attributeValue";
 
 export const priceDataFilter = [
@@ -70,6 +71,9 @@ export const Filter = () => {
   const { filters, size } = useSelector((state: RootState) => state.product);
   const dispatch = useDispatch<AppDispatch>();
   const [listCategory, setListCategory] = useState<CategoryTree[]>([]);
+  const [searchParams] = useSearchParams();
+  const promotion = searchParams.get("promotion");
+  const search = searchParams.get("search");
 
   useEffect(() => {
     if (categoryData) {
@@ -109,6 +113,12 @@ export const Filter = () => {
     let url = `/product?page=${0}&size=${size}`;
     if (categoryId) {
       url = url + `&categoryIds=` + categoryId;
+    }
+    if (search) {
+      url = url + "&search=" + search;
+    }
+    if (promotion) {
+      url = url + "&promotion=true";
     }
     dispatch(
       fetchProduct({
@@ -276,7 +286,7 @@ export const Filter = () => {
                             color: "secondary.main",
                           },
                         }}
-                        checked={filters.categorys[item.slug]}
+                        checked={filters.categorys[item.id]}
                         onChange={() => {
                           handleChangeCategory(item.id);
                         }}

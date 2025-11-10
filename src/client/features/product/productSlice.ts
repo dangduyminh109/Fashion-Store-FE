@@ -49,6 +49,12 @@ const productSlice = createSlice({
     setPage: (state, action) => {
       state.page = action.payload;
     },
+    setCategory: (state, action) => {
+      state.filters.categorys = action.payload;
+    },
+    setTitle: (state, action) => {
+      state.title = action.payload;
+    },
     toggleFilter: (
       state,
       action: PayloadAction<{
@@ -87,6 +93,7 @@ const productSlice = createSlice({
         state.listProduct = action.payload.result.listProduct;
         state.totalPage = action.payload.result.totalPage;
         state.page = 0;
+        state.loading = "succeeded";
       })
       .addCase(fetchProduct.rejected, (state, action) => {
         state.loading = "failed";
@@ -114,5 +121,5 @@ const productSlice = createSlice({
       });
   },
 });
-export const { setSort, toggleFilter, setPage } = productSlice.actions;
+export const { setSort, toggleFilter, setPage, setCategory, setTitle } = productSlice.actions;
 export default productSlice.reducer;
