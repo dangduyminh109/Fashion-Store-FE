@@ -60,6 +60,7 @@ export const Header = () => {
   function handleLogout() {
     localStorage.removeItem("customer-token");
     localStorage.removeItem("customer");
+    localStorage.removeItem("conversationHistory");
     localStorage.setItem("cart", JSON.stringify([]));
     setCustomer(null);
     setCart([]);

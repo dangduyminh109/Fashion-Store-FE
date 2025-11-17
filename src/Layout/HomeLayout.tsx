@@ -14,6 +14,7 @@ import { AuthForm } from "~/client/components/AuthForm";
 import axiosClient from "~/client/hooks/useFetch";
 import { AuthContext } from "~/client/context/AuthContext";
 import { CartContext } from "~/client/context/CartContext";
+import carousel from "~/assets/images/carousel-1.png";
 import getCart from "~/utils/getCart";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";
 import Breadcrumb from "~/client/components/Breadcrumb";
@@ -108,6 +109,20 @@ const MainLayout = () => {
       {breadcrumb && breadcrumb.length > 0 && <Breadcrumb listBreadcrumb={breadcrumb} />}
       <Siderbar />
       <AuthForm />
+      <Box
+        id="carousel"
+        sx={{
+          width: "100%",
+          height: "100vh",
+          backgroundImage: `url(${carousel})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          position: "fixed",
+          zIndex: -10,
+          mt: "-45px",
+        }}
+      ></Box>
       <Box id="smooth-content">
         <Box component={"main"}>
           <Outlet />
