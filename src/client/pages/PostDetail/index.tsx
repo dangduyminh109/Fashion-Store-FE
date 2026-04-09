@@ -8,7 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import type { RootState } from "~/client/store";
 import axiosClient from "~/client/hooks/useFetch";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";
-import type PostFeatured from "~/client/types/postFeatured";
+import type PostFeatured from "~/client/types/PostFeatured";
 function PostDetail() {
   const { setBreadcrumb } = useContext(BreadcrumbContext);
   const { slug } = useParams();

@@ -52,14 +52,15 @@ export const Register = ({ switchLogin }: { switchLogin: () => void }) => {
       ).data;
       if (res.code === 1000) {
         setLoading(false);
-        toast.success("Đăng kí thành công!");
+        toast.success("Đăng ký thành công!");
         switchLogin();
       } else {
         toast.error(res.message);
       }
     } catch (error: any) {
-      let message = "Đăng kí không thành công có lỗi xãy ra!!!";
+      let message = "Đăng ký không thành công có lỗi xãy ra!!!";
       if (error.response?.data?.code == 9411) message = "OTP không hợp lệ!";
+      if (error.response?.data?.code == 9002) message = "Tài khoản đã tồn tại!";
       toast.error(message);
     } finally {
       setLoading(false);

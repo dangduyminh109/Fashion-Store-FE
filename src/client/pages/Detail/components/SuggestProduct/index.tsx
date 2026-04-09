@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { CartItem } from "~/client/components/CartItem";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
-import type ProductFeatured from "~/client/types/productFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 export const SuggestProduct = ({ productId }: { productId: number }) => {
   const navigate = useNavigate();
   const { data, loading, error } = useFetch<ProductFeatured[]>({
-    endpoint: "/product/suggest/" + productId,
+    endpoint: `/recommend?items=${productId}`,
     method: "get",
   });
   useLayoutEffect(() => {
@@ -37,7 +37,7 @@ export const SuggestProduct = ({ productId }: { productId: number }) => {
       });
     });
     return () => ctx.revert();
-  }, []);
+  }, [data, loading, error]);
 
   return (
     <Fragment>

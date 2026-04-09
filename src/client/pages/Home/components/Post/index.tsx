@@ -9,7 +9,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { PostItem } from "../../../../components/PostItem";
 import { useFetch } from "~/client/hooks/useFetch";
-import type PostFeatured from "~/client/types/postFeatured";
+import type PostFeatured from "~/client/types/PostFeatured";
 
 gsap.registerPlugin(ScrollTrigger);
 

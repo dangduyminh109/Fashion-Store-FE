@@ -14,13 +14,13 @@ export const Carousel = () => {
         },
         {
           y: 0,
-          duration: 1.5,
+          duration: 2,
           opacity: 1,
           ease: "power3.out",
         }
       );
 
-      const tl = gsap.timeline({ defaults: { ease: "power2.in", duration: 0.8 } });
+      const tl = gsap.timeline({ defaults: { ease: "power2.in", duration: 1 } });
       tl.from("#carousel-title", { y: 70, opacity: 0 })
         .from("#carousel-slogan", { y: 60, opacity: 0 }, "-=0.5")
         .from("#carousel-content", { y: 50, opacity: 0 }, "-=0.5")

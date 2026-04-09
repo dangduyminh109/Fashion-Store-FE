@@ -59,7 +59,6 @@ function Checkout() {
   const [loading, setLoading] = useState(false);
   const { setBackDrop } = useContext(BackDropContext);
   const { setBreadcrumb } = useContext(BreadcrumbContext);
-
   useEffect(() => {
     const listBreadcrumb = [
       {
@@ -80,29 +79,29 @@ function Checkout() {
   }, [cart]);
 
   useEffect(() => {
-    if (customer) {
+    const applyAddress = async () => {
+      if (!customer) {
+        handleSelectProvince(1, setLoading, setDistricts);
+        reset();
+        return;
+      }
       setValue("customerName", customer.fullName);
       if (customer.addresses.length > 0) {
-        let address =
-          customer.addresses.find((item) => {
-            if (selectedAddress) {
-              return item.id === selectedAddress;
-            }
-            return item.isDefault === true;
-          }) || customer.addresses[0];
+        const address =
+          customer.addresses.find((item) =>
+            selectedAddress ? item.id === selectedAddress : item.isDefault
+          ) || customer.addresses[0];
         setSelectedAddress(address.id);
         setValue("address", address.address);
         setValue("phone", address.phone);
         setValue("cityId", address.cityId);
+        await handleSelectProvince(address.cityId, setLoading, setDistricts);
         setValue("districtId", address.districtId);
+        await handleSelectDistrict(address.districtId, setLoading, setWards);
         setValue("wardId", address.wardId);
-        handleSelectProvince(address.cityId, setLoading, setDistricts);
-        handleSelectDistrict(address.districtId, setLoading, setWards);
       }
-    } else {
-      handleSelectProvince(1, setLoading, setDistricts);
-      reset();
-    }
+    };
+    applyAddress();
   }, [customer, selectedAddress]);
 
   useEffect(() => {
@@ -223,7 +222,6 @@ function Checkout() {
   const onError = (data: any) => {
     toast.warning(getLastError(data));
   };
-
   return (
     <form onSubmit={handleSubmit(onSubmit, onError)}>
       <Box
@@ -446,6 +444,7 @@ function Checkout() {
                           </InputLabel>
                           <Select
                             {...field}
+                            value={field.value ?? ""}
                             labelId="district-label"
                             displayEmpty
                             label={" Quận/Huyện"}
@@ -483,6 +482,7 @@ function Checkout() {
                           </InputLabel>
                           <Select
                             {...field}
+                            value={field.value ?? ""}
                             labelId="ward-label"
                             displayEmpty
                             label={"Xã/Phường"}

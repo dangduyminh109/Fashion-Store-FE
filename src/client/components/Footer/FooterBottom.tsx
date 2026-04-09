@@ -335,7 +335,7 @@ export const FooterBottom = () => {
                       height: "38px",
                     }}
                   >
-                    Đăng Kí
+                    Đăng Ký
                   </Button>
                 </Box>
                 <Box

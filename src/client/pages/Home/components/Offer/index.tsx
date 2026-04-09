@@ -9,7 +9,7 @@ import { CartItem } from "~/client/components/CartItem";
 import { CountDown } from "./CountDown";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { useFetch } from "~/client/hooks/useFetch";
-import type ProductFeatured from "~/client/types/productFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 import { useNavigate } from "react-router-dom";
 
 gsap.registerPlugin(ScrollTrigger);

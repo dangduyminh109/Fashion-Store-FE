@@ -11,7 +11,7 @@ import { CartItem } from "~/client/components/CartItem";
 import { fetchProduct, refillProduct } from "~/client/features/product/productApi";
 import type { AppDispatch, RootState } from "~/client/store";
 import { setPage, setTitle } from "~/client/features/product/productSlice";
-import type ProductFeatured from "~/client/types/productFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 import { priceDataFilter } from "./Filter";
 import handlePrice from "~/utils/handlePrice";
 export const ListProduct = () => {
@@ -198,19 +198,6 @@ export const ListProduct = () => {
             </Grid>
           ))}
         </Grid>
-      )}
-      {loading == "pending" && (
-        <Box
-          sx={{
-            with: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <CircularProgress sx={{ color: "secondary.main" }} />
-        </Box>
       )}
       {loading == "succeeded" && (!productData || productData.length === 0) && (
         <Typography

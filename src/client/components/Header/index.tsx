@@ -84,7 +84,7 @@ export const Header = () => {
       {
         y: 0,
         ease: "power2.inout",
-        duration: 1,
+        duration: 2,
       }
     );
 
@@ -96,7 +96,7 @@ export const Header = () => {
       {
         y: 0,
         ease: "power2.out",
-        duration: 1.5,
+        duration: 2,
       }
     );
   }, []);

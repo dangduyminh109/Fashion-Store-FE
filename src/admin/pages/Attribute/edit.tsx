@@ -111,7 +111,9 @@ function Edit() {
       formData.append(`displayType`, data.displayType);
       formData.append(`status`, data.status);
       data.listAttributeValue.forEach((item: any, index: number) => {
-        formData.append(`listAttributeValue[${index}].id`, item.id);
+        if (item.id) {
+          formData.append(`listAttributeValue[${index}].id`, item.id);
+        }
         formData.append(`listAttributeValue[${index}].value`, item.value);
         formData.append(`listAttributeValue[${index}].color`, item.color);
         formData.append(`listAttributeValue[${index}].imageDelete`, item.imageDelete || false);

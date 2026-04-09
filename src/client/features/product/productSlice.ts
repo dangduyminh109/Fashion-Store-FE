@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { fetchProduct, refillProduct } from "./productApi";
-import type ProductFeatured from "~/client/types/productFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 
 interface initialStateType {
   title: string;
@@ -114,6 +114,7 @@ const productSlice = createSlice({
         } else {
           state.page = state.page + 1;
         }
+        state.loading = "succeeded";
       })
       .addCase(refillProduct.rejected, (state, action) => {
         state.loading = "failed";

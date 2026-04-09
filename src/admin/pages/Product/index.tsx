@@ -154,6 +154,7 @@ function Mapper(data: ProductResponse[]) {
           name: p.name,
           categoryName: p.categoryName,
           brandName: p.brandName,
+          image: p.productImages.length > 0 ? p.productImages[0] : "",
           status: p.status,
           isFeatured: p.isFeatured,
           sku: v.sku,

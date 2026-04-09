@@ -923,6 +923,7 @@ function Create() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -940,6 +941,7 @@ function Create() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -957,6 +959,7 @@ function Create() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -974,6 +977,7 @@ function Create() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -991,6 +995,7 @@ function Create() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />

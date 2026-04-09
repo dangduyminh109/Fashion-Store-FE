@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import ProductDetail from "./components/ProductDetail";
 import axiosClient from "~/client/hooks/useFetch";
 
-import type ProductFeatured from "~/client/types/productFeatured";
+import type ProductFeatured from "~/client/types/ProductFeatured";
 import { SuggestProduct } from "./components/SuggestProduct";
 import { ProductDescription } from "./components/ProductDescription";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";

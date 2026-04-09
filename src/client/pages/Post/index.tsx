@@ -12,7 +12,7 @@ import type { AppDispatch, RootState } from "~/client/store";
 import { setPage } from "~/client/features/post/postSlice";
 import { PostItem } from "~/client/components/PostItem";
 import { fetchPost, refillPost } from "~/client/features/post/postApi";
-import type PostFeatured from "~/client/types/postFeatured";
+import type PostFeatured from "~/client/types/PostFeatured";
 
 function Post() {
   const [listDisplayPost, setListDisplayPost] = useState<PostFeatured[]>([]);

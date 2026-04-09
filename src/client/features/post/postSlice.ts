@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchPost, refillPost } from "./postApi";
-import type PostFeatured from "~/client/types/postFeatured";
+import type PostFeatured from "~/client/types/PostFeatured";
 
 interface initialStateType {
   title: string;

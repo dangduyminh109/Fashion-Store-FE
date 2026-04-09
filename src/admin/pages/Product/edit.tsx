@@ -606,7 +606,7 @@ function Edit() {
                 />
               </Grid>
             </Grid>
-            <Grid size={{ md: 3, sm: 12 }} spacing={1} sx={{ width: "100%", mt: "16px " }}>
+            <Grid size={{ md: 3, sm: 12 }} spacing={1} sx={{ width: "100%", mt: "16px" }}>
               <Grid container spacing={1}>
                 {listImagePreview.length + listImage.length < 12 && (
                   <>
@@ -1071,6 +1071,7 @@ function Edit() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -1088,6 +1089,7 @@ function Edit() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -1105,6 +1107,7 @@ function Edit() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -1122,6 +1125,7 @@ function Edit() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />
@@ -1139,6 +1143,7 @@ function Edit() {
                                   variant="outlined"
                                   fullWidth
                                   margin="normal"
+                                  sx={{ minWidth: "100px" }}
                                   error={!!fieldState.error}
                                   helperText={fieldState.error?.message}
                                 />

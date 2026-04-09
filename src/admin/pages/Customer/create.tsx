@@ -240,7 +240,7 @@ function Create() {
               render={({ field }) => (
                 <FormControl fullWidth error={!!errors.authProvider} required>
                   <InputLabel shrink id="demo-simple-select-label">
-                    Phương thức đăng kí
+                    Phương thức đăng ký
                   </InputLabel>
                   <Select
                     {...field}

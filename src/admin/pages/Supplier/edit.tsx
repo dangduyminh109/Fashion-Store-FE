@@ -93,7 +93,7 @@ function Edit() {
       formData.append(`address`, data.address);
       formData.append(`status`, data.status);
 
-      const res = await axiosClient.post("/supplier", formData, {
+      const res = await axiosClient.put("/supplier/" + id, formData, {
         headers: {
           "Content-Type": "application/json",
         },

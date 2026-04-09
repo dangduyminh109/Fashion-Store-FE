@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 import defaultCategory from "~/assets/images/default-category.png";
-import type CategoryFeatured from "~/client/types/categoryFeatured";
+import type CategoryFeatured from "~/client/types/CategoryFeatured";
 import { setCategory } from "~/client/features/product/productSlice";
 import type { AppDispatch } from "~/client/store";
 gsap.registerPlugin(ScrollTrigger);

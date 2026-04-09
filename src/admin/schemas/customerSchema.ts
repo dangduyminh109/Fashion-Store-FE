@@ -13,7 +13,7 @@ const createSchema = yup.object({
   providerId: yup.string().nullable().optional(),
   email: yup.string().nullable().optional(),
   phone: yup.string().nullable().optional(),
-  authProvider: yup.string().required("Phương thức đăng kí không được để trống!"),
+  authProvider: yup.string().required("Phương thức đăng ký không được để trống!"),
   avatar: yup.mixed<File>().nullable().optional(),
 });
 
@@ -30,7 +30,7 @@ const editSchema = yup.object({
   email: yup.string().nullable().optional(),
   phone: yup.string().nullable().optional(),
   avatar: yup.mixed<File>().nullable().optional(),
-  authProvider: yup.string().required("Phương thức đăng kí không được để trống!"),
+  authProvider: yup.string().required("Phương thức đăng ký không được để trống!"),
   avatarPreview: yup.string().nullable().optional(),
 });
 

@@ -182,13 +182,13 @@ function Edit() {
                 render={({ field }) => (
                   <FormControl fullWidth>
                     <InputLabel shrink id="demo-simple-select-label">
-                      Thương Hiệu
+                      Nhà Cung Cấp
                     </InputLabel>
                     <Select
                       {...field}
                       labelId="demo-simple-select-label"
                       displayEmpty
-                      label={"Thương Hiệu"}
+                      label={"Nhà Cung Cấp"}
                       inputProps={{ "aria-label": "Without label" }}
                     >
                       <MenuItem value="">Không chọn</MenuItem>
