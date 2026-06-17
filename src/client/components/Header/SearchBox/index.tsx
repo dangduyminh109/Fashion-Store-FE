@@ -15,7 +15,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Divider from "@mui/material/Divider";
 
-import defaultImg from "~/assets/images/default-image.png";
+import defaultImg from "~/assets/images/default-product.png";
 import handlePrice from "~/utils/handlePrice";
 import type { RootState } from "~/client/store";
 import type { AppDispatch } from "~/admin/store";

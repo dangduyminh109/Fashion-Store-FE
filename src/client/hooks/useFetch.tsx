@@ -39,7 +39,7 @@ axiosClient.interceptors.response.use(
           const newToken = res.data.result.token;
           localStorage.setItem("customer-token", newToken);
           originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          axiosClient(originalRequest);
+          return axiosClient(originalRequest);
         }
       } catch (error) {
         localStorage.removeItem("customer-token");
@@ -62,6 +62,7 @@ export function useFetch<T>({
   endpoint,
   method,
   options = {},
+  enabled = true,
 }: {
   endpoint: string;
   method: "get" | "post" | "put" | "patch" | "delete";
@@ -73,7 +74,10 @@ export function useFetch<T>({
   const [error, setError] = useState<any>(null);
 
   useEffect(() => {
-    if (!endpoint) return;
+    if (!endpoint || !enabled) {
+      setLoading(false);
+      return;
+    }
     let mounted = true;
     const controller = new AbortController();
 
@@ -106,7 +110,7 @@ export function useFetch<T>({
       mounted = false;
       controller.abort();
     };
-  }, [endpoint, method, JSON.stringify(options)]);
+  }, [endpoint, method, JSON.stringify(options), enabled]);
 
   return { data, loading, error };
 }

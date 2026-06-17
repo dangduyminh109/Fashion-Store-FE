@@ -17,7 +17,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<Cart[]>([]);
   useEffect(() => {
     const data: Cart[] = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (!(!!data || Object.keys(data).length === 0 || Object.keys(data).length === 0)) {
+    if (Array.isArray(data)) {
       setCart(data);
     }
   }, []);

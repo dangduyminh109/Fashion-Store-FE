@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Navigation } from "swiper/modules";
 
-import defaultImg from "~/assets/images/default-image.png";
+import defaultImg from "~/assets/images/default-product.png";
 
 export const LeftBlock = ({ productImages }: { productImages: string[] | undefined }) => {
   const theme = useTheme();

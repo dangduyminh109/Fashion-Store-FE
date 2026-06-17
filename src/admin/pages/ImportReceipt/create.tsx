@@ -41,7 +41,7 @@ import type Supplier from "~/admin/types/supplier";
 import Breadcrumb from "~/admin/components/Breadcrumb";
 import getLastError from "~/utils/onErrorValidate";
 import axiosClient from "~/admin/hooks/useFetch";
-import DefaultImage from "~/assets/images/default-image.png";
+import DefaultImage from "~/assets/images/default-product.png";
 import formatToLocalDateTime from "~/utils/formatToLocalDateTime";
 
 const listBreadcrumb = [

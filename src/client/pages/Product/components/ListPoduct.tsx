@@ -51,10 +51,7 @@ export const ListProduct = () => {
   }, [filters.categorys, promotion]);
 
   useEffect(() => {
-    let data = [];
-    for (let index = page * size; index < listProduct.length && data.length < size; index++) {
-      data.push(listProduct[index]);
-    }
+    let data = [...listProduct];
     let filterData = data;
     filterData = data.filter((item) => {
       let brandValid = false;
@@ -181,11 +178,13 @@ export const ListProduct = () => {
     if (categoryId) {
       url = url + `&categoryIds=` + categoryId;
     }
-    if (value * size >= listProduct.length + size) {
-      dispatch(refillProduct({ url, method: "get" }));
-    } else {
-      dispatch(setPage(value - 1));
+    if (search) {
+      url = url + "&search=" + search;
     }
+    if (promotion) {
+      url = url + "&promotion=true";
+    }
+    dispatch(fetchProduct({ url, method: "get" }));
   };
 
   return (

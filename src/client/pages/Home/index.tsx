@@ -11,12 +11,16 @@ import { AuthContext } from "~/client/context/AuthContext";
 import { toast } from "react-toastify";
 import axiosClient from "~/client/hooks/useFetch";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";
+import { CartContext } from "~/client/context/CartContext";
+import { RecommendProduct } from "./components/RecommendProduct";
 
 function Home() {
   const location = useLocation();
   const { setCustomer } = useContext(AuthContext);
 
   const { setBreadcrumb } = useContext(BreadcrumbContext);
+  const { cart } = useContext(CartContext);
+  const cartItems = Array.from(new Set(cart.map((item) => item.variant.product.id))).join(",");
 
   useEffect(() => {
     setBreadcrumb([]);
@@ -48,6 +52,7 @@ function Home() {
     <Box sx={{ mt: "-45px" }} id="smooth-content">
       <Carousel />
       <Category />
+      <RecommendProduct cartItems={cartItems} />
       <Offer />
       <NewProduct />
       <FeaturedProduct />

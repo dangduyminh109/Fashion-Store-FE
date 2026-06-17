@@ -6,7 +6,7 @@ import { Fragment } from "react/jsx-runtime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import IconButton from "@mui/material/IconButton";
 
-import defaultImg from "~/assets/images/default-image.png";
+import defaultImg from "~/assets/images/default-product.png";
 import type ProductFeatured from "~/client/types/ProductFeatured";
 import handlePrice from "~/utils/handlePrice";
 

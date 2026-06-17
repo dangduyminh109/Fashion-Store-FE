@@ -17,7 +17,7 @@ import type CartVariant from "~/client/types/cart";
 import { AuthContext } from "~/client/context/AuthContext";
 import axiosClient from "~/client/hooks/useFetch";
 import type Cart from "~/client/types/cart";
-import defaultImg from "~/assets/images/default-image.png";
+import defaultImg from "~/assets/images/default-product.png";
 import { toast } from "react-toastify";
 import getPrice from "~/utils/getPrice";
 import BreadcrumbContext from "~/client/context/BreadcrumbContext";
@@ -126,13 +126,16 @@ function CartPage() {
   }
 
   async function handleRemoveToCart(cartItem: CartVariant) {
+    const nextSelectedIds = listSelectProduct.filter((id) => id !== cartItem.variant.id);
     if (customer) {
       try {
         const data = (await axiosClient.delete("/cart/" + cartItem.variant.id)).data;
         if (data && data.code === 1000) {
           let newCart: Cart[] = cart.filter((item) => item.variant.id != cartItem.variant.id);
           setCart(newCart);
+          setListSelectProduct(nextSelectedIds);
           localStorage.setItem("cart", JSON.stringify(newCart));
+          localStorage.setItem("listSelectId", JSON.stringify(nextSelectedIds));
           toast.success("Sản phẩm đã được xóa khỏi giỏ!!!");
         }
       } catch (error: any) {
@@ -142,7 +145,9 @@ function CartPage() {
     } else {
       let newCart: Cart[] = cart.filter((item) => item.variant.id != cartItem.variant.id);
       setCart(newCart);
+      setListSelectProduct(nextSelectedIds);
       localStorage.setItem("cart", JSON.stringify(newCart));
+      localStorage.setItem("listSelectId", JSON.stringify(nextSelectedIds));
       toast.success("Sản phẩm đã được xóa khỏi giỏ!!!");
     }
   }

@@ -29,7 +29,7 @@ import { toast } from "react-toastify";
 import PrimaryButton from "~/client/components/PrimaryButton";
 import { AuthContext } from "~/client/context/AuthContext";
 import type Cart from "~/client/types/cart";
-import defaultImg from "~/assets/images/default-image.png";
+import defaultImg from "~/assets/images/default-product.png";
 import AuthFormContext from "~/client/context/AuthFormContext";
 import getPrice from "~/utils/getPrice";
 import ListVoucher from "./components/ListVoucher";

@@ -38,7 +38,7 @@ import { createSchema as schema } from "~/admin/schemas/orderSchema";
 import Breadcrumb from "~/admin/components/Breadcrumb";
 import getLastError from "~/utils/onErrorValidate";
 import axiosClient from "~/admin/hooks/useFetch";
-import DefaultImage from "~/assets/images/default-image.png";
+import DefaultImage from "~/assets/images/default-product.png";
 import Autocomplete from "@mui/material/Autocomplete";
 import FormLabel from "@mui/material/FormLabel";
 import Radio from "@mui/material/Radio";

@@ -92,7 +92,8 @@ const productSlice = createSlice({
       .addCase(fetchProduct.fulfilled, (state, action) => {
         state.listProduct = action.payload.result.listProduct;
         state.totalPage = action.payload.result.totalPage;
-        state.page = 0;
+        const pageMatch = action.meta.arg?.url ? action.meta.arg.url.match(/page=(\d+)/) : null;
+        state.page = pageMatch ? parseInt(pageMatch[1]) : 0;
         state.loading = "succeeded";
       })
       .addCase(fetchProduct.rejected, (state, action) => {
